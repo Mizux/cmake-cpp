@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/Mizux/cpp-template.svg?branch=master)](https://travis-ci.org/Mizux/cpp-template)
-[![Build status](https://ci.appveyor.com/api/projects/status/9mrdg0m9u1a2r3ji?svg=true)](https://ci.appveyor.com/project/Mizux/cpp-template)
+[![Build Status](https://travis-ci.org/Mizux/cmake-cpp.svg?branch=master)](https://travis-ci.org/Mizux/cmake-cpp)
+[![Build status](https://ci.appveyor.com/api/projects/status/cmv8xp5npei1o6w3/branch/master?svg=true)](https://ci.appveyor.com/project/Mizux/cmake-cpp/branch/master)
 
 # Introduction
 
