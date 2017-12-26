@@ -9,13 +9,14 @@ macro(find_package)
 	endif()
 endmacro()
 
+if(POLICY CMP0068)
+	# Don't modify install_name when touching RPATH.
+	cmake_policy(SET CMP0068 NEW)
+endif()
+
 include(CTest)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 if(UNIX)
-	if(APPLE)
-		# Don't modify install_name when touching RPATH.
-		cmake_policy(SET CMP0068 NEW)
-	endif()
   set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
   option(BUILD_SHARED_LIBS "Build shared libraries(.so)." ON)
 else()

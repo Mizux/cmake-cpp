@@ -16,6 +16,7 @@ elseif(UNIX AND NOT APPLE)
 		INSTALL_RPATH "$ORIGIN/../FooBar:$ORIGIN/../Foo:$ORIGIN/../lib")
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE FooBar::FooBar)
+add_executable(${PROJECT_NAME} ALIAS ${PROJECT_NAME}::${PROJECT_NAME})
 
 # Test
 include(CTest)
