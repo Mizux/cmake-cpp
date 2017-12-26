@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.8.2)
 project(Foo VERSION 1.0.0 LANGUAGES CXX)
 
-file(GLOB_RECURSE _HDRS "include/*.hpp" "include/*hxx")
-file(GLOB_RECURSE _SRCS "src/*.[hc]pp")
+file(GLOB _HDRS "include/foo/*.hpp" "include/foo/*.hxx")
+file(GLOB _SRCS "src/*.[hc]pp")
 
 add_library(${PROJECT_NAME} ${_HDRS} ${_SRCS})
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -12,6 +12,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER ${_HDRS})
 #target_link_libraries(${PROJECT_NAME} PUBLIC ...)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
+# Test
 include(CTest)
 if(BUILD_TESTING)
 	add_subdirectory(test)

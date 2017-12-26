@@ -1,28 +1,27 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.8.2)
 project(FooBar VERSION 1.0.0 LANGUAGES CXX)
 
-if(NOT TARGET Foo::Foo OR NOT TARGET Bar::Bar)
-	message(FATAL_ERROR "FooBar: missing dependencies")
-endif()
+find_package(Foo)
+find_package(Bar)
 
-file(GLOB_RECURSE _HDRS "include/*.hpp" "include/*hxx")
-file(GLOB_RECURSE _SRCS "src/*.[hc]pp")
+file(GLOB _HDRS "include/foobar/*.hpp" "include/foobar/*.hxx")
+file(GLOB _SRCS "src/*.[hc]pp")
 
 add_library(${PROJECT_NAME} ${_HDRS} ${_SRCS})
 target_include_directories(${PROJECT_NAME} PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 	$<INSTALL_INTERFACE:include>)
 if(APPLE)
-set_target_properties(${PROJECT_NAME} PROPERTIES
-	INSTALL_RPATH "@loader_path/../Foo;@loader_path/../Bar;@loader_path/../lib")
+	set_target_properties(${PROJECT_NAME} PROPERTIES
+		INSTALL_RPATH "@loader_path/../Foo;@loader_path/../Bar;@loader_path")
 elseif(UNIX AND NOT APPLE)
 	set_target_properties(${PROJECT_NAME} PROPERTIES
-INSTALL_RPATH "$ORIGIN/../Foo:$ORIGIN/../Bar:$ORIGIN")
+		INSTALL_RPATH "$ORIGIN/../Foo:$ORIGIN/../Bar:$ORIGIN")
 endif()
 target_link_libraries(${PROJECT_NAME} PUBLIC Foo::Foo PRIVATE Bar::Bar)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-# TEST
+# Test
 include(CTest)
 if(BUILD_TESTING)
 	add_subdirectory(test)
