@@ -17,7 +17,7 @@ PROJECT :=$(shell basename $(shell pwd))
 UID := $(shell id -u)
 GID := $(shell id -g)
 DOCKER_CMD := docker run --rm -it -v ${PWD}:/tmp -w /tmp --user ${UID}:${GID}
-DOCKER_INSTALL_CMD := docker run --rm -it --user ${UID}:${GID}
+DOCKER_INSTALL_CMD := docker run --rm -it
 
 # $* stem
 # $< first prerequist
@@ -85,7 +85,7 @@ build/%/install: build/%/docker_devel.tar FORCE
 	@docker load -i $<
 	${DOCKER_CMD} ${PROJECT}_$*:devel /bin/sh -c "cmake --build build/$* --target install -- DESTDIR=install"
 
-build/%/docker_install.tar: docker/%/InstallDockerfile build/%/install FORCE
+build/%/docker_install.tar: docker/%/InstallDockerfile build/%/install test/config
 	docker image rm -f ${PROJECT}_$*:install 2>/dev/null
 	docker build --no-cache -t ${PROJECT}_$*:install -f $< .
 	docker save ${PROJECT}_$*:install -o $@
@@ -101,10 +101,14 @@ bash_install_ubuntu: build/ubuntu/docker_install.tar
 
 # TEST INSTALL
 .PHONY: test_install test_install_alpine bash_install_archlinux bash_isntall_ubuntu
-test_install: test_install_alpine bash_install_archlinux bash_isntall_ubuntu
-build-%/.test_install: build/%/docker_install.tar
+test_install: test_install_alpine test_install_archlinux test_install_ubuntu
+test_install_alpine: test_install-alpine
+test_install_archlinux: test_install-archlinux
+test_install_ubuntu: test_install-ubuntu
+test_install-%: build/%/docker_install.tar
 	@docker load -i $<
 	${DOCKER_INSTALL_CMD} ${PROJECT}_$*:install /bin/sh -c "FooBarApp"
+	${DOCKER_INSTALL_CMD} -w /project ${PROJECT}_$*:install /bin/sh -c "cmake -H. -Bbuild; cmake --build build"
 
 # CLEAN
 .PHONY: clean clean_alpine clean_archlinux clean_ubuntu

@@ -5,4 +5,4 @@ project(Sample VERSION 1.0 LANGUAGES CXX)
 find_package(CMakeCPP CONFIG REQUIRED)
 
 add_executable(sample main.cpp)
-target_link_libraries(sample PRIVATE FooBar::FooBar)
+target_link_libraries(sample PRIVATE CMakeCPP::FooBar)
