@@ -8,7 +8,9 @@ add_library(${PROJECT_NAME} ${_HDRS} ${_SRCS})
 target_include_directories(${PROJECT_NAME} PUBLIC
 	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
 	$<INSTALL_INTERFACE:include>)
-set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER ${_HDRS})
+set_target_properties(${PROJECT_NAME} PROPERTIES
+	PUBLIC_HEADER ${_HDRS}
+	VERSION ${PROJECT_VERSION})
 #target_link_libraries(${PROJECT_NAME} PUBLIC ...)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 

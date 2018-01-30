@@ -11,6 +11,9 @@ add_library(${PROJECT_NAME} ${_HDRS} ${_SRCS})
 target_include_directories(${PROJECT_NAME} PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 	$<INSTALL_INTERFACE:include>)
+set_target_properties(${PROJECT_NAME} PROPERTIES
+	PUBLIC_HEADER ${_HDRS}
+	VERSION ${PROJECT_VERSION})
 if(APPLE)
 	set_target_properties(${PROJECT_NAME} PROPERTIES
 		INSTALL_RPATH "@loader_path/../Foo;@loader_path/../Bar;@loader_path")
