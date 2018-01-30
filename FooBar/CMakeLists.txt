@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.8.2)
 project(FooBar VERSION 1.0.0 LANGUAGES CXX)
 
-find_package(Foo REQUIRED)
-find_package(Bar REQUIRED)
+find_target(CMakeCPP::Foo CMakeCPP REQUIRED CONFIG)
+find_target(CMakeCPP::Bar CMakeCPP REQUIRED CONFIG)
 
 file(GLOB _HDRS "include/foobar/*.hpp" "include/foobar/*.hxx")
 file(GLOB _SRCS "src/*.[hc]pp")
@@ -21,8 +21,10 @@ elseif(UNIX AND NOT APPLE)
 	set_target_properties(${PROJECT_NAME} PROPERTIES
 		INSTALL_RPATH "$ORIGIN/../Foo:$ORIGIN/../Bar:$ORIGIN")
 endif()
-target_link_libraries(${PROJECT_NAME} PUBLIC Foo::Foo PRIVATE Bar::Bar)
-add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME}
+	PUBLIC CMakeCPP::Foo
+	PRIVATE CMakeCPP::Bar)
+add_library(CMakeCPP::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # Test
 include(CTest)
@@ -33,14 +35,9 @@ endif()
 # Install
 include(GNUInstallDirs)
 install(TARGETS ${PROJECT_NAME}
-	EXPORT ${PROJECT_NAME}Targets
-	INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+	EXPORT CMakeCPPTargets
 	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/foobar
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	#RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-	)
-install(EXPORT ${PROJECT_NAME}Targets
-	NAMESPACE ${PROJECT_NAME}::
-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 	)

@@ -9,20 +9,15 @@ if(NOT CMAKE_BUILD_TYPE)
 		FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
 
-# Use find_package everywhere, no-op if it's a target
-macro(find_package)
-	if(NOT TARGET ${ARGV0} AND NOT TARGET ${ARGV0}::${ARGV0})
-		_find_package(${ARGV})
+# Usage find_target(TARGET_NAME TARGET_PACKAGE [PACKAGE OPTIONS]).
+# e.g.: find_target(protobuf::libprotobuf Protobuf REQUIRED)
+macro(find_target TARGET_NAME TARGET_PACKAGE)
+	if(TARGET ${TARGET_NAME})
+		get_target_property(TGT_VERSION ${TARGET_NAME} VERSION)
+		message(STATUS "Found Target: ${TARGET_NAME} (found version \"${TGT_VERSION}\")")
+		set(${TARGET_PACKAGE}_FOUND TRUE)
 	else()
-		if(TARGET ${ARGV0})
-			get_target_property(TGT_VER ${ARGV0} VERSION)
-			set(TGT ${ARGV0})
-		else()
-			get_target_property(TGT_VER ${ARGV0}::${ARGV0} VERSION)
-			set(TGT ${ARGV0}::${ARGV0})
-		endif()
-		message(STATUS "Found ${ARGV0}: CMake Target ${TGT} (found version \"${TGT_VER}\")")
-		set(${ARGV0}_FOUND TRUE)
+		find_package(${TARGET_PACKAGE} ${ARGN})
 	endif()
 endmacro()
 
@@ -45,3 +40,25 @@ add_subdirectory(Foo)
 add_subdirectory(Bar)
 add_subdirectory(FooBar)
 add_subdirectory(FooBarApp)
+
+# Install
+include(GNUInstallDirs)
+install(EXPORT CMakeCPPTargets
+	NAMESPACE CMakeCPP::
+	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCPP
+	COMPONENT Devel)
+include(CMakePackageConfigHelpers)
+configure_package_config_file(cmake/CMakeCPPConfig.cmake.in
+	"${PROJECT_BINARY_DIR}/CMakeCPPConfig.cmake"
+	INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCPP"
+	NO_SET_AND_CHECK_MACRO
+  NO_CHECK_REQUIRED_COMPONENTS_MACRO)
+write_basic_package_version_file(
+	"${PROJECT_BINARY_DIR}/CMakeCPPConfigVersion.cmake"
+	COMPATIBILITY SameMajorVersion)
+install(
+	FILES
+	"${PROJECT_BINARY_DIR}/CMakeCPPConfig.cmake"
+	"${PROJECT_BINARY_DIR}/CMakeCPPConfigVersion.cmake"
+	DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCPP"
+	COMPONENT Devel)
