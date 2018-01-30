@@ -1,0 +1,4 @@
+FROM ubuntu:devel
+LABEL maintainer="corentinl@google.com"
+
+COPY build/ubuntu/install /
