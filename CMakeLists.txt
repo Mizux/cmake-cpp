@@ -1,5 +1,11 @@
 # This file is just an orchestration
 cmake_minimum_required(VERSION 3.8.2)
+
+# Apple: Don't modify install_name when touching RPATH.
+if(POLICY CMP0068)
+	cmake_policy(SET CMP0068 NEW)
+endif()
+
 project(meta VERSION 1.0 LANGUAGES NONE)
 
 # Force default build type to Release
@@ -20,11 +26,6 @@ macro(find_target TARGET_NAME TARGET_PACKAGE)
 		find_package(${TARGET_PACKAGE} ${ARGN})
 	endif()
 endmacro()
-
-if(POLICY CMP0068)
-	# Don't modify install_name when touching RPATH.
-	cmake_policy(SET CMP0068 NEW)
-endif()
 
 include(CTest)
 set(CMAKE_VERBOSE_MAKEFILE ON)
