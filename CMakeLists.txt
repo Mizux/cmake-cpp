@@ -44,22 +44,22 @@ add_subdirectory(FooBarApp)
 
 # Install
 include(GNUInstallDirs)
-install(EXPORT CMakeCPPTargets
-	NAMESPACE CMakeCPP::
-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCPP
+install(EXPORT CMakeCppTargets
+	NAMESPACE CMakeCpp::
+	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCpp
 	COMPONENT Devel)
 include(CMakePackageConfigHelpers)
-configure_package_config_file(cmake/CMakeCPPConfig.cmake.in
-	"${PROJECT_BINARY_DIR}/CMakeCPPConfig.cmake"
-	INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCPP"
+configure_package_config_file(cmake/CMakeCppConfig.cmake.in
+	"${PROJECT_BINARY_DIR}/CMakeCppConfig.cmake"
+	INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCpp"
 	NO_SET_AND_CHECK_MACRO
   NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 write_basic_package_version_file(
-	"${PROJECT_BINARY_DIR}/CMakeCPPConfigVersion.cmake"
+	"${PROJECT_BINARY_DIR}/CMakeCppConfigVersion.cmake"
 	COMPATIBILITY SameMajorVersion)
 install(
 	FILES
-	"${PROJECT_BINARY_DIR}/CMakeCPPConfig.cmake"
-	"${PROJECT_BINARY_DIR}/CMakeCPPConfigVersion.cmake"
-	DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCPP"
+	"${PROJECT_BINARY_DIR}/CMakeCppConfig.cmake"
+	"${PROJECT_BINARY_DIR}/CMakeCppConfigVersion.cmake"
+	DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCpp"
 	COMPONENT Devel)

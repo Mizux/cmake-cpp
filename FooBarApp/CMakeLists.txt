@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8.2)
 project(FooBarApp VERSION 1.0.0 LANGUAGES CXX)
 
-find_target(CMakeCPP::FooBar CMakeCPP REQUIRED CONFIG)
+find_target(CMakeCpp::FooBar CMakeCpp REQUIRED CONFIG)
 
 file(GLOB _SRCS "src/*.[hc]pp")
 
@@ -16,8 +16,8 @@ elseif(UNIX AND NOT APPLE)
 		INSTALL_RPATH "$ORIGIN/../FooBar:$ORIGIN/../Foo:$ORIGIN/../lib")
 endif()
 target_link_libraries(${PROJECT_NAME}
-	PRIVATE CMakeCPP::FooBar)
-add_executable(CMakeCPP::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+	PRIVATE CMakeCpp::FooBar)
+add_executable(CMakeCpp::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # Test
 include(CTest)
@@ -28,6 +28,6 @@ endif()
 # Install
 include(GNUInstallDirs)
 install(TARGETS ${PROJECT_NAME}
-	EXPORT CMakeCPPTargets
+	EXPORT CMakeCppTargets
 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 	)
