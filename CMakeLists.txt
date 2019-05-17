@@ -1,5 +1,5 @@
 # This file is just an orchestration
-cmake_minimum_required(VERSION 3.8.2)
+cmake_minimum_required(VERSION 3.10.3)
 
 # Apple: Don't modify install_name when touching RPATH.
 if(POLICY CMP0068)
