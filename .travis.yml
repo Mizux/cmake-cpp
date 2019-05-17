@@ -3,10 +3,10 @@ language: cpp
 matrix:
   include:
     - os: linux
-      dist: trusty
+      dist: xenial
       compiler: clang
     - os: linux
-      dist: trusty
+      dist: xenial
       compiler: gcc
     - os: osx
       compiler: clang
