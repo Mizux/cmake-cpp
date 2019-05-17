@@ -37,6 +37,30 @@ else()
  set(BUILD_SHARED_LIBS OFF)
 endif()
 
+
+# type size checks
+enable_language(CXX)
+include(CheckTypeSize)
+set(TYPES
+  "char"
+  "short"
+  "int"
+  "long"
+  "long int"
+  "long long"
+  "long long int"
+  "void *"
+  "intptr_t"
+  "uintptr_t")
+foreach(TYPE ${TYPES})
+  string(MAKE_C_IDENTIFIER ${TYPE} TYPE_NAME)
+  string(TOUPPER ${TYPE_NAME} TYPE_NAME)
+  string(PREPEND TYPE_NAME "SIZEOF_")
+  message(STATUS "${TYPE} -> ${TYPE_NAME}")
+  check_type_size(${TYPE} ${TYPE_NAME} LANGUAGE CXX)
+  message(STATUS "${TYPE_NAME} -> ${${TYPE_NAME}}")
+endforeach()
+
 add_subdirectory(Foo)
 add_subdirectory(Bar)
 add_subdirectory(FooBar)
