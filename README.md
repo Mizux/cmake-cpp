@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Mizux/cmake-cpp.svg?branch=master)](https://travis-ci.org/Mizux/cmake-cpp)
+[![Build Status](https://travis-ci.com/Mizux/cmake-cpp.svg?branch=master)](https://travis-ci.com/Mizux/cmake-cpp)
 [![Build status](https://ci.appveyor.com/api/projects/status/cmv8xp5npei1o6w3/branch/master?svg=true)](https://ci.appveyor.com/project/Mizux/cmake-cpp/branch/master)
 
 # Introduction
