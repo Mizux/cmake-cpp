@@ -2,7 +2,7 @@ language: cpp
 cache:
   ccache: true
 
-matrix:
+jobs:
   include:
     - os: linux
       dist: bionic
