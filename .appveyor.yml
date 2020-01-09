@@ -15,7 +15,7 @@ matrix:
 
 before_build:
   - cmake --version
-  - cmake -H. -Bbuild -G "%CMAKE_GENERATOR%"
+  - cmake -S. -Bbuild -G "%CMAKE_GENERATOR%"
 
 build_script:
   - cmake --build build --target ALL_BUILD -- %MSBUILD_FLAGS%
