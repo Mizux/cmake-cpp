@@ -16,11 +16,7 @@ matrix:
       compiler: gcc
 
 install:
-  - eval "${MATRIX_EVAL}"
-#  - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get -qq update; fi
-#  - if [ $TRAVIS_OS_NAME == osx ]; then sudo chown -R $(whoami) /usr/local; fi
-#  # Avoid bug on CI with OSX, see https://github.com/travis-ci/travis-ci/issues/8552
-#  - if [ $TRAVIS_OS_NAME == osx ]; then brew update; fi
+  # See https://docs.travis-ci.com/user/caching/#ccache-on-macos
   - if [ $TRAVIS_OS_NAME == osx ]; then brew install ccache; export PATH="/usr/local/opt/ccache/libexec:$PATH"; fi
 
 script:
