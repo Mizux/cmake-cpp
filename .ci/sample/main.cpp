@@ -1,8 +1,8 @@
 #include <iostream>
-#include <coin/CoinUtilsConfig.h>
+#include <foobar/FooBar.hpp>
 
 int main(int argc, char** argv) {
-  std::cout << "version: " << COINUTILS_VERSION << std::endl;
+  foobar::hello();
 	return 0;
 }
 
