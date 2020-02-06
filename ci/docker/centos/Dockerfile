@@ -33,4 +33,4 @@ FROM env AS install
 COPY --from=devel /usr/local /usr/local/
 # Copy  sample
 WORKDIR /home/sample
-COPY .ci/sample .
+COPY ci/sample .
