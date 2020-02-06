@@ -1,17 +1,17 @@
 # Project Files unneeded by docker
-.ci/cache
-.ci/docker
+ci/cache
+ci/docker
 .git
 .gitignore
 .github
 .dockerignore
-.travis.yml
 .clang-format
+.appveyor.yml
+.travis.yml
 AUTHORS
-INSTALL
-install-sh
-missing
-README
+CONTRIBUTING.md
+CONTRIBUTORS
+LICENSE
 README.md
 
 build/

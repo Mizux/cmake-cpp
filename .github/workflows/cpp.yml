@@ -8,68 +8,82 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build env image
-      run: make --directory=.ci env_alpine
+      run: make --directory=ci env_alpine
     - name: Build project
-      run: make --directory=.ci devel_alpine
+      run: make --directory=ci devel_alpine
     - name: Test project
-      run: make --directory=.ci test_alpine
+      run: make --directory=ci test_alpine
+    - name: Test Install project
+      run: make --directory=ci test_install_alpine
   build-archlinux:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Build env image
-      run: make --directory=.ci env_archlinux
+      run: make --directory=ci env_archlinux
     - name: Build project
-      run: make --directory=.ci devel_archlinux
+      run: make --directory=ci devel_archlinux
     - name: Test project
-      run: make --directory=.ci test_archlinux
+      run: make --directory=ci test_archlinux
+    - name: Test Install project
+      run: make --directory=ci test_install_archlinux
   build-centos:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Build env image
-      run: make --directory=.ci env_centos
+      run: make --directory=ci env_centos
     - name: Build project
-      run: make --directory=.ci devel_centos
+      run: make --directory=ci devel_centos
     - name: Test project
-      run: make --directory=.ci test_centos
+      run: make --directory=ci test_centos
+    - name: Test Install project
+      run: make --directory=ci test_install_centos
   build-debian:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Build env image
-      run: make --directory=.ci env_debian
+      run: make --directory=ci env_debian
     - name: Build project
-      run: make --directory=.ci devel_debian
+      run: make --directory=ci devel_debian
     - name: Test project
-      run: make --directory=.ci test_debian
+      run: make --directory=ci test_debian
+    - name: Test Install project
+      run: make --directory=ci test_install_debian
   build-fedora:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Build env image
-      run: make --directory=.ci env_fedora
+      run: make --directory=ci env_fedora
     - name: Build project
-      run: make --directory=.ci devel_fedora
+      run: make --directory=ci devel_fedora
     - name: Test project
-      run: make --directory=.ci test_fedora
+      run: make --directory=ci test_fedora
+    - name: Test Install project
+      run: make --directory=ci test_install_fedora
   build-opensuse:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Build env image
-      run: make --directory=.ci env_opensuse
+      run: make --directory=ci env_opensuse
     - name: Build project
-      run: make --directory=.ci devel_opensuse
+      run: make --directory=ci devel_opensuse
     - name: Test project
-      run: make --directory=.ci test_opensuse
+      run: make --directory=ci test_opensuse
+    - name: Test Install project
+      run: make --directory=ci test_install_opensuse
   build-ubuntu:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Build env image
-      run: make --directory=.ci env_ubuntu
+      run: make --directory=ci env_ubuntu
     - name: Build project
-      run: make --directory=.ci devel_ubuntu
+      run: make --directory=ci devel_ubuntu
     - name: Test project
-      run: make --directory=.ci test_ubuntu
+      run: make --directory=ci test_ubuntu
+    - name: Test Install project
+      run: make --directory=ci test_install_ubuntu
