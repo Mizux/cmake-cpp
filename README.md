@@ -1,5 +1,15 @@
-[![Build Status](https://travis-ci.com/Mizux/cmake-cpp.svg?branch=master)](https://travis-ci.com/Mizux/cmake-cpp)
-[![Build status](https://ci.appveyor.com/api/projects/status/cmv8xp5npei1o6w3/branch/master?svg=true)](https://ci.appveyor.com/project/Mizux/cmake-cpp/branch/master)
+[![Build Status][github_status]][github_link]
+[![Build Status][travis_status]][travis_link]
+[![Build Status][appveyor_status]][appveyor_link]
+
+[github_status]: https://github.com/Mizux/cmake-cpp/workflows/C++%20CI/badge.svg
+[github_link]: https://github.com/Mizux/cmake-cpp/actions
+
+[travis_status]: https://travis-ci.com/Mizux/cmake-cpp.svg?branch=master
+[travis_link]: https://travis-ci.com/Mizux/cmake-cpp
+
+[appveyor_status]: https://ci.appveyor.com/api/projects/status/cmv8xp5npei1o6w3/branch/master?svg=true
+[appveyor_link]: https://ci.appveyor.com/project/Mizux/cmake-cpp/branch/master
 
 # Introduction
 
