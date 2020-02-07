@@ -87,3 +87,41 @@ jobs:
       run: make --directory=ci test_ubuntu
     - name: Test Install project
       run: make --directory=ci test_install_ubuntu
+
+  # Building using the github runner environement directly.
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Configure
+      run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+    - name: Build
+      run: cmake --build build --config Release --target all -v
+    - name: Test
+      run: cmake --build build --config Release --target test -v
+    - name: Install
+      run: cmake --build build --config Release --target install -v
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Configure
+      run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+    - name: Build
+      run: cmake --build build --config Release --target all -v
+    - name: Test
+      run: cmake --build build --config Release --target test -v
+    - name: Install
+      run: cmake --build build --config Release --target install -v
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Configure
+      run: cmake -S. -Bbuild -G "Visual Studio 16 2019" -DCMAKE_BUILD_TYPE=Release
+    - name: Build
+      run: cmake --build build --config Release --target ALL_BUILD -- /maxcpucount
+    - name: Test
+      run: cmake --build build --config Release --target RUN_TESTS -- /maxcpucount
+    - name: Install
+      run: cmake --build build --config Release --target INSTALL -- /maxcpucount
