@@ -1,14 +1,14 @@
 # Create a virtual environment with all tools installed
 # ref: https://hub.docker.com/_/fedora
 FROM fedora:latest AS env
-LABEL maintainer="corentinl@google.com"
+LABEL maintainer="mizux.dev@gmail.com"
 # Install system build dependencies
-ENV PATH=$PATH:/usr/local/bin
+ENV PATH=/usr/local/bin:$PATH
 RUN dnf -y update \
+&& dnf -y install git wget \
 && dnf -y groupinstall "Development Tools" \
-&& dnf -y install git cmake gcc-c++ \
+&& dnf -y install gcc-c++ cmake \
 && dnf clean all
-
 CMD [ "/bin/sh" ]
 
 # Add the library src to our build env
@@ -17,6 +17,8 @@ FROM env AS devel
 WORKDIR /home/lib
 # Bundle lib source
 COPY . .
+# CMake version
+RUN cmake -version
 # CMake configure
 RUN cmake -S. -Bbuild
 # CMake build

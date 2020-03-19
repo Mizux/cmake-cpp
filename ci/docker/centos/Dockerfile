@@ -1,17 +1,19 @@
 # Create a virtual environment with all tools installed
 # ref: https://hub.docker.com/_/centos
 FROM centos:latest AS env
-LABEL maintainer="corentinl@google.com"
+LABEL maintainer="mizux.dev@gmail.com"
 # Install system build dependencies
-ENV PATH=$PATH:/usr/local/bin
+ENV PATH=/usr/local/bin:$PATH
 RUN yum -y update \
+&& yum -y install git wget openssl-devel \
 && yum -y groupinstall "Development Tools" \
-&& yum -y install epel-release \
-&& yum -y install cmake3 \
-&& ln -s /usr/bin/cmake3 /usr/local/bin/cmake \
 && yum clean all \
 && rm -rf /var/cache/yum
-
+# Install CMake 3.16.4
+RUN wget "https://cmake.org/files/v3.16/cmake-3.16.4-Linux-x86_64.sh" \
+&& chmod a+x cmake-3.16.4-Linux-x86_64.sh \
+&& ./cmake-3.16.4-Linux-x86_64.sh --prefix=/usr/local/ --skip-license \
+&& rm cmake-3.16.4-Linux-x86_64.sh
 CMD [ "/bin/sh" ]
 
 # Add the library src to our build env
@@ -20,6 +22,8 @@ FROM env AS devel
 WORKDIR /home/lib
 # Bundle lib source
 COPY . .
+# CMake version
+RUN cmake -version
 # CMake configure
 RUN cmake -H. -Bbuild
 # CMake build

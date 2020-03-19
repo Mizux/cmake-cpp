@@ -1,15 +1,13 @@
 # Create a virtual environment with all tools installed
 # ref: https://hub.docker.com/r/opensuse/tumbleweed
 FROM opensuse/tumbleweed AS env
-LABEL maintainer="corentinl@google.com"
+LABEL maintainer="mizux.dev@gmail.com"
 # Install system build dependencies
-ENV PATH=$PATH:/usr/local/bin
-RUN zypper up -y \
+ENV PATH=/usr/local/bin:$PATH
+RUN zypper update -y \
 && zypper install -y git gcc gcc-c++ cmake \
 && zypper clean -a
-
 ENV CC=gcc CXX=g++
-
 CMD [ "/bin/sh" ]
 
 # Add the library src to our build env
@@ -18,6 +16,8 @@ FROM env AS devel
 WORKDIR /home/lib
 # Bundle lib source
 COPY . .
+# CMake version
+RUN cmake -version
 # CMake configure
 RUN cmake -S. -Bbuild
 # CMake build
