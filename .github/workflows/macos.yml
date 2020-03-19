@@ -1,0 +1,18 @@
+name: MacOS
+
+on: [push, pull_request]
+
+jobs:
+  # Building using the github runner environement directly.
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Configure
+      run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+    - name: Build
+      run: cmake --build build --config Release --target all -v
+    - name: Test
+      run: cmake --build build --config Release --target test -v
+    - name: Install
+      run: cmake --build build --config Release --target install -v
