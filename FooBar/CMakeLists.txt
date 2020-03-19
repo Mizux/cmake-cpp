@@ -1,43 +1,46 @@
-cmake_minimum_required(VERSION 3.8.2)
-project(FooBar VERSION 1.0.0 LANGUAGES CXX)
-
-find_target(CMakeCpp::Foo CMakeCpp REQUIRED CONFIG)
-find_target(CMakeCpp::Bar CMakeCpp REQUIRED CONFIG)
-
-file(GLOB _HDRS "include/foobar/*.hpp" "include/foobar/*.hxx")
-file(GLOB _SRCS "src/*.[hc]pp")
-
-add_library(${PROJECT_NAME} ${_HDRS} ${_SRCS})
-target_include_directories(${PROJECT_NAME} PUBLIC
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-	$<INSTALL_INTERFACE:include>)
-set_target_properties(${PROJECT_NAME} PROPERTIES
-	PUBLIC_HEADER ${_HDRS}
-	VERSION ${PROJECT_VERSION})
+add_library(FooBar "")
+target_sources(FooBar
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/foobar/FooBar.hpp>
+    $<INSTALL_INTERFACE:include/foobar/FooBar.hpp>
+  PRIVATE
+    src/FooBar.cpp
+  )
+target_include_directories(FooBar
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+target_compile_features(FooBar PUBLIC cxx_std_11)
+set_target_properties(FooBar PROPERTIES
+  VERSION ${PROJECT_VERSION}
+  PUBLIC_HEADER $<TARGET_PROPERTY:FooBar,INTERFACE_SOURCES>
+  )
+# note: macOS is APPLE and also UNIX !
 if(APPLE)
-	set_target_properties(${PROJECT_NAME} PROPERTIES
-		INSTALL_RPATH "@loader_path/../Foo;@loader_path/../Bar;@loader_path")
-elseif(UNIX AND NOT APPLE)
-	set_target_properties(${PROJECT_NAME} PROPERTIES
-		INSTALL_RPATH "$ORIGIN/../Foo:$ORIGIN/../Bar:$ORIGIN")
+  set_target_properties(FooBar PROPERTIES
+    INSTALL_RPATH "@loader_path")
+elseif(UNIX)
+  set_target_properties(FooBar PROPERTIES
+    INSTALL_RPATH "$ORIGIN")
 endif()
-target_link_libraries(${PROJECT_NAME}
-	PUBLIC CMakeCpp::Foo
-	PRIVATE CMakeCpp::Bar)
-add_library(CMakeCpp::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+target_link_libraries(FooBar
+  PUBLIC
+  ${PROJECT_NAME}::Foo
+  ${PROJECT_NAME}::Bar
+  )
+add_library(${PROJECT_NAME}::FooBar ALIAS FooBar)
 
-# Test
-include(CTest)
 if(BUILD_TESTING)
-	add_subdirectory(test)
+  add_subdirectory(test)
 endif()
 
 # Install
 include(GNUInstallDirs)
-install(TARGETS ${PROJECT_NAME}
-	EXPORT CMakeCppTargets
-	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/foobar
-	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	#RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-	)
+install(TARGETS FooBar
+  EXPORT ${PROJECT_NAME}Targets
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/foobar
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  #RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  )

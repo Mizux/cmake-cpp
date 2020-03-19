@@ -1,42 +1,97 @@
 # This file is just an orchestration
 cmake_minimum_required(VERSION 3.10.3)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # Apple: Don't modify install_name when touching RPATH.
 if(POLICY CMP0068)
-	cmake_policy(SET CMP0068 NEW)
+  cmake_policy(SET CMP0068 NEW)
 endif()
 
-project(meta VERSION 1.0 LANGUAGES NONE)
+# Define file(GENERATE) behavior for relative paths.
+if(POLICY CMP0070)
+  cmake_policy(SET CMP0070 NEW)
+endif()
+
+# target_sources: use absolute path for INTERFACE_SOURCES.
+if(POLICY CMP0076)
+  cmake_policy(SET CMP0076 NEW)
+endif()
+
+# option() honors normal variables.
+# see: https://cmake.org/cmake/help/git-stage/policy/CMP0077.html
+if(POLICY CMP0077)
+  cmake_policy(SET CMP0077 NEW)
+endif()
+
+# SWIG: use standard target name.
+if(POLICY CMP0078)
+  cmake_policy(SET CMP0078 NEW)
+endif()
+
+# SWIG: use SWIG_MODULE_NAME property.
+if(POLICY CMP0086)
+  cmake_policy(SET CMP0086 NEW)
+endif()
+
+project(CMakeCpp VERSION 1.0 LANGUAGES CXX)
+message(STATUS "project: ${PROJECT_NAME}")
+message(STATUS "version: ${PROJECT_VERSION}")
 
 # Force default build type to Release
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING
-		"Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel."
-		FORCE)
+    "Choose the type of build, options are: Debug, Release (default), RelWithDebInfo and MinSizeRel."
+    FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
 
-# Usage find_target(TARGET_NAME TARGET_PACKAGE [PACKAGE OPTIONS]).
-# e.g.: find_target(protobuf::libprotobuf Protobuf REQUIRED)
-macro(find_target TARGET_NAME TARGET_PACKAGE)
-	if(TARGET ${TARGET_NAME})
-		get_target_property(TGT_VERSION ${TARGET_NAME} VERSION)
-		message(STATUS "Found Target: ${TARGET_NAME} (found version \"${TGT_VERSION}\")")
-		set(${TARGET_PACKAGE}_FOUND TRUE)
-	else()
-		find_package(${TARGET_PACKAGE} ${ARGN})
-	endif()
-endmacro()
-
-include(CTest)
-set(CMAKE_VERBOSE_MAKEFILE ON)
+# Layout build dir like install dir
 if(UNIX)
+  option(BUILD_SHARED_LIBS "Build shared libraries(.so or .dyld)." ON)
   set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-  option(BUILD_SHARED_LIBS "Build shared libraries(.so)." ON)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+  # for multi-config build system (e.g. xcode)
+  foreach(OUTPUTCONFIG IN LISTS CMAKE_CONFIGURATION_TYPES)
+    string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR}/${OUTPUTCONFIG}/lib)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR}/${OUTPUTCONFIG}/lib)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR}/${OUTPUTCONFIG}/bin)
+  endforeach()
 else()
-	# only support for static build on Windows.
- set(BUILD_SHARED_LIBS OFF)
+  # Currently Only support static build for windows
+  set(BUILD_SHARED_LIBS OFF)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+  # for multi-config builds (e.g. msvc)
+  foreach(OUTPUTCONFIG IN LISTS CMAKE_CONFIGURATION_TYPES)
+    string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR}/${OUTPUTCONFIG}/bin)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR}/${OUTPUTCONFIG}/bin)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR}/${OUTPUTCONFIG}/bin)
+  endforeach()
 endif()
 
+
+include(CTest)
+if(BUILD_TESTING)
+  include(FetchContent)
+  #FetchContent_Declare(
+  #  googletest
+  #  GIT_REPOSITORY https://github.com/google/googletest.git
+  #  GIT_TAG master)
+  #set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  #FetchContent_MakeAvailable(googletest)
+  FetchContent_Declare(
+    Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG master
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+    )
+  FetchContent_MakeAvailable(Catch2)
+endif()
 
 # type size checks
 enable_language(CXX)
@@ -69,21 +124,21 @@ add_subdirectory(FooBarApp)
 # Install
 include(GNUInstallDirs)
 install(EXPORT CMakeCppTargets
-	NAMESPACE CMakeCpp::
-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCpp
-	COMPONENT Devel)
+  NAMESPACE CMakeCpp::
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCpp
+  COMPONENT Devel)
 include(CMakePackageConfigHelpers)
 configure_package_config_file(cmake/CMakeCppConfig.cmake.in
-	"${PROJECT_BINARY_DIR}/CMakeCppConfig.cmake"
-	INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCpp"
-	NO_SET_AND_CHECK_MACRO
+  "${PROJECT_BINARY_DIR}/CMakeCppConfig.cmake"
+  INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCpp"
+  NO_SET_AND_CHECK_MACRO
   NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 write_basic_package_version_file(
-	"${PROJECT_BINARY_DIR}/CMakeCppConfigVersion.cmake"
-	COMPATIBILITY SameMajorVersion)
+  "${PROJECT_BINARY_DIR}/CMakeCppConfigVersion.cmake"
+  COMPATIBILITY SameMajorVersion)
 install(
-	FILES
-	"${PROJECT_BINARY_DIR}/CMakeCppConfig.cmake"
-	"${PROJECT_BINARY_DIR}/CMakeCppConfigVersion.cmake"
-	DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCpp"
-	COMPONENT Devel)
+  FILES
+  "${PROJECT_BINARY_DIR}/CMakeCppConfig.cmake"
+  "${PROJECT_BINARY_DIR}/CMakeCppConfigVersion.cmake"
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCpp"
+  COMPONENT Devel)
