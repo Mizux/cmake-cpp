@@ -9,14 +9,14 @@ configuration:
 environment:
   MSBUILD_FLAGS: /verbosity:minimal /maxcpucount
   matrix:
-  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019 
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
 matrix:
   fast_finish: true
 
 before_build:
   - cmake --version
-  - cmake -S. -Bbuild -G "Visual Studio 16 2019" -DCMAKE_BUILD_TYPE=%configuration%
+  - cmake -S. -Bbuild -G "Visual Studio 16 2019" -DCMAKE_CONFIGURATION_TYPES=%configuration%
 
 build_script:
   - cmake --build build --config %configuration% --target ALL_BUILD -- %MSBUILD_FLAGS%
