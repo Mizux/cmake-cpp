@@ -13,6 +13,9 @@ FROM env AS devel
 WORKDIR /home/lib
 # Bundle lib source
 COPY . .
+
+# Effectively build the project
+FROM devel AS build
 # CMake version
 RUN cmake -version
 # CMake configure
