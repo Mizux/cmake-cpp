@@ -1,0 +1,45 @@
+@startdot
+digraph DockerDeps {
+  //rankdir=BT;
+  rankdir=TD;
+  node [shape=cylinder, style="rounded,filled", color=black, fillcolor=royalblue];
+  DISTRO_IMG [label="<distro>:latest"];
+  PKG [label="packages\ne.g. cmake", shape=box3d];
+  SRC [label="git repo", shape=folder];
+
+  subgraph clusterDockerfile {
+    ENV_IMG [label="CMakeCpp:<distro>_env\nenv"];
+    DEVEL_IMG [label="CMakeCpp:<distro>_devel\ndevel"];
+    BUILD_IMG [label="CMakeCpp:<distro>_build\nbuild"];
+    INSTALL_IMG [label="CMakeCpp:<distro>_install\ninstall"];
+
+    ENV_IMG -> DEVEL_IMG;
+    DEVEL_IMG -> BUILD_IMG;
+    BUILD_IMG -> INSTALL_IMG [label="copy install", style="dashed"];
+    ENV_IMG -> INSTALL_IMG;
+
+    color=royalblue;
+    label = "docker/<distro>/Dockerfile";
+  }
+  DISTRO_IMG -> ENV_IMG;
+  PKG -> ENV_IMG [label="install", style="dashed"];
+  SRC -> DEVEL_IMG [label="copy", style="dashed"];
+
+  subgraph clusterCache {
+    node [shape=note, style="rounded,filled", color=black, fillcolor=royalblue];
+    ENV_TAR [label="docker_env.tar"];
+    DEVEL_TAR [label="docker_devel.tar"];
+    BUILD_TAR [label="docker_build.tar"];
+    INSTALL_TAR [label="docker_install.tar"];
+
+    edge [color=red];
+    ENV_IMG -> ENV_TAR [label="make save_env_<distro>"];
+    DEVEL_IMG -> DEVEL_TAR [label="make save_devel_<distro>"];
+    BUILD_IMG -> BUILD_TAR [label="make save_build_<distro>"];
+    INSTALL_IMG -> INSTALL_TAR [label="make save_install_<distro>"];
+
+    color=royalblue;
+    label = "cache/<distro>/";
+  }
+}
+@enddot
