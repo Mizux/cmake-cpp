@@ -102,7 +102,7 @@ targets = $(addprefix env_, $(DISTROS))
 .PHONY: env $(targets)
 env: $(targets)
 $(targets): env_%: docker/%/Dockerfile
-	@docker image rm -f ${IMAGE}:$*_env 2>/dev/null
+	#@docker image rm -f ${IMAGE}:$*_env 2>/dev/null
 	${DOCKER_BUILD_CMD} --target=env --tag ${IMAGE}:$*_env -f $< docker/$*
 
 # Save the env image (debug).
@@ -128,7 +128,7 @@ targets = $(addprefix devel_, $(DISTROS))
 .PHONY: devel $(targets)
 devel: $(targets)
 $(targets): devel_%: docker/%/Dockerfile ../CMakeLists.txt ../cmake
-	@docker image rm -f ${IMAGE}:$*_devel 2>/dev/null
+	#@docker image rm -f ${IMAGE}:$*_devel 2>/dev/null
 	${DOCKER_BUILD_CMD} --target=devel --tag ${IMAGE}:$*_devel -f $< ..
 
 # Save the devel image (debug).
@@ -154,7 +154,7 @@ targets = $(addprefix build_, $(DISTROS))
 .PHONY: build $(targets)
 build: $(targets)
 $(targets): build_%: docker/%/Dockerfile ../CMakeLists.txt ../cmake
-	@docker image rm -f ${IMAGE}:$*_build 2>/dev/null
+	#@docker image rm -f ${IMAGE}:$*_build 2>/dev/null
 	${DOCKER_BUILD_CMD} --target=build --tag ${IMAGE}:$*_build -f $< ..
 
 # Save the build image (debug).
@@ -189,7 +189,7 @@ targets = $(addprefix install_, $(DISTROS))
 .PHONY: install $(targets)
 install: $(targets)
 $(targets): install_%: docker/%/Dockerfile sample
-	@docker image rm -f ${IMAGE}:$*_install 2>/dev/null
+	#@docker image rm -f ${IMAGE}:$*_install 2>/dev/null
 	${DOCKER_BUILD_CMD} --target=install --tag ${IMAGE}:$*_install -f $< ..
 
 # Save the install image (debug).
@@ -197,15 +197,15 @@ targets = $(addprefix save_install_, $(DISTROS))
 .PHONY: save_install $(targets)
 save_install: $(targets)
 $(targets): save_install_%: cache/%/docker_install.tar
-cache/%/docker_install.tar: docker/%/Dockerfile \
+cache/%/docker_install.tar: install_% \
 	@rm -f $@
 	mkdir -p cache/$*
 	docker save ${IMAGE}:$*_install -o $@
 
-# DOCKER BASH INSTALL (debug)
+# Run a container using the install image (debug).
 targets = $(addprefix sh_install_, $(DISTROS))
 .PHONY: $(targets)
-$(targets): sh_install_%: cache/%/docker_install.tar
+$(targets): sh_install_%: install_%
 	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$* ${IMAGE}:$*_install /bin/sh
 
 # TEST INSTALL
