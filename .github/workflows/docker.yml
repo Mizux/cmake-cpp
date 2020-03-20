@@ -9,8 +9,10 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build env image
       run: make --directory=ci env_alpine
-    - name: Build project
+    - name: Build devel project
       run: make --directory=ci devel_alpine
+    - name: Build project
+      run: make --directory=ci build_alpine
     - name: Test project
       run: make --directory=ci test_alpine
     - name: Test Install project
@@ -21,8 +23,10 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build env image
       run: make --directory=ci env_archlinux
-    - name: Build project
+    - name: Build devel project
       run: make --directory=ci devel_archlinux
+    - name: Build project
+      run: make --directory=ci build_archlinux
     - name: Test project
       run: make --directory=ci test_archlinux
     - name: Test Install project
@@ -33,8 +37,10 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build env image
       run: make --directory=ci env_centos
-    - name: Build project
+    - name: Build devel project
       run: make --directory=ci devel_centos
+    - name: Build project
+      run: make --directory=ci build_centos
     - name: Test project
       run: make --directory=ci test_centos
     - name: Test Install project
@@ -45,8 +51,10 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build env image
       run: make --directory=ci env_debian
-    - name: Build project
+    - name: Build devel project
       run: make --directory=ci devel_debian
+    - name: Build project
+      run: make --directory=ci build_debian
     - name: Test project
       run: make --directory=ci test_debian
     - name: Test Install project
@@ -57,8 +65,10 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build env image
       run: make --directory=ci env_fedora
-    - name: Build project
+    - name: Build devel project
       run: make --directory=ci devel_fedora
+    - name: Build project
+      run: make --directory=ci build_fedora
     - name: Test project
       run: make --directory=ci test_fedora
     - name: Test Install project
@@ -69,8 +79,10 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build env image
       run: make --directory=ci env_opensuse
-    - name: Build project
+    - name: Build devel project
       run: make --directory=ci devel_opensuse
+    - name: Build project
+      run: make --directory=ci build_opensuse
     - name: Test project
       run: make --directory=ci test_opensuse
     - name: Test Install project
@@ -81,8 +93,10 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build env image
       run: make --directory=ci env_ubuntu
-    - name: Build project
+    - name: Build devel project
       run: make --directory=ci devel_ubuntu
+    - name: Build project
+      run: make --directory=ci build_ubuntu
     - name: Test project
       run: make --directory=ci test_ubuntu
     - name: Test Install project
