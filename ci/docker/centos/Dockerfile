@@ -36,8 +36,8 @@ RUN cmake --build build --target install
 
 # Create an install image
 FROM env AS install
-# Copy lib from devel to prod
-COPY --from=devel /usr/local /usr/local/
+# Copy lib from build to prod
+COPY --from=build /usr/local /usr/local/
 # Copy  sample
 WORKDIR /home/sample
 COPY ci/sample .

@@ -183,6 +183,7 @@ $(targets): test_%: build_%
 	${DOCKER_RUN_CMD} -t --name ${IMAGE}_$* ${IMAGE}:$*_build \
  cmake --build build --target test
 
+
 ## INSTALL ##
 # Build the instqll image.
 targets = $(addprefix install_, $(DISTROS))
@@ -208,19 +209,21 @@ targets = $(addprefix sh_install_, $(DISTROS))
 $(targets): sh_install_%: install_%
 	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$* ${IMAGE}:$*_install /bin/sh
 
-# TEST INSTALL
+
+## TEST INSTALL ##
+# Run tests.
 targets = $(addprefix test_install_, $(DISTROS))
 .PHONY: test_install $(targets)
 test_install: $(targets)
-$(targets): test_install_%: cache/%/docker_install.tar sample
-	@docker load -i cache/$*/docker_install.tar
+$(targets): test_install_%: install_%
 	${DOCKER_RUN_CMD} -t --name ${IMAGE}_$* ${IMAGE}:$*_install /bin/sh -c \
  "cmake -H. -Bbuild; \
  cmake --build build --target all; \
  cmake --build build --target test; \
  cmake --build build --target install"
 
-# CLEAN
+
+## CLEAN ##
 targets = $(addprefix clean_, $(DISTROS))
 .PHONY: clean $(targets)
 clean: $(targets)

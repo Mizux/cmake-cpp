@@ -1,6 +1,8 @@
 # Project Files unneeded by docker
-ci/cache
+ci/Makefile
 ci/docker
+ci/doc
+ci/cache
 .git
 .gitignore
 .github
