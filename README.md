@@ -81,9 +81,8 @@ Thus the project layout is as follow:
 # C++ Project Build
 To build the C++ project, as usual:
 ```sh
-mkdir build && cd build
-cmake ..
-make
+cmake -S. -Bbuild
+cmake --build build
 ```
 
 # Contributing
