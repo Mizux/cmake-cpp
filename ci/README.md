@@ -32,5 +32,6 @@ make test_alpine
 ```
 
 # Docker layers
+Dockerfile is splitted in several stages.
 
 ![docker](doc/deps.svg)
