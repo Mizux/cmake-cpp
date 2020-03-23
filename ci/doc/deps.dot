@@ -8,10 +8,10 @@ digraph DockerDeps {
   SRC [label="git repo", shape=folder];
 
   subgraph clusterDockerfile {
-    ENV_IMG [label="CMakeCpp:<distro>_env\nenv"];
-    DEVEL_IMG [label="CMakeCpp:<distro>_devel\ndevel"];
-    BUILD_IMG [label="CMakeCpp:<distro>_build\nbuild"];
-    INSTALL_IMG [label="CMakeCpp:<distro>_install\ninstall"];
+    ENV_IMG [label="cmake-cpp:<distro>_env\nenv"];
+    DEVEL_IMG [label="cmake-cpp:<distro>_devel\ndevel"];
+    BUILD_IMG [label="cmake-cpp:<distro>_build\nbuild"];
+    INSTALL_IMG [label="cmake-cpp:<distro>_install\ninstall"];
 
     ENV_IMG -> DEVEL_IMG;
     DEVEL_IMG -> BUILD_IMG;
