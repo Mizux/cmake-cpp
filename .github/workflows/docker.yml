@@ -81,7 +81,7 @@ jobs:
   OpenSuse:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
     - name: Build env image
       run: make --directory=ci opensuse_env
     - name: Build devel project
@@ -96,7 +96,7 @@ jobs:
   Ubuntu:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
     - name: Build env image
       run: make --directory=ci ubuntu_env
     - name: Build devel project
