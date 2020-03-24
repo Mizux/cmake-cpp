@@ -33,10 +33,25 @@ RUN cmake --build build --target all
 # CMake build
 RUN cmake --build build --target install
 
+# Run tests
+FROM build AS test
+RUN cmake --build build --target test
+
 # Create an install image
-FROM env AS install
+FROM env AS install_devel
 # Copy lib from build to prod
 COPY --from=build /usr/local /usr/local/
 # Copy  sample
 WORKDIR /home/sample
 COPY ci/sample .
+
+# Build sample
+FROM install_devel AS install_build
+# CMake configure
+RUN cmake -S. -Bbuild
+# CMake build
+RUN cmake --build build --target all -v
+
+# Test sample
+FROM install_build AS install_test
+RUN cmake --build build --target test

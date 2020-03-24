@@ -17,36 +17,20 @@ help:
 	@echo -e "${BOLD}MAKE TARGETS${RESET}"
 	@echo -e "\t${BOLD}help${RESET}: display this help and exit."
 	@echo
-	@echo -e "\t${BOLD}env${RESET}: build all env docker images."
-	@echo -e "\t${BOLD}env_<distro>${RESET}: build the env docker image for a specific distro."
-	@echo -e "\t${BOLD}save_env${RESET}: Save all env docker images."
-	@echo -e "\t${BOLD}save_env_<distro>${RESET}: Save the env docker image for a specific distro."
-	@echo -e "\t${BOLD}sh_env_<distro>${RESET}: run a container using the env docker image (debug purpose)."
+	@echo -e "\t${BOLD}<stage>${RESET}: build all <stage> docker images."
+	@echo -e "\t${BOLD}<distro>_<stage>${RESET}: build the <stage> docker image for a specific distro."
+	@echo -e "\t${BOLD}save_<stage>${RESET}: Save all <stage> docker images."
+	@echo -e "\t${BOLD}save_<distro>_<stage>${RESET}: Save the <stage> docker image for a specific distro."
+	@echo -e "\t${BOLD}sh_<distro>_<stage>${RESET}: run a container using the <stage> docker image (debug purpose)."
 	@echo
-	@echo -e "\t${BOLD}devel${RESET}: build all devel docker images."
-	@echo -e "\t${BOLD}devel_<distro>${RESET}: build the devel docker image for a specific distro."
-	@echo -e "\t${BOLD}save_devel${RESET}: Save all devel docker images."
-	@echo -e "\t${BOLD}save_devel_<distro>${RESET}: Save the devel docker image for a specific distro."
-	@echo -e "\t${BOLD}sh_devel_<distro>${RESET}: run a container using the devel docker image (debug purpose)."
-	@echo
-	@echo -e "\t${BOLD}build${RESET}: build all build docker images."
-	@echo -e "\t${BOLD}build_<distro>${RESET}: build the build docker image for a specific distro."
-	@echo -e "\t${BOLD}save_build${RESET}: Save all build docker images."
-	@echo -e "\t${BOLD}save_build_<distro>${RESET}: Save the build docker image for a specific distro."
-	@echo -e "\t${BOLD}sh_build_<distro>${RESET}: run a container using the build docker image (debug purpose)."
-	@echo
-	@echo -e "\t${BOLD}test${RESET}: test using all build docker images."
-	@echo -e "\t${BOLD}test_<distro>${RESET}: test using the build image."
-	@echo -e "\t${BOLD}sh_<distro>${RESET}: run a container using the devel image (debug purpose)."
-	@echo
-	@echo -e "\t${BOLD}install${RESET}: execute the cmake target ${BOLD}install${RESET} using all devel image container, then create an install image with it."
-	@echo -e "\t${BOLD}install_<distro>${RESET}: execute the cmake target ${BOLD}install${RESET} using the devel image container specified, then create an install image with it."
-	@echo -e "\t${BOLD}test_install${RESET}: configure, build, install then test a sample project against it using all ${BOLD}install${RESET} image containers."
-	@echo -e "\t${BOLD}test_install_<distro>${RESET}: configure, build, install then test a sample project against it using the ${BOLD}install${RESET} image container specified."
-	@echo -e "\t${BOLD}sh_install_<distro>${RESET}: run a container using the install image (debug purpose)."
-	@echo
-	@echo -e "\t${BOLD}clean${RESET}: Remove cache and docker image."
-	@echo -e "\t${BOLD}clean_<distro>${RESET}: Remove cache and docker image for the specified distro."
+	@echo -e "\t${BOLD}<stage>${RESET}:"
+	@echo -e "\t\t${BOLD}env${RESET}"
+	@echo -e "\t\t${BOLD}devel${RESET}"
+	@echo -e "\t\t${BOLD}build${RESET}"
+	@echo -e "\t\t${BOLD}test${RESET}"
+	@echo -e "\t\t${BOLD}install_devel${RESET}"
+	@echo -e "\t\t${BOLD}install_build${RESET}"
+	@echo -e "\t\t${BOLD}install_test${RESET}"
 	@echo
 	@echo -e "\t${BOLD}<distro>${RESET}:"
 	@echo -e "\t\t${BOLD}alpine${RESET} (edge)"
@@ -56,7 +40,10 @@ help:
 	@echo -e "\t\t${BOLD}fedora${RESET} (latest)"
 	@echo -e "\t\t${BOLD}opensuse${RESET} (tumbleweed)"
 	@echo -e "\t\t${BOLD}ubuntu${RESET} (rolling)"
-	@echo -e "\te.g. 'make test_ubuntu'"
+	@echo -e "\te.g. 'make ubuntu_test'"
+	@echo
+	@echo -e "\t${BOLD}clean${RESET}: Remove cache and ALL docker images."
+	@echo -e "\t${BOLD}clean_<distro>${RESET}: Remove cache and docker images for the specified distro."
 	@echo
 	@echo -e "\t${BOLD}NOCACHE=1${RESET}: use 'docker build --no-cache' when building container (default use cache)."
 	@echo
@@ -95,132 +82,186 @@ DISTROS = alpine archlinux centos debian fedora opensuse ubuntu
 # $< first prerequist
 # $@ target name
 
-
 ## ENV ##
 # Build the env image.
-targets = $(addprefix env_, $(DISTROS))
+targets = $(addsuffix _env, $(DISTROS))
 .PHONY: env $(targets)
 env: $(targets)
-$(targets): env_%: docker/%/Dockerfile
+$(targets): %_env: docker/%/Dockerfile
 	#@docker image rm -f ${IMAGE}:$*_env 2>/dev/null
-	${DOCKER_BUILD_CMD} --target=env --tag ${IMAGE}:$*_env -f $< docker/$*
+	${DOCKER_BUILD_CMD} --target=env --tag ${IMAGE}:$*_env -f $< ..
 
 # Save the env image (debug).
-targets = $(addprefix save_env_, $(DISTROS))
+targets = $(addprefix save_, $(addsuffix _env, $(DISTROS)))
 .PHONY: save_env $(targets)
 save_env: $(targets)
-$(targets): save_env_%: cache/%/docker_env.tar
-cache/%/docker_env.tar: env_%
+$(targets): save_%_env: cache/%/docker_env.tar
+cache/%/docker_env.tar: %_env
 	@rm -f $@
 	mkdir -p cache/$*
 	docker save ${IMAGE}:$*_env -o $@
 
 # Run a container using the env image (debug).
-targets = $(addprefix sh_env_, $(DISTROS))
+targets = $(addprefix sh_, $(addsuffix _env, $(DISTROS)))
 .PHONY: $(targets)
-$(targets): sh_env_%: env_%
-	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$* ${IMAGE}:$*_env /bin/sh
+$(targets): sh_%_env: %_env
+	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$*_env ${IMAGE}:$*_env /bin/sh
 
 
 ## DEVEL ##
 # Build the devel image.
-targets = $(addprefix devel_, $(DISTROS))
+targets = $(addsuffix _devel, $(DISTROS))
 .PHONY: devel $(targets)
 devel: $(targets)
-$(targets): devel_%: docker/%/Dockerfile ../CMakeLists.txt ../cmake
+$(targets): %_devel: docker/%/Dockerfile
 	#@docker image rm -f ${IMAGE}:$*_devel 2>/dev/null
 	${DOCKER_BUILD_CMD} --target=devel --tag ${IMAGE}:$*_devel -f $< ..
 
 # Save the devel image (debug).
-targets = $(addprefix save_devel_, $(DISTROS))
+targets = $(addprefix save_, $(addsuffix _devel, $(DISTROS)))
 .PHONY: save_devel $(targets)
 save_devel: $(targets)
-$(targets): save_devel_%: cache/%/docker_devel.tar
-cache/%/docker_devel.tar: devel_%
+$(targets): save_%_devel: cache/%/docker_devel.tar
+cache/%/docker_devel.tar: %_devel
 	@rm -f $@
 	mkdir -p cache/$*
 	docker save ${IMAGE}:$*_devel -o $@
 
 # Run a container using the devel image (debug).
-targets = $(addprefix sh_devel_, $(DISTROS))
+targets = $(addprefix sh_, $(addsuffix _devel, $(DISTROS)))
 .PHONY: $(targets)
-$(targets): sh_devel_%: devel_%
-	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$* ${IMAGE}:$*_devel /bin/sh
+$(targets): sh_%_devel: %_devel
+	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$*_devel ${IMAGE}:$*_devel /bin/sh
 
 
 ## BUILD ##
 # Build the build image.
-targets = $(addprefix build_, $(DISTROS))
+targets = $(addsuffix _build, $(DISTROS))
 .PHONY: build $(targets)
 build: $(targets)
-$(targets): build_%: docker/%/Dockerfile ../CMakeLists.txt ../cmake
+$(targets): %_build: docker/%/Dockerfile
 	#@docker image rm -f ${IMAGE}:$*_build 2>/dev/null
 	${DOCKER_BUILD_CMD} --target=build --tag ${IMAGE}:$*_build -f $< ..
 
 # Save the build image (debug).
-targets = $(addprefix save_build_, $(DISTROS))
+targets = $(addprefix save_, $(addsuffix _build, $(DISTROS)))
 .PHONY: save_build $(targets)
 save_build: $(targets)
-$(targets): save_build_%: cache/%/docker_build.tar
-cache/%/docker_build.tar: build_%
+$(targets): save_%_build: cache/%/docker_build.tar
+cache/%/docker_build.tar: %_build
 	@rm -f $@
 	mkdir -p cache/$*
 	docker save ${IMAGE}:$*_build -o $@
 
 # Run a container using the build image (debug).
-targets = $(addprefix sh_build_, $(DISTROS))
+targets = $(addprefix sh_, $(addsuffix _build, $(DISTROS)))
 .PHONY: $(targets)
-$(targets): sh_build_%: build_%
-	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$* ${IMAGE}:$*_build /bin/sh
+$(targets): sh_%_build: %_build
+	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$*_build ${IMAGE}:$*_build /bin/sh
 
 
 ## TEST ##
-# Run the tests.
-targets = $(addprefix test_, $(DISTROS))
+# Build the test image.
+targets = $(addsuffix _test, $(DISTROS))
 .PHONY: test $(targets)
 test: $(targets)
-$(targets): test_%: build_%
-	${DOCKER_RUN_CMD} -t --name ${IMAGE}_$* ${IMAGE}:$*_build \
- cmake --build build --target test
+$(targets): %_test: docker/%/Dockerfile
+	#@docker image rm -f ${IMAGE}:$*_test 2>/dev/null
+	${DOCKER_BUILD_CMD} --target=test --tag ${IMAGE}:$*_test -f $< ..
 
-
-## INSTALL ##
-# Build the instqll image.
-targets = $(addprefix install_, $(DISTROS))
-.PHONY: install $(targets)
-install: $(targets)
-$(targets): install_%: docker/%/Dockerfile sample
-	#@docker image rm -f ${IMAGE}:$*_install 2>/dev/null
-	${DOCKER_BUILD_CMD} --target=install --tag ${IMAGE}:$*_install -f $< ..
-
-# Save the install image (debug).
-targets = $(addprefix save_install_, $(DISTROS))
-.PHONY: save_install $(targets)
-save_install: $(targets)
-$(targets): save_install_%: cache/%/docker_install.tar
-cache/%/docker_install.tar: install_% \
+# Save the test image (debug).
+targets = $(addprefix save_, $(addsuffix _test, $(DISTROS)))
+.PHONY: save_test $(targets)
+save_test: $(targets)
+$(targets): save_%_test: cache/%/docker_test.tar
+cache/%/docker_test.tar: %_test
 	@rm -f $@
 	mkdir -p cache/$*
-	docker save ${IMAGE}:$*_install -o $@
+	docker save ${IMAGE}:$*_test -o $@
 
-# Run a container using the install image (debug).
-targets = $(addprefix sh_install_, $(DISTROS))
+# Run a container using the test image (debug).
+targets = $(addprefix sh_, $(addsuffix _test, $(DISTROS)))
 .PHONY: $(targets)
-$(targets): sh_install_%: install_%
-	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$* ${IMAGE}:$*_install /bin/sh
+$(targets): sh_%_test: %_test
+	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$*_test ${IMAGE}:$*_test /bin/sh
 
 
-## TEST INSTALL ##
-# Run tests.
-targets = $(addprefix test_install_, $(DISTROS))
-.PHONY: test_install $(targets)
-test_install: $(targets)
-$(targets): test_install_%: install_%
-	${DOCKER_RUN_CMD} -t --name ${IMAGE}_$* ${IMAGE}:$*_install /bin/sh -c \
- "cmake -H. -Bbuild; \
- cmake --build build --target all; \
- cmake --build build --target test; \
- cmake --build build --target install"
+## INSTALL_DEVEL ##
+# Build the install_devel image.
+targets = $(addsuffix _install_devel, $(DISTROS))
+.PHONY: install_devel $(targets)
+install_devel: $(targets)
+$(targets): %_install_devel: docker/%/Dockerfile
+	#@docker image rm -f ${IMAGE}:$*_install_devel 2>/dev/null
+	${DOCKER_BUILD_CMD} --target=install_devel --tag ${IMAGE}:$*_install_devel -f $< ..
+
+# Save the install_devel image (debug).
+targets = $(addprefix save_, $(addsuffix _install_devel, $(DISTROS)))
+.PHONY: save_install_devel $(targets)
+save_install_devel: $(targets)
+$(targets): save_%_install_devel: cache/%/docker_install_devel.tar
+cache/%/docker_install_devel.tar: %_install_devel
+	@rm -f $@
+	mkdir -p cache/$*
+	docker save ${IMAGE}:$*_install_devel -o $@
+
+# Run a container using the install_devel image (debug).
+targets = $(addprefix sh_, $(addsuffix _install_devel, $(DISTROS)))
+.PHONY: $(targets)
+$(targets): sh_%_install_devel: %_install_devel
+	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$*_install_devel ${IMAGE}:$*_install_devel /bin/sh
+
+
+## INSTALL_BUILD ##
+# Build the install_build image.
+targets = $(addsuffix _install_build, $(DISTROS))
+.PHONY: install_build $(targets)
+install_build: $(targets)
+$(targets): %_install_build: docker/%/Dockerfile
+	#@docker image rm -f ${IMAGE}:$*_install_build 2>/dev/null
+	${DOCKER_BUILD_CMD} --target=install_build --tag ${IMAGE}:$*_install_build -f $< ..
+
+# Save the install_build image (debug).
+targets = $(addprefix save_, $(addsuffix _install_build, $(DISTROS)))
+.PHONY: save_install_build $(targets)
+save_install_build: $(targets)
+$(targets): save_%_install_build: cache/%/docker_install_build.tar
+cache/%/docker_install_build.tar: %_install_build
+	@rm -f $@
+	mkdir -p cache/$*
+	docker save ${IMAGE}:$*_install_build -o $@
+
+# Run a container using the install_build image (debug).
+targets = $(addprefix sh_, $(addsuffix _install_build, $(DISTROS)))
+.PHONY: $(targets)
+$(targets): sh_%_install_build: %_install_build
+	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$*_install_build ${IMAGE}:$*_install_build /bin/sh
+
+
+## INSTALL_TEST ##
+# Build the install_test image.
+targets = $(addsuffix _install_test, $(DISTROS))
+.PHONY: install_test $(targets)
+install_test: $(targets)
+$(targets): %_install_test: docker/%/Dockerfile
+	#@docker image rm -f ${IMAGE}:$*_install_test 2>/dev/null
+	${DOCKER_BUILD_CMD} --target=install_test --tag ${IMAGE}:$*_install_test -f $< ..
+
+# Save the install_test image (debug).
+targets = $(addprefix save_, $(addsuffix _install_test, $(DISTROS)))
+.PHONY: save_install_test $(targets)
+save_install_test: $(targets)
+$(targets): save_%_install_test: cache/%/docker_install_test.tar
+cache/%/docker_install_test.tar: %_install_test
+	@rm -f $@
+	mkdir -p cache/$*
+	docker save ${IMAGE}:$*_install_test -o $@
+
+# Run a container using the install_test image (debug).
+targets = $(addprefix sh_, $(addsuffix _install_test, $(DISTROS)))
+.PHONY: $(targets)
+$(targets): sh_%_install_test: %_install_test
+	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$*_install_test ${IMAGE}:$*_install_test /bin/sh
 
 
 ## CLEAN ##
@@ -231,11 +272,17 @@ clean: $(targets)
 $(targets): clean_%:
 	docker container prune -f
 	docker image prune -f
-	-docker image rm -f ${IMAGE}:$*_install 2>/dev/null
+	-docker image rm -f ${IMAGE}:$*_install_test 2>/dev/null
+	-docker image rm -f ${IMAGE}:$*_install_build 2>/dev/null
+	-docker image rm -f ${IMAGE}:$*_install_devel 2>/dev/null
+	-docker image rm -f ${IMAGE}:$*_test 2>/dev/null
 	-docker image rm -f ${IMAGE}:$*_build 2>/dev/null
 	-docker image rm -f ${IMAGE}:$*_devel 2>/dev/null
 	-docker image rm -f ${IMAGE}:$*_env 2>/dev/null
-	-rm -f cache/$*/docker_install.tar
+	-rm -f cache/$*/docker_install_test.tar
+	-rm -f cache/$*/docker_install_build.tar
+	-rm -f cache/$*/docker_install_devel.tar
+	-rm -f cache/$*/docker_test.tar
 	-rm -f cache/$*/docker_build.tar
 	-rm -f cache/$*/docker_devel.tar
 	-rm -f cache/$*/docker_env.tar
