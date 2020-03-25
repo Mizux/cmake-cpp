@@ -272,20 +272,10 @@ clean: $(targets)
 $(targets): clean_%:
 	docker container prune -f
 	docker image prune -f
-	-docker image rm -f ${IMAGE}:$*_install_test 2>/dev/null
-	-docker image rm -f ${IMAGE}:$*_install_build 2>/dev/null
-	-docker image rm -f ${IMAGE}:$*_install_devel 2>/dev/null
-	-docker image rm -f ${IMAGE}:$*_test 2>/dev/null
-	-docker image rm -f ${IMAGE}:$*_build 2>/dev/null
-	-docker image rm -f ${IMAGE}:$*_devel 2>/dev/null
-	-docker image rm -f ${IMAGE}:$*_env 2>/dev/null
-	-rm -f cache/$*/docker_install_test.tar
-	-rm -f cache/$*/docker_install_build.tar
-	-rm -f cache/$*/docker_install_devel.tar
-	-rm -f cache/$*/docker_test.tar
-	-rm -f cache/$*/docker_build.tar
-	-rm -f cache/$*/docker_devel.tar
-	-rm -f cache/$*/docker_env.tar
+	-for s in install_test install_build install_devel test build devel env; do \
+ docker image rm -f ${IMAGE}:$*_$$s 2>/dev/null; \
+ rm -f cache/$*/docker_$$s.tar; \
+ done
 	-rmdir cache/$*
 
 .PHONY: distclean
