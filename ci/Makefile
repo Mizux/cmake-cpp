@@ -28,6 +28,7 @@ help:
 	@echo -e "\t\t${BOLD}devel${RESET}"
 	@echo -e "\t\t${BOLD}build${RESET}"
 	@echo -e "\t\t${BOLD}test${RESET}"
+	@echo -e "\t\t${BOLD}install_env${RESET}"
 	@echo -e "\t\t${BOLD}install_devel${RESET}"
 	@echo -e "\t\t${BOLD}install_build${RESET}"
 	@echo -e "\t\t${BOLD}install_test${RESET}"
@@ -82,7 +83,7 @@ DISTROS = alpine archlinux centos debian fedora opensuse ubuntu
 # $< first prerequist
 # $@ target name
 
-STAGES = env devel build test install_devel install_build install_test
+STAGES = env devel build test install_env install_devel install_build install_test
 define make-stage-target
 $(info STAGE: $1)
 $(info Create targets: $1 $(addsuffix _$1, $(DISTROS)).)
