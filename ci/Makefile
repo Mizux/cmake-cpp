@@ -54,7 +54,7 @@ help:
 # Need to add cmd_distro to PHONY otherwise target are ignored since they do not
 # contain recipe (using FORCE do not work here)
 .PHONY: all
-all: devel
+all: build
 
 # Delete all implicit rules to speed up makefile
 MAKEFLAGS += --no-builtin-rules
