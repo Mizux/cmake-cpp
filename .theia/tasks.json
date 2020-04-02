@@ -1,0 +1,12 @@
+{
+    "tasks": [
+        {
+            "label": "compile example",
+            "type": "shell",
+            "command": "cmake --build build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        }
+    ]
+}

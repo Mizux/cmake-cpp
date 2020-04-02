@@ -1,8 +1,8 @@
 {
    "cpp.buildConfigurations": [
       {
-         "name": "Debug",
-         "directory": "/workspace/cmake-cpp/build"
+         "name": "Release",
+         "directory": "build"
       }
    ],
    "cpp.clangdArgs": "--background-index",
