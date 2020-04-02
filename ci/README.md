@@ -34,7 +34,7 @@ make test_alpine
 # Docker layers
 Dockerfile is splitted in several stages.
 
-![docker](doc/deps.svg)
+![docker](doc/docker.svg)
 
 # Custom CMake install
 To control the version of CMake, instead of using the version provided by the
