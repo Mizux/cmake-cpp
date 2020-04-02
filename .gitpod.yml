@@ -1,0 +1,7 @@
+tasks:
+  - init: cmake -S. -Bbuild
+
+vscode:
+  extensions:
+    - ms-vscode.cpptools@0.27.0
+
