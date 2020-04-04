@@ -3,107 +3,22 @@ name: Docker
 on: [push, pull_request]
 
 jobs:
-  Alpine:
+  Distros:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        distro: [alpine, archlinux, centos, debian, fedora, opensuse, ubuntu]
+    env:
+      DISTRO: ${{ matrix.distro }}
     steps:
     - uses: actions/checkout@v2
     - name: Build env image
-      run: make --directory=ci alpine_env
+      run: make --directory=ci ${DISTRO}_env
     - name: Build devel project
-      run: make --directory=ci alpine_devel
+      run: make --directory=ci ${DISTRO}_devel
     - name: Build project
-      run: make --directory=ci alpine_build
+      run: make --directory=ci ${DISTRO}_build
     - name: Test project
-      run: make --directory=ci alpine_test
+      run: make --directory=ci ${DISTRO}_test
     - name: Test Install project
-      run: make --directory=ci alpine_install_test
-
-  Archlinux:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build env image
-      run: make --directory=ci archlinux_env
-    - name: Build devel project
-      run: make --directory=ci archlinux_devel
-    - name: Build project
-      run: make --directory=ci archlinux_build
-    - name: Test project
-      run: make --directory=ci archlinux_test
-    - name: Test Install project
-      run: make --directory=ci archlinux_install_test
-
-  Centos:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build env image
-      run: make --directory=ci centos_env
-    - name: Build devel project
-      run: make --directory=ci centos_devel
-    - name: Build project
-      run: make --directory=ci centos_build
-    - name: Test project
-      run: make --directory=ci centos_test
-    - name: Test Install project
-      run: make --directory=ci centos_install_test
-
-  Debian:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build env image
-      run: make --directory=ci debian_env
-    - name: Build devel project
-      run: make --directory=ci debian_devel
-    - name: Build project
-      run: make --directory=ci debian_build
-    - name: Test project
-      run: make --directory=ci debian_test
-    - name: Test Install project
-      run: make --directory=ci debian_install_test
-
-  Fedora:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build env image
-      run: make --directory=ci fedora_env
-    - name: Build devel project
-      run: make --directory=ci fedora_devel
-    - name: Build project
-      run: make --directory=ci fedora_build
-    - name: Test project
-      run: make --directory=ci fedora_test
-    - name: Test Install project
-      run: make --directory=ci fedora_install_test
-
-  OpenSuse:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build env image
-      run: make --directory=ci opensuse_env
-    - name: Build devel project
-      run: make --directory=ci opensuse_devel
-    - name: Build project
-      run: make --directory=ci opensuse_build
-    - name: Test project
-      run: make --directory=ci opensuse_test
-    - name: Test Install project
-      run: make --directory=ci opensuse_install_test
-
-  Ubuntu:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build env image
-      run: make --directory=ci ubuntu_env
-    - name: Build devel project
-      run: make --directory=ci ubuntu_devel
-    - name: Build project
-      run: make --directory=ci ubuntu_build
-    - name: Test project
-      run: make --directory=ci ubuntu_test
-    - name: Test Install project
-      run: make --directory=ci ubuntu_install_test
+      run: make --directory=ci ${DISTRO}_install_test
