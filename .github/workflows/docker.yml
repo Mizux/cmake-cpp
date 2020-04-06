@@ -8,6 +8,7 @@ jobs:
     strategy:
       matrix:
         distro: [alpine, archlinux, centos, debian, fedora, opensuse, ubuntu]
+      fail-fast: false
     env:
       DISTRO: ${{ matrix.distro }}
     steps:
