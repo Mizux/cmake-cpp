@@ -8,7 +8,7 @@ RUN pacman -Syu --noconfirm git base-devel cmake
 CMD [ "/bin/sh" ]
 
 FROM env AS devel
-WORKDIR /home/lib
+WORKDIR /home/project
 COPY . .
 
 FROM devel AS build

@@ -8,7 +8,7 @@ RUN apk add --no-cache git build-base cmake
 CMD [ "/bin/sh" ]
 
 FROM env AS devel
-WORKDIR /home/lib
+WORKDIR /home/project
 COPY . .
 
 FROM devel AS build

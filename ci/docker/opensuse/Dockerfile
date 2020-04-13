@@ -11,7 +11,7 @@ ENV CC=gcc CXX=g++
 CMD [ "/bin/sh" ]
 
 FROM env AS devel
-WORKDIR /home/lib
+WORKDIR /home/project
 COPY . .
 
 FROM devel AS build
