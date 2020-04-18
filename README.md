@@ -1,5 +1,3 @@
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/Mizux/cmake-cpp)
-
 Github-CI:
 [![Build Status][github_docker_status]][github_docker_link]
 [![Build Status][github_linux_status]][github_linux_link]
