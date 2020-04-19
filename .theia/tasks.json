@@ -1,7 +1,7 @@
 {
     "tasks": [
         {
-            "label": "compile example",
+            "label": "Debug Build",
             "type": "shell",
             "command": "cmake --build build",
             "options": {
