@@ -74,7 +74,8 @@ else
 DOCKER_BUILD_CMD := docker build
 endif
 
-DOCKER_RUN_CMD := docker run --rm --init --net=host
+DOCKER_RUN_CMD := docker run --rm --init \
+ --net=host
 
 # Currently supported distro
 DISTROS = alpine archlinux centos debian fedora opensuse ubuntu
@@ -108,7 +109,7 @@ cache/%/docker_$1.tar: %_$1
 sh_targets_$1 = $(addprefix sh_, $(addsuffix _$1, $(DISTROS)))
 .PHONY: $(sh_targets_$1)
 $$(sh_targets_$1): sh_%_$1: %_$1
-	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$$*_$1 ${IMAGE}:$$*_$1 /bin/sh
+	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$$*_$1 ${IMAGE}:$$*_$1
 
 #$$(info Create targets: $(addprefix clean_, $(addsuffix _$1, $(DISTROS))).)
 clean_targets_$1 = $(addprefix clean_, $(addsuffix _$1, $(DISTROS)))

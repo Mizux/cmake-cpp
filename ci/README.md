@@ -10,9 +10,6 @@ cons:
 * Only GNU/Linux distro supported.
 * Could take few GiB (~30 GiB for all distro and all languages)
   * ~500MiB OS + C++/CMake tools,
-  * ~150 MiB Python,
-  * ~400 MiB dotnet-sdk,
-  * ~400 MiB java-jdk.
 
 # Usage
 To get the help simply type:
@@ -28,7 +25,7 @@ make --directory=ci
 ## Example
 For example to test inside an `Alpine` container:
 ```sh
-make test_alpine
+make alpine_test
 ```
 
 # Docker layers
@@ -38,7 +35,7 @@ Dockerfile is splitted in several stages.
 
 # Custom CMake install
 To control the version of CMake, instead of using the version provided by the
-distro packafe manager, you can rebuild it (slower) using the following snippet:
+distro package manager, you can rebuild it (slower) using the following snippet:
 ```Dockerfile
 # Install CMake 3.16.4
 RUN wget "https://cmake.org/files/v3.16/cmake-3.16.4.tar.gz" \

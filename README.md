@@ -29,12 +29,18 @@ Appveyor-CI:
 [appveyor_link]: https://ci.appveyor.com/project/Mizux/cmake-cpp/branch/master
 
 # Introduction
-
+<nav for="project"> |
+<a href="#dependencies">Dependencies</a> |
+<a href="#codemap">Codemap</a> |
+<a href="#build">Build</a> |
+<a href="ci/README.md">CI</a> |
+<a href="#license">License</a> |
+</nav>
 This is an example of how to create a Modern [CMake](https://cmake.org/) C++ Project.
 
 This project should run on Linux, Mac and Windows.
 
-# CMake Dependencies Tree
+# [Dependencies Tree](#dependencies)
 To complexify a little, the CMake project is composed of three libraries (Foo, Bar and FooBar)
 with the following dependencies:  
 ```sh
@@ -46,53 +52,49 @@ FooBarApp: PRIVATE FooBar
 
 note: Since `Foo` is a public dependency of `FooBar`, then `FooBarApp` will
 *see* `Foo` inlude directories
-## Project directory layout
-Thus the project layout is as follow:
-```sh
- CMakeLists.txt // meta CMake doing the orchestration
- Foo
- ├── CMakeLists.txt
- ├── include
- │   └── foo
- │       └── Foo.hpp
- └── src
-     └── Foo.cpp
- Bar
- ├── CMakeLists.txt
- ├── include
- │   └── bar
- │       └── Bar.hpp
- └── src
-     └── Bar.cpp
- FooBar
- ├── CMakeLists.txt
- ├── include
- │   └── foobar
- │       └── FooBar.hpp
- └── src
-     ├── FooBar.cpp
-     └── main.cpp
- FooBarApp
- ├── CMakeLists.txt
- └── src
-     └── main.cpp
-```
 
-# C++ Project Build
+# [Project directory layout](#codemap)
+Thus the project layout is as follow:
+
+* [CMakeLists.txt](CMakeLists.txt) Top-level for [CMake](https://cmake.org/cmake/help/latest/) based build.
+* [cmake](cmake) Subsidiary CMake files.
+
+* [ci](ci) Root directory for continuous integration.
+
+* [Foo](Foo) Root directory for `Foo` library.
+  * [CMakeLists.txt](Foo/CMakeLists.txt) for `Foo`.
+  * [include](Foo/include) public folder.
+    * [foo](Foo/include/foo)
+      * [Foo.hpp](Foo/include/foo/Foo.hpp)
+  * [src](Foo/src) private folder.
+    * [src/Foo.cpp](Foo/src/Foo.cpp)
+* [Bar](Bar) Root directory for `Bar` library.
+  * [CMakeLists.txt](Bar/CMakeLists.txt) for `Bar`.
+  * [include](Bar/include) public folder.
+    * [bar](Bar/include/bar)
+      * [Bar.hpp](Bar/include/bar/Bar.hpp)
+  * [src](Bar/src) private folder.
+    * [src/Bar.cpp](Bar/src/Bar.cpp)
+* [FooBar](FooBar) Root directory for `FooBar` library.
+  * [CMakeLists.txt](FooBar/CMakeLists.txt) for `FooBar`.
+  * [include](FooBar/include) public folder.
+    * [foobar](FooBar/include/foobar)
+      * [FooBar.hpp](FooBar/include/foobar/FooBar.hpp)
+  * [src](FooBar/src) private folder.
+    * [src/FooBar.cpp](FooBar/src/FooBar.cpp)
+* [FooBarApp](FooBarApp) Root directory for `FooBarApp` executable.
+  * [CMakeLists.txt](FooBarApp/CMakeLists.txt) for `FooBarApp`.
+  * [src](FooBarApp/src) private folder.
+    * [src/main.cpp](FooBarApp/src/main.cpp)
+
+# [C++ Project Build](#build)
 To build the C++ project, as usual:
 ```sh
 cmake -S. -Bbuild
 cmake --build build
 ```
 
-# Contributing
-
-The [CONTRIBUTING.md](./CONTRIBUTING.md) file contains instructions on how to
-file the Contributor License Agreement before sending any pull requests (PRs).
-Of course, if you're new to the project, it's usually best to discuss any
-proposals and reach consensus before sending your first PR.
-
-# License
+# [License](#license)
 
 Apache 2. See the LICENSE file for details.
 
