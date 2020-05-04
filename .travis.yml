@@ -19,10 +19,10 @@ install:
   # See https://docs.travis-ci.com/user/caching/#ccache-on-macos
   - if [ $TRAVIS_OS_NAME == osx ]; then brew install ccache; export PATH="/usr/local/opt/ccache/libexec:$PATH"; fi
   - if [ $TRAVIS_OS_NAME == linux ]; then
-    wget "https://cmake.org/files/v3.16/cmake-3.16.4-Linux-x86_64.sh"
-    && chmod a+x cmake-3.16.4-Linux-x86_64.sh
-    && sudo ./cmake-3.16.4-Linux-x86_64.sh --prefix=/usr/local/ --skip-license
-    && rm cmake-3.16.4-Linux-x86_64.sh
+    wget "https://cmake.org/files/v3.17/cmake-3.17.2-Linux-x86_64.sh"
+    && chmod a+x cmake-3.17.2-Linux-x86_64.sh
+    && sudo ./cmake-3.17.2-Linux-x86_64.sh --prefix=/usr/local/ --skip-license
+    && rm cmake-3.17.2-Linux-x86_64.sh
     && export PATH=/usr/local/bin:"${PATH}";
     fi
 
