@@ -8,10 +8,10 @@ set_target_properties(FooBarApp PROPERTIES
 # note: macOS is APPLE and also UNIX !
 if(APPLE)
   set_target_properties(FooBarApp PROPERTIES
-    INSTALL_RPATH "@loader_path/../lib")
+    INSTALL_RPATH "@loader_path/../${CMAKE_INSTALL_LIBDIR}")
 elseif(UNIX AND NOT APPLE)
   set_target_properties(FooBarApp PROPERTIES
-    INSTALL_RPATH "$ORIGIN/../lib")
+    INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}")
 endif()
 target_link_libraries(FooBarApp PRIVATE ${PROJECT_NAME}::FooBar)
 add_executable(${PROJECT_NAME}::FooBarApp ALIAS FooBarApp)
