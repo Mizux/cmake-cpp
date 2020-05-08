@@ -9,10 +9,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Configure
-      run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+      run: cmake -S. -Bbuild -G "Xcode" -DCMAKE_CONFIGURATION_TYPES=Release
     - name: Build
-      run: cmake --build build --config Release --target all -v
+      run: cmake --build build --config Release --target ALL_BUILD -v
     - name: Test
-      run: cmake --build build --config Release --target test -v
+      run: cmake --build build --config Release --target RUN_TESTS -v
     - name: Install
       run: cmake --build build --config Release --target install -v
