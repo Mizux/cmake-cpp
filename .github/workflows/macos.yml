@@ -4,10 +4,12 @@ on: [push, pull_request]
 
 jobs:
   # Building using the github runner environement directly.
-  build-macos:
+  xcode:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Check cmake
+      run: cmake --version
     - name: Configure
       run: cmake -S. -Bbuild -G "Xcode" -DCMAKE_CONFIGURATION_TYPES=Release
     - name: Build
@@ -16,3 +18,17 @@ jobs:
       run: cmake --build build --config Release --target RUN_TESTS -v
     - name: Install
       run: cmake --build build --config Release --target install -v
+  make:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check cmake
+      run: cmake --version
+    - name: Configure
+      run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+    - name: Build
+      run: cmake --build build --target all -v
+    - name: Test
+      run: cmake --build build --target test -v
+    - name: Install
+      run: cmake --build build --target install -v
