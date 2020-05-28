@@ -57,7 +57,7 @@ class Bar {
   std::string operator()() const;
 
  private:
-  int _intValue = 0;
+  int     _intValue   = 0;
   int64_t _int64Value = 0;
 };
 } // namespace bar
