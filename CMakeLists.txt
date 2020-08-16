@@ -23,16 +23,6 @@ if(POLICY CMP0077)
   cmake_policy(SET CMP0077 NEW)
 endif()
 
-# SWIG: use standard target name.
-if(POLICY CMP0078)
-  cmake_policy(SET CMP0078 NEW)
-endif()
-
-# SWIG: use SWIG_MODULE_NAME property.
-if(POLICY CMP0086)
-  cmake_policy(SET CMP0086 NEW)
-endif()
-
 project(CMakeCpp VERSION 1.0 LANGUAGES CXX)
 message(STATUS "project: ${PROJECT_NAME}")
 message(STATUS "version: ${PROJECT_VERSION}")
