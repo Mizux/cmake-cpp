@@ -10,16 +10,16 @@ Travis-CI:
 Appveyor-CI:
 [![Build Status][appveyor_status]][appveyor_link]
 
-[github_docker_status]: https://github.com/Mizux/cmake-cpp/workflows/Docker/badge.svg
+[github_docker_status]: https://github.com/Mizux/cmake-cpp/workflows/Docker/badge.svg?branch=master
 [github_docker_link]: https://github.com/Mizux/cmake-cpp/actions?query=workflow%3ADocker
 
-[github_linux_status]: https://github.com/Mizux/cmake-cpp/workflows/Linux/badge.svg
+[github_linux_status]: https://github.com/Mizux/cmake-cpp/workflows/Linux/badge.svg?branch=master
 [github_linux_link]: https://github.com/Mizux/cmake-cpp/actions?query=workflow%3ALinux
 
-[github_macos_status]: https://github.com/Mizux/cmake-cpp/workflows/MacOS/badge.svg
+[github_macos_status]: https://github.com/Mizux/cmake-cpp/workflows/MacOS/badge.svg?branch=master
 [github_macos_link]: https://github.com/Mizux/cmake-cpp/actions?query=workflow%3AMacOS
 
-[github_windows_status]: https://github.com/Mizux/cmake-cpp/workflows/Windows/badge.svg
+[github_windows_status]: https://github.com/Mizux/cmake-cpp/workflows/Windows/badge.svg?branch=master
 [github_windows_link]: https://github.com/Mizux/cmake-cpp/actions?query=workflow%3AWindows
 
 [travis_status]: https://travis-ci.com/Mizux/cmake-cpp.svg?branch=master
