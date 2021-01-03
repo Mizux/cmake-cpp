@@ -4,12 +4,12 @@ FROM opensuse/tumbleweed AS env
 LABEL maintainer="mizux.dev@gmail.com"
 # Install system build dependencies
 ENV PATH=/usr/local/bin:$PATH
-RUN zypper update -y \
-&& zypper install -y git gcc gcc-c++ cmake \
+RUN zypper up -y \
+&& zypper install -y git patch gcc gcc-c++ cmake \
 && zypper clean -a
 ENV CC=gcc CXX=g++
-CMD [ "/bin/sh" ]
 
+# Add the library src to our build env
 FROM env AS devel
 WORKDIR /home/project
 COPY . .
@@ -18,11 +18,12 @@ FROM devel AS build
 RUN cmake -version
 RUN cmake -S. -Bbuild
 RUN cmake --build build --target all -v
-RUN cmake --build build --target install
+RUN cmake --build build --target install -v
 
 FROM build AS test
 RUN cmake --build build --target test
 
+# Test install rules
 FROM env AS install_env
 COPY --from=build /usr/local /usr/local/
 

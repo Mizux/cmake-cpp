@@ -1,5 +1,6 @@
-#include <foobar/FooBar.hpp>
 #include <iostream>
+
+#include <foobar/FooBar.hpp>
 
 int main(int /*argc*/, char** /*argv*/) {
   foobar::foobarHello(1);

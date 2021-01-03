@@ -9,8 +9,8 @@ RUN dnf -y update \
 && dnf -y groupinstall "Development Tools" \
 && dnf -y install gcc-c++ cmake \
 && dnf clean all
-CMD [ "/bin/sh" ]
 
+# Add the library src to our build env
 FROM env AS devel
 WORKDIR /home/project
 COPY . .
@@ -19,11 +19,12 @@ FROM devel AS build
 RUN cmake -version
 RUN cmake -S. -Bbuild
 RUN cmake --build build --target all -v
-RUN cmake --build build --target install
+RUN cmake --build build --target install -v
 
 FROM build AS test
 RUN cmake --build build --target test
 
+# Test install rules
 FROM env AS install_env
 COPY --from=build /usr/local /usr/local/
 

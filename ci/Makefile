@@ -17,13 +17,13 @@ help:
 	@echo -e "${BOLD}MAKE TARGETS${RESET}"
 	@echo -e "\t${BOLD}help${RESET}: display this help and exit."
 	@echo
-	@echo -e "\t${BOLD}<stage>${RESET}: build all <stage> docker images."
-	@echo -e "\t${BOLD}<distro>_<stage>${RESET}: build the <stage> docker image for a specific distro."
-	@echo -e "\t${BOLD}save_<stage>${RESET}: Save all <stage> docker images."
+	@echo -e "\t${BOLD}<stage>${RESET}: build <stage> docker images for ALL DISTROS."
+	@echo -e "\t${BOLD}<distro>_<stage>${RESET}: build <stage> docker image for a specific distro."
+	@echo -e "\t${BOLD}save_<stage>${RESET}: Save <stage> docker images for ALL DISTROS."
 	@echo -e "\t${BOLD}save_<distro>_<stage>${RESET}: Save the <stage> docker image for a specific distro."
-	@echo -e "\t${BOLD}sh_<distro>_<stage>${RESET}: run a container using the <stage> docker image (debug purpose)."
+	@echo -e "\t${BOLD}sh_<distro>_<stage>${RESET}: run a container using the <stage> docker image specified (debug purpose)."
 	@echo
-	@echo -e "\t${BOLD}<stage>${RESET}:"
+	@echo -e "\tWith ${BOLD}<stage>${RESET}:"
 	@echo -e "\t\t${BOLD}env${RESET}"
 	@echo -e "\t\t${BOLD}devel${RESET}"
 	@echo -e "\t\t${BOLD}build${RESET}"
@@ -32,8 +32,9 @@ help:
 	@echo -e "\t\t${BOLD}install_devel${RESET}"
 	@echo -e "\t\t${BOLD}install_build${RESET}"
 	@echo -e "\t\t${BOLD}install_test${RESET}"
+	@echo -e "\te.g. 'make build'"
 	@echo
-	@echo -e "\t${BOLD}<distro>${RESET}:"
+	@echo -e "\tWith ${BOLD}<distro>${RESET}:"
 	@echo -e "\t\t${BOLD}alpine${RESET} (edge)"
 	@echo -e "\t\t${BOLD}archlinux${RESET} (latest)"
 	@echo -e "\t\t${BOLD}centos${RESET} (latest)"
@@ -80,8 +81,7 @@ else
 DOCKER_BUILD_CMD := docker build
 endif
 
-DOCKER_RUN_CMD := docker run --rm --init \
- --net=host
+DOCKER_RUN_CMD := docker run --rm --init --net=host
 
 # Currently supported distro
 DISTROS = alpine archlinux centos debian fedora opensuse ubuntu
@@ -90,12 +90,15 @@ DISTROS = alpine archlinux centos debian fedora opensuse ubuntu
 # $< first prerequist
 # $@ target name
 
+############
+## STAGES ##
+############
 STAGES = env devel build test install_env install_devel install_build install_test
-define make-stage-target
+define make-stage-target =
 #$$(info STAGE: $1)
 #$$(info Create targets: $1 $(addsuffix _$1, $(DISTROS)).)
 targets_$1 = $(addsuffix _$1, $(DISTROS))
-.PHONY: $1 $(targets_$1)
+.PHONY: $1 $$(targets_$1)
 $1: $$(targets_$1)
 $$(targets_$1): %_$1: docker/%/Dockerfile
 	#@docker image rm -f ${IMAGE}:$$*_$1 2>/dev/null
@@ -103,7 +106,7 @@ $$(targets_$1): %_$1: docker/%/Dockerfile
 
 #$$(info Create targets: save_$1 $(addprefix save_, $(addsuffix _$1, $(DISTROS))) (debug).)
 save_targets_$1 = $(addprefix save_, $(addsuffix _$1, $(DISTROS)))
-.PHONY: save_$1 $(save_targets_$1)
+.PHONY: save_$1 $$(save_targets_$1)
 save_$1: $$(save_targets_$1)
 $$(save_targets_$1): save_%_$1: cache/%/docker_$1.tar
 cache/%/docker_$1.tar: %_$1
@@ -113,13 +116,13 @@ cache/%/docker_$1.tar: %_$1
 
 #$$(info Create targets: $(addprefix sh_, $(addsuffix _$1, $(DISTROS))) (debug).)
 sh_targets_$1 = $(addprefix sh_, $(addsuffix _$1, $(DISTROS)))
-.PHONY: $(sh_targets_$1)
+.PHONY: $$(sh_targets_$1)
 $$(sh_targets_$1): sh_%_$1: %_$1
 	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$$*_$1 ${IMAGE}:$$*_$1
 
 #$$(info Create targets: $(addprefix clean_, $(addsuffix _$1, $(DISTROS))).)
 clean_targets_$1 = $(addprefix clean_, $(addsuffix _$1, $(DISTROS)))
-.PHONY: clean_$1 $(clean_targets_$1)
+.PHONY: clean_$1 $$(clean_targets_$1)
 clean_$1: $$(clean_targets_$1)
 $$(clean_targets_$1): clean_%_$1:
 	docker image rm -f ${IMAGE}:$$*_$1 2>/dev/null
