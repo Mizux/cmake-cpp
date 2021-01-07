@@ -4,7 +4,7 @@ FROM alpine:edge AS env
 LABEL maintainer="mizux.dev@gmail.com"
 # Install system build dependencies
 ENV PATH=/usr/local/bin:$PATH
-RUN apk add --no-cache git build-base cmake
+RUN apk add --no-cache git build-base linux-headers cmake
 
 # Add the library src to our build env
 FROM env AS devel
@@ -18,7 +18,7 @@ RUN cmake --build build --target all -v
 RUN cmake --build build --target install -v
 
 FROM build AS test
-RUN cmake --build build --target test
+RUN cmake --build build --target test -v
 
 # Test install rules
 FROM env AS install_env

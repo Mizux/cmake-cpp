@@ -4,7 +4,7 @@ FROM opensuse/tumbleweed AS env
 LABEL maintainer="mizux.dev@gmail.com"
 # Install system build dependencies
 ENV PATH=/usr/local/bin:$PATH
-RUN zypper up -y \
+RUN zypper update -y \
 && zypper install -y git patch gcc gcc-c++ cmake \
 && zypper clean -a
 ENV CC=gcc CXX=g++
@@ -21,7 +21,7 @@ RUN cmake --build build --target all -v
 RUN cmake --build build --target install -v
 
 FROM build AS test
-RUN cmake --build build --target test
+RUN cmake --build build --target test -v
 
 # Test install rules
 FROM env AS install_env

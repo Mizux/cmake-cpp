@@ -26,7 +26,7 @@ RUN cmake --build build --target all -v
 RUN cmake --build build --target install -v
 
 FROM build AS test
-RUN cmake --build build --target test
+RUN cmake --build build --target test -v
 
 # Test install rules
 FROM env AS install_env
