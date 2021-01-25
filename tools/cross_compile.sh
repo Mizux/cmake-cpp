@@ -28,6 +28,10 @@ function unpack() {
 }
 
 function install_qemu() {
+  if [[ "${QEMU_ARCH}" == "DISABLED" ]]; then
+    >&2 echo 'QEMU is disabled !'
+    return 0
+  fi
   local -r QEMU_VERSION=${QEMU_VERSION:=5.2.0}
   local -r QEMU_TARGET=${QEMU_ARCH}-linux-user
 
@@ -136,19 +140,30 @@ QEMU_ARGS+=( -E LD_LIBRARY_PATH=/lib )
 }
 
 function expand_codescape_config() {
-  local -r DATE=2020.06-01
-  local -r CODESCAPE_URL=https://codescape.mips.com/components/toolchain/${DATE}/Codescape.GNU.Tools.Package.${DATE}.for.MIPS.MTI.Linux.CentOS-6.x86_64.tar.gz
+  # ref: https://codescape.mips.com/components/toolchain/2019.02-04/downloads.html
+  #local -r DATE=2020.06-01
+  local -r DATE=2019.02-04
+  #local -r CODESCAPE_URL=https://codescape.mips.com/components/toolchain/${DATE}/Codescape.GNU.Tools.Package.${DATE}.for.MIPS.MTI.Linux.CentOS-6.x86_64.tar.gz
+  local -r CODESCAPE_URL=https://codescape.mips.com/components/toolchain/${DATE}/Codescape.GNU.Tools.Package.${DATE}.for.MIPS.IMG.Linux.CentOS-6.x86_64.tar.gz
   local -r GCC_URL=${CODESCAPE_URL}
-  local -r GCC_RELATIVE_DIR="mips-mti-linux-gnu/${DATE}"
+  #local -r GCC_RELATIVE_DIR="mips-mti-linux-gnu/${DATE}"
+  local -r GCC_RELATIVE_DIR="mips-img-linux-gnu/${DATE}"
   unpack "${GCC_URL}" "${GCC_RELATIVE_DIR}"
 
   local -r GCC_DIR=${ARCHIVE_DIR}/${GCC_RELATIVE_DIR}
   local MIPS_FLAGS=""
   local FLAVOUR=""
-  local LIBC_DIR_SUFFIX=""
   case "${TARGET}" in
-    "mips64")    MIPS_FLAGS="-EB -mabi=64"; FLAVOUR="mips-r2-hard"; LIBC_DIR_SUFFIX="lib64" ;;
-    "mips64el")  MIPS_FLAGS="-EL -mabi=64"; FLAVOUR="mipsel-r2-hard"; LIBC_DIR_SUFFIX="lib64" ;;
+    "mips64")
+      MIPS_FLAGS="-EB -mabi=64";
+      #FLAVOUR="mips-r2-hard";
+      FLAVOUR="mips-r6-hard";
+      ;;
+    "mips64el")
+      MIPS_FLAGS="-EL -mabi=64";
+      #FLAVOUR="mipsel-r2-hard"
+      FLAVOUR="mipsel-r6-hard"
+      ;;
     *)
       >&2 echo 'unknown mips platform'
       exit 1 ;;
@@ -168,10 +183,11 @@ set(CMAKE_SYSROOT ${SYSROOT_DIR})
 set(CMAKE_STAGING_PREFIX ${STAGING_DIR})
 
 set(tools ${GCC_DIR})
-set(CMAKE_C_COMPILER mips-mti-linux-gnu-gcc)
-set(CMAKE_C_COMPILER_ARG ${MIPS_FLAGS})
-set(CMAKE_CXX_COMPILER mips-mti-linux-gnu-g++)
-set(CMAKE_CXX_COMPILER_ARG ${MIPS_FLAGS})
+set(CMAKE_C_COMPILER \${tools}/bin/mips-img-linux-gnu-gcc)
+set(CMAKE_C_COMPILER_ARG "${MIPS_FLAGS}")
+set(CMAKE_CXX_COMPILER \${tools}/bin/mips-img-linux-gnu-g++)
+set(CMAKE_CXX_FLAGS "${MIPS_FLAGS}")
+set(CMAKE_CXX_FLAGS "${MIPS_FLAGS} -L${SYSROOT_DIR}/usr/lib64")
 
 set(CMAKE_FIND_ROOT_PATH ${GCC_DIR})
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
@@ -180,29 +196,17 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 EOL
 
-  #CMAKE_ADDITIONAL_ARGS+=( -DCMAKE_FIND_ROOT_PATH="${GCC_DIR}" )
-  #CMAKE_ADDITIONAL_ARGS+=( -DCMAKE_SYSTEM_NAME=Linux )
-  #CMAKE_ADDITIONAL_ARGS+=( -DCMAKE_SYSTEM_PROCESSOR="${TARGET}" )
-  #CMAKE_ADDITIONAL_ARGS+=( -DCMAKE_C_COMPILER=mips-mti-linux-gnu-gcc )
-  #CMAKE_ADDITIONAL_ARGS+=( -DCMAKE_CXX_COMPILER=mips-mti-linux-gnu-g++ )
-  #CMAKE_ADDITIONAL_ARGS+=( -DCMAKE_C_COMPILER_ARG1="${MIPS_FLAGS}" )
-  #CMAKE_ADDITIONAL_ARGS+=( -DCMAKE_CXX_COMPILER_ARG1="${MIPS_FLAGS}" )
-
-  local -r LIBC_DIR=${GCC_DIR}/mips-mti-linux-gnu/lib/${FLAVOUR}/${LIBC_DIR_SUFFIX}
-  QEMU_ARGS+=( -L "${SYSROOT_DIR}" )
-  QEMU_ARGS+=( -E LD_PRELOAD="${LIBC_DIR}/libstdc++.so.6:${LIBC_DIR}/libgcc_s.so.1" )
+CMAKE_ADDITIONAL_ARGS+=( -DCMAKE_TOOLCHAIN_FILE="${TOOLCHAIN_FILE}" )
+local -r LIBC_DIR=${GCC_DIR}/mips-img-linux-gnu/lib/${FLAVOUR}/lib64
+QEMU_ARGS+=( -L "${SYSROOT_DIR}" )
+QEMU_ARGS+=( -E LD_PRELOAD="${LIBC_DIR}/libstdc++.so.6:${LIBC_DIR}/libgcc_s.so.1" )
 }
 
 function build() {
   cd "${PROJECT_DIR}" || exit 2
-  clean_build
-
-  # CMake Configuration
   set -x
+  clean_build
   cmake -S. -B"${BUILD_DIR}" "${CMAKE_DEFAULT_ARGS[@]}" "${CMAKE_ADDITIONAL_ARGS[@]}"
-
-  # CMake Build
-  #cmake --build "${BUILD_DIR}" --target host_tools -v
   cmake --build "${BUILD_DIR}" --target all -j8 -v
   set +x
 }
@@ -217,18 +221,20 @@ function run_test() {
 
   cd "${BUILD_DIR}" || exit 2
   set -x
-  for test_binary in "${BUILD_DIR}"/bin/FooBarApp; do
-    ${RUN_CMD} "${test_binary}"
-  done
-  set +x
-}
+  for test_binary in \
+    "${BUILD_DIR}"/bin/FooBarApp \
+    "${BUILD_DIR}"/bin/*_UT ; do
+      ${RUN_CMD} "${test_binary}"
+    done
+    set +x
+  }
 
 function usage() {
   local -r NAME=$(basename "$0")
   echo -e "$NAME - Build using a cross toolchain.
 
 SYNOPSIS
-\t$NAME [-h|--help]
+\t$NAME [-h|--help] [toolchain|build|qemu|test|all]
 
 DESCRIPTION
 \tCross compile using a cross toolchain.
@@ -238,6 +244,11 @@ DESCRIPTION
 
 OPTIONS
 \t-h --help: show this help text
+\ttoolchain: download, unpack toolchain and generate CMake toolchain file
+\tbuild: toolchain + build the project using the toolchain file (note: remove previous build dir)
+\tqemu: download, unpack and build qemu
+\ttest: qemu + run all executable using qemu (note: don't build !)
+\tall: build + test (default)
 
 EXAMPLES
 * Using export:
@@ -250,12 +261,10 @@ TARGET=aarch64-linux-gnu $0"
 
 # Main
 function main() {
-  if [[ -n ${1-} ]]; then
-    case $1 in
-      -h | --help)
-        usage; exit ;;
-    esac
-  fi
+  case ${1} in
+    -h | --help)
+      usage; exit ;;
+  esac
 
   assert_defined TARGET
 
@@ -264,7 +273,6 @@ function main() {
   declare -r BUILD_DIR="${PROJECT_DIR}/build_cross/${TARGET}"
   declare -r TOOLCHAIN_FILE=${ARCHIVE_DIR}/toolchain_${TARGET}.cmake
 
-  echo "Project: '${PROJECT}'"
   echo "Target: '${TARGET}'"
 
   echo "Project dir: '${PROJECT_DIR}'"
@@ -272,7 +280,7 @@ function main() {
   echo "Build dir: '${BUILD_DIR}'"
   echo "toolchain file: '${TOOLCHAIN_FILE}'"
 
-  declare -a CMAKE_DEFAULT_ARGS=( -G ${CMAKE_GENERATOR:-"Unix Makefiles"} -DBUILD_DEPS=ON )
+  declare -a CMAKE_DEFAULT_ARGS=( -G ${CMAKE_GENERATOR:-"Unix Makefiles"} )
   declare -a CMAKE_ADDITIONAL_ARGS=()
 
   declare -a QEMU_ARGS=()
@@ -295,23 +303,21 @@ function main() {
       >&2 echo "Unknown TARGET '${TARGET}'..."
       exit 1 ;;
   esac
-  declare -r QEMU_INSTALL=${ARCHIVE_DIR}/qemu
+  declare -r QEMU_INSTALL=${ARCHIVE_DIR}/qemu-${QEMU_ARCH}
 
-  if [[ -n ${1-} ]]; then
-    case $1 in
-      toolchain)
-        exit ;;
-      build)
-        build ;;
-      qemu)
-        install_qemu ;;
-      test)
-        run_test ;;
-      *)
-        build
-        run_test ;;
-    esac
-  fi
+  case ${1} in
+    toolchain)
+      exit ;;
+    build)
+      build ;;
+    qemu)
+      install_qemu ;;
+    test)
+      run_test ;;
+    *)
+      build
+      run_test ;;
+  esac
 }
 
-main "$1"
+main "${1:-all}"
