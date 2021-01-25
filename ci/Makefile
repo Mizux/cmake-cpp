@@ -131,12 +131,44 @@ endef
 
 $(foreach stage,$(STAGES),$(eval $(call make-stage-target,$(stage))))
 
-# Currently supported virtual machine
+#############
+## VAGRANT ##
+#############
 VMS = freebsd
 
 $(VMS): %: vagrant/%/Vagrantfile
 	@cd vagrant/$* && vagrant destroy -f
 	cd vagrant/$* && vagrant up
+
+############
+## ARM 64 ##
+############
+STEPS = env devel build test
+#$(info Create targets: $(addprefix arm_, $(STEPS)))
+arm_targets = $(addprefix arm_, $(STEPS))
+.PHONY: $(arm_targets)
+$(arm_targets): arm_%: docker/arm/Dockerfile
+	#@docker image rm -f ${IMAGE}:$@ 2>/dev/null
+	${DOCKER_BUILD_CMD} --target=$* --tag ${IMAGE}:$@ -f $< ..
+
+save_arm_targets = $(addprefix save_arm_, $(STEPS))
+.PHONY: $(save_arm_targets)
+$(save_arm_targets): save_arm_%: cache/arm/docker_%.tar
+cache/arm/docker_%.tar: arm_%
+	@rm -f $@
+	mkdir -p cache/arm
+	docker save ${IMAGE}:$< -o $@
+
+sh_arm_targets = $(addprefix sh_arm_, $(STEPS))
+.PHONY: $(sh_arm_targets)
+$(sh_arm_targets): sh_arm_%: arm_%
+	${DOCKER_RUN_CMD} -it --name ${PROJECT}_$< ${IMAGE}:$<
+
+clean_arm_targets = $(addprefix clean_arm_, $(STEPS))
+.PHONY: $(clean_arm_targets)
+$(clean_arm_targets): clean_arm_%
+	docker image rm -f ${IMAGE}:arm_$* 2>/dev/null
+	rm -f cache/arm/docker_$*.tar
 
 ## CLEAN ##
 clean_targets = $(addprefix clean_, $(DISTROS))
@@ -156,3 +188,4 @@ $(clean_vms): clean_%:
 distclean: clean
 	-docker container rm -f $$(docker container ls -aq)
 	-docker image rm -f $$(docker image ls -aq)
+	-vagrant box remove -f generic/freebsd12
