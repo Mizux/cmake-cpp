@@ -227,7 +227,7 @@ function run_test() {
       ${RUN_CMD} "${test_binary}"
     done
     set +x
-  }
+}
 
 function usage() {
   local -r NAME=$(basename "$0")
