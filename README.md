@@ -36,6 +36,7 @@ Appveyor-CI:
 <a href="ci/README.md">CI</a> |
 <a href="#license">License</a> |
 </nav>
+
 This is an example of how to create a Modern [CMake](https://cmake.org/) C++ Project.
 
 This project should run on Linux, Mac and Windows.
