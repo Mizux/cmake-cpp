@@ -16,7 +16,7 @@ CONTRIBUTORS
 LICENSE
 README.md
 
-build/
+build*/
 
 # Editor directories and files
 *.user
