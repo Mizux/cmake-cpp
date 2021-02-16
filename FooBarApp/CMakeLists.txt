@@ -17,7 +17,7 @@ target_link_libraries(FooBarApp PRIVATE ${PROJECT_NAME}::FooBar)
 add_executable(${PROJECT_NAME}::FooBarApp ALIAS FooBarApp)
 
 if(BUILD_TESTING)
-  add_test(NAME FooBarAppTest COMMAND FooBarApp)
+  add_test(NAME cxx_FooBarApp_test COMMAND FooBarApp)
 endif()
 
 # Install
