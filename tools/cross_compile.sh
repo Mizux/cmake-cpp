@@ -159,12 +159,12 @@ function expand_codescape_config() {
   local FLAVOUR=""
   case "${TARGET}" in
     "mips64")
-      MIPS_FLAGS="-EB -mips64r6 -mabi=64";
-      FLAVOUR="mips-r6-hard";
-      #FLAVOUR="mips-r2-hard";
+      MIPS_FLAGS="-EB -mips64r6 -mabi=64"
+      FLAVOUR="mips-r6-hard"
+      #FLAVOUR="mips-r2-hard"
       ;;
     "mips64el")
-      MIPS_FLAGS="-EL -mips64r6 -mabi=64";
+      MIPS_FLAGS="-EL -mips64r6 -mabi=64"
       FLAVOUR="mipsel-r6-hard"
       #FLAVOUR="mipsel-r2-hard"
       ;;
@@ -190,17 +190,11 @@ set(tools ${GCC_DIR})
 
 set(CMAKE_C_COMPILER \${tools}/bin/mips-mti-linux-gnu-gcc)
 #set(CMAKE_C_COMPILER \${tools}/bin/mips-img-linux-gnu-gcc)
-#set(CMAKE_C_COMPILER_ARG1 "${MIPS_FLAGS}")
 set(CMAKE_C_FLAGS "${MIPS_FLAGS}")
 
 set(CMAKE_CXX_COMPILER \${tools}/bin/mips-mti-linux-gnu-g++)
 #set(CMAKE_CXX_COMPILER \${tools}/bin/mips-img-linux-gnu-g++)
-#set(CMAKE_CXX_COMPILER_ARG1 "${MIPS_FLAGS}")
 set(CMAKE_CXX_FLAGS "${MIPS_FLAGS}")
-
-#set(CMAKE_CXX_FLAGS "\${CMAKE_CXX_FLAGS} -L${SYSROOT_DIR}/usr/lib64")
-#set(CMAKE_CXX_FLAGS "\${CMAKE_CXX_FLAGS} -L${SYSROOT_DIR}/lib64")
-#set(CMAKE_CXX_LINKER_FLAGS "\${CMAKE_CXX_LINKER_FLAGS} -L${SYSROOT_DIR}/usr/lib64")
 
 set(CMAKE_FIND_ROOT_PATH ${GCC_DIR})
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
@@ -240,8 +234,8 @@ function run_test() {
     "${BUILD_DIR}"/bin/FooBarApp \
     "${BUILD_DIR}"/bin/*_UT ; do
       ${RUN_CMD} "${test_binary}"
-    done
-    set +x
+  done
+  set +x
 }
 
 function usage() {
@@ -255,7 +249,10 @@ DESCRIPTION
 \tCross compile using a cross toolchain.
 
 \tYou MUST define the following variables before running this script:
-\t* TARGET: x86_64 aarch64-linux-gnu aarch64_be-linux-gnu mips64 mips64el
+\t* TARGET:
+\t\tx86_64
+\t\taarch64-linux-gnu aarch64_be-linux-gnu
+\t\tmips64 mips64el
 
 OPTIONS
 \t-h --help: show this help text
