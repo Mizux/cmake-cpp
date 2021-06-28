@@ -208,9 +208,9 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 EOL
 
 CMAKE_ADDITIONAL_ARGS+=( -DCMAKE_TOOLCHAIN_FILE="${TOOLCHAIN_FILE}" )
+QEMU_ARGS+=( -L "${SYSROOT_DIR}/${FLAVOUR}" )
 local -r LIBC_DIR=${GCC_DIR}/mips-mti-linux-gnu/lib/${FLAVOUR}/lib64
 #local -r LIBC_DIR=${GCC_DIR}/mips-img-linux-gnu/lib/${FLAVOUR}/lib64
-QEMU_ARGS+=( -L "${SYSROOT_DIR}" )
 QEMU_ARGS+=( -E LD_PRELOAD="${LIBC_DIR}/libstdc++.so.6:${LIBC_DIR}/libgcc_s.so.1" )
 }
 
@@ -226,6 +226,7 @@ function build() {
 function run_test() {
   assert_defined QEMU_ARCH
   if [[ "${QEMU_ARCH}" == "DISABLED" ]]; then
+    >&2 echo "QEMU is disabled for ${TARGET}"
     return
   fi
   install_qemu
@@ -307,7 +308,7 @@ function main() {
       declare -r QEMU_ARCH=DISABLED ;;
     mips64)
       expand_codescape_config
-      declare -r QEMU_ARCH=mips64 ;;
+      declare -r QEMU_ARCH=DISABLED ;;
     mips64el)
       expand_codescape_config
       declare -r QEMU_ARCH=mips64el ;;
