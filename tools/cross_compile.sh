@@ -3,6 +3,7 @@
 set -eo pipefail
 
 function extract() {
+  echo "Extracting ${1}..."
   case $1 in
     *.tar.bz2)   tar xjf "$1"    ;;
     *.tar.xz)    tar xJf "$1"    ;;
@@ -20,6 +21,7 @@ function unpack() {
   local -r RELATIVE_DIR=$2
   local -r DESTINATION="${ARCHIVE_DIR}/${RELATIVE_DIR}"
   if [[  ! -d "${DESTINATION}" ]] ; then
+    echo "Downloading ${URL}..."
     local -r ARCHIVE_NAME=$(basename "${URL}")
     test -f "${ARCHIVE_NAME}" || wget --no-verbose "${URL}"
     extract "${ARCHIVE_NAME}"
@@ -308,7 +310,7 @@ function main() {
       declare -r QEMU_ARCH=DISABLED ;;
     mips64)
       expand_codescape_config
-      declare -r QEMU_ARCH=DISABLED ;;
+      declare -r QEMU_ARCH=mips64 ;;
     mips64el)
       expand_codescape_config
       declare -r QEMU_ARCH=mips64el ;;
