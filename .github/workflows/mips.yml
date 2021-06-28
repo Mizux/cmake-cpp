@@ -1,0 +1,23 @@
+name: MIPS
+
+on:
+  push:
+  pull_request:
+  schedule:
+    # min hours day(month) month day(week)
+    - cron: '0 0 7,22 * *'
+
+# Building using the github runner environement directly.
+jobs:
+  mips:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build env image
+      run: make --directory=ci mips_env
+    - name: Build devel image
+      run: make --directory=ci mips_devel
+    - name: Build project
+      run: make --directory=ci mips_build
+    - name: Test project
+      run: make --directory=ci mips_test

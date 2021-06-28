@@ -170,6 +170,36 @@ $(clean_arm_targets): clean_arm_%
 	docker image rm -f ${IMAGE}:arm_$* 2>/dev/null
 	rm -f cache/arm/docker_$*.tar
 
+#############
+## MIPS 64 ##
+#############
+STEPS = env devel build test
+#$(info Create targets: $(addprefix mips_, $(STEPS)))
+mips_targets = $(addprefix mips_, $(STEPS))
+.PHONY: $(mips_targets)
+$(mips_targets): mips_%: docker/mips/Dockerfile
+	#@docker image rm -f ${IMAGE}:$@ 2>/dev/null
+	${DOCKER_BUILD_CMD} --target=$* --tag ${IMAGE}:$@ -f $< ..
+
+save_mips_targets = $(addprefix save_mips_, $(STEPS))
+.PHONY: $(save_mips_targets)
+$(save_mips_targets): save_mips_%: cache/mips/docker_%.tar
+cache/mips/docker_%.tar: mips_%
+	@rm -f $@
+	mkdir -p cache/mips
+	docker save ${IMAGE}:$< -o $@
+
+sh_mips_targets = $(addprefix sh_mips_, $(STEPS))
+.PHONY: $(sh_mips_targets)
+$(sh_mips_targets): sh_mips_%: mips_%
+	${DOCKER_RUN_CMD} -it --name ${PROJECT}_$< ${IMAGE}:$<
+
+clean_mips_targets = $(addprefix clean_mips_, $(STEPS))
+.PHONY: $(clean_mips_targets)
+$(clean_mips_targets): clean_mips_%
+	docker image rm -f ${IMAGE}:mips_$* 2>/dev/null
+	rm -f cache/mips/docker_$*.tar
+
 ## CLEAN ##
 clean_targets = $(addprefix clean_, $(DISTROS))
 clean_vms = $(addprefix clean_, $(VMS))

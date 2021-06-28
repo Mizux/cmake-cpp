@@ -21,7 +21,7 @@ function unpack() {
   local -r DESTINATION="${ARCHIVE_DIR}/${RELATIVE_DIR}"
   if [[  ! -d "${DESTINATION}" ]] ; then
     local -r ARCHIVE_NAME=$(basename "${URL}")
-    test -f "${ARCHIVE_NAME}" || wget "${URL}"
+    test -f "${ARCHIVE_NAME}" || wget --no-verbose "${URL}"
     extract "${ARCHIVE_NAME}"
     rm -f "${ARCHIVE_NAME}"
   fi
@@ -157,12 +157,12 @@ function expand_codescape_config() {
   local FLAVOUR=""
   case "${TARGET}" in
     "mips64")
-      MIPS_FLAGS="-EB -mabi=64";
+      MIPS_FLAGS="-EB -mips64r6 -mabi=64";
       FLAVOUR="mips-r6-hard";
       #FLAVOUR="mips-r2-hard";
       ;;
     "mips64el")
-      MIPS_FLAGS="-EL -mabi=64";
+      MIPS_FLAGS="-EL -mips64r6 -mabi=64";
       FLAVOUR="mipsel-r6-hard"
       #FLAVOUR="mipsel-r2-hard"
       ;;
@@ -170,7 +170,7 @@ function expand_codescape_config() {
       >&2 echo 'unknown mips platform'
       exit 1 ;;
   esac
-  local -r SYSROOT_DIR=${GCC_DIR}/sysroot/${FLAVOUR}
+  local -r SYSROOT_DIR=${GCC_DIR}/sysroot
   local -r STAGING_DIR=${SYSROOT_DIR}-stage
 
   # Write a Toolchain file
@@ -188,15 +188,17 @@ set(tools ${GCC_DIR})
 
 set(CMAKE_C_COMPILER \${tools}/bin/mips-mti-linux-gnu-gcc)
 #set(CMAKE_C_COMPILER \${tools}/bin/mips-img-linux-gnu-gcc)
-set(CMAKE_C_COMPILER_ARG1 "${MIPS_FLAGS}")
+#set(CMAKE_C_COMPILER_ARG1 "${MIPS_FLAGS}")
+set(CMAKE_C_FLAGS "${MIPS_FLAGS}")
 
 set(CMAKE_CXX_COMPILER \${tools}/bin/mips-mti-linux-gnu-g++)
 #set(CMAKE_CXX_COMPILER \${tools}/bin/mips-img-linux-gnu-g++)
-set(CMAKE_CXX_COMPILER_ARG1 "${MIPS_FLAGS}")
+#set(CMAKE_CXX_COMPILER_ARG1 "${MIPS_FLAGS}")
+set(CMAKE_CXX_FLAGS "${MIPS_FLAGS}")
 
-#set(CMAKE_CXX_FLAGS "${MIPS_FLAGS}")
 #set(CMAKE_CXX_FLAGS "\${CMAKE_CXX_FLAGS} -L${SYSROOT_DIR}/usr/lib64")
-#set(CMAKE_CXX_FLAGS "\${CMAKE_CXX_FLAGS} -L${SYSROOT_DIR}/usr/lib")
+#set(CMAKE_CXX_FLAGS "\${CMAKE_CXX_FLAGS} -L${SYSROOT_DIR}/lib64")
+#set(CMAKE_CXX_LINKER_FLAGS "\${CMAKE_CXX_LINKER_FLAGS} -L${SYSROOT_DIR}/usr/lib64")
 
 set(CMAKE_FIND_ROOT_PATH ${GCC_DIR})
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
