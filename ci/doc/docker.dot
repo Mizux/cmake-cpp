@@ -6,12 +6,14 @@ digraph DockerDeps {
   DISTRO_IMG [label="<distro>:latest"];
   PKG [label="packages\ne.g. cmake, g++", shape=box3d];
   SRC [label="git repo", shape=folder];
+  SPL [label="sample", shape=folder];
 
   subgraph clusterDockerfile {
     ENV_IMG [label="cmake-cpp:<distro>_env\nenv"];
     DEVEL_IMG [label="cmake-cpp:<distro>_devel\ndevel"];
     BUILD_IMG [label="cmake-cpp:<distro>_build\nbuild"];
     TEST_IMG [label="cmake-cpp:<distro>_test\ntest"];
+    INSTALL_ENV_IMG [label="cmake-cpp:<distro>_install_env\ninstall_env"];
     INSTALL_DEVEL_IMG [label="cmake-cpp:<distro>_install_devel\ninstall_devel"];
     INSTALL_BUILD_IMG [label="cmake-cpp:<distro>_install_build\ninstall_build"];
     INSTALL_TEST_IMG [label="cmake-cpp:<distro>_install_test\ninstall_test"];
@@ -19,8 +21,11 @@ digraph DockerDeps {
     ENV_IMG -> DEVEL_IMG;
     DEVEL_IMG -> BUILD_IMG;
     BUILD_IMG -> TEST_IMG;
-    BUILD_IMG -> INSTALL_DEVEL_IMG [label="copy install", style="dashed"];
-    ENV_IMG -> INSTALL_DEVEL_IMG;
+
+    ENV_IMG -> INSTALL_ENV_IMG;
+    BUILD_IMG -> INSTALL_ENV_IMG [label="copy install", style="dashed"];
+    INSTALL_ENV_IMG -> INSTALL_DEVEL_IMG;
+    SPL -> INSTALL_DEVEL_IMG [label="copy", style="dashed"];
     INSTALL_DEVEL_IMG -> INSTALL_BUILD_IMG;
     INSTALL_BUILD_IMG -> INSTALL_TEST_IMG;
 
@@ -37,6 +42,7 @@ digraph DockerDeps {
     DEVEL_TAR [label="docker_devel.tar"];
     BUILD_TAR [label="docker_build.tar"];
     TEST_TAR [label="docker_test.tar"];
+    INSTALL_ENV_TAR [label="docker_install_env.tar"];
     INSTALL_DEVEL_TAR [label="docker_install_devel.tar"];
     INSTALL_BUILD_TAR [label="docker_install_build.tar"];
     INSTALL_TEST_TAR [label="docker_install_test.tar"];
@@ -46,6 +52,7 @@ digraph DockerDeps {
     DEVEL_IMG -> DEVEL_TAR [label="make save_<distro>_devel"];
     BUILD_IMG -> BUILD_TAR [label="make save_<distro>_build"];
     TEST_IMG -> TEST_TAR [label="make save_<distro>_test"];
+    INSTALL_ENV_IMG -> INSTALL_ENV_TAR [label="make save_<distro>_install_env"];
     INSTALL_DEVEL_IMG -> INSTALL_DEVEL_TAR [label="make save_<distro>_install_devel"];
     INSTALL_BUILD_IMG -> INSTALL_BUILD_TAR [label="make save_<distro>_install_build"];
     INSTALL_TEST_IMG -> INSTALL_TEST_TAR [label="make save_<distro>_install_test"];
