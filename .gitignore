@@ -1,13 +1,14 @@
 
-/build*
+build/
 cache/
 
 .vagrant/
 
-# Visual studio
+# IDE 
 .vs/
+.cache/
 # Kdevelop
-.kdev4
+.kdev4/
 *.kdev4
 # vim
 compile_commands.json
