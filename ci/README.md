@@ -57,3 +57,4 @@ RUN wget "https://cmake.org/files/v3.17/cmake-3.17.2-Linux-x86_64.sh" \
 && ./cmake-3.17.2-Linux-x86_64.sh --prefix=/usr/local/ --skip-license \
 && rm cmake-3.17.2-Linux-x86_64.sh
 ```
+**warning**: Since [CMake 3.20](https://cmake.org/files/v3.20/) Kitware use a lowercase `linux` instead of `Linux`.
