@@ -4,9 +4,6 @@ Github-CI:
 [![Build Status][github_macos_status]][github_macos_link]
 [![Build Status][github_windows_status]][github_windows_link]
 
-Travis-CI:
-[![Build Status][travis_status]][travis_link]
-
 Appveyor-CI:
 [![Build Status][appveyor_status]][appveyor_link]
 
@@ -21,9 +18,6 @@ Appveyor-CI:
 
 [github_windows_status]: https://github.com/Mizux/cmake-cpp/workflows/Windows/badge.svg?branch=master
 [github_windows_link]: https://github.com/Mizux/cmake-cpp/actions?query=workflow%3AWindows
-
-[travis_status]: https://travis-ci.com/Mizux/cmake-cpp.svg?branch=master
-[travis_link]: https://travis-ci.com/Mizux/cmake-cpp
 
 [appveyor_status]: https://ci.appveyor.com/api/projects/status/cmv8xp5npei1o6w3/branch/master?svg=true
 [appveyor_link]: https://ci.appveyor.com/project/Mizux/cmake-cpp/branch/master
