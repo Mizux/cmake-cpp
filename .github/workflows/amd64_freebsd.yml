@@ -1,4 +1,4 @@
-name: Vagrant
+name: amd64 FreeBSD
 
 on:
   push:
