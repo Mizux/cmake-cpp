@@ -26,7 +26,7 @@ This is an example of how to create a Modern [CMake](https://cmake.org/) C++ Pro
 
 This project should run on Linux, Mac and Windows.
 
-# [Dependencies Tree](#dependencies)
+## [Dependencies Tree](#dependencies)
 To complexify a little, the CMake project is composed of three libraries (Foo, Bar and FooBar)
 with the following dependencies:  
 ```sh
@@ -39,7 +39,7 @@ FooBarApp: PRIVATE FooBar
 note: Since `Foo` is a public dependency of `FooBar`, then `FooBarApp` will
 *see* `Foo` inlude directories
 
-# [Project directory layout](#codemap)
+## [Project directory layout](#codemap)
 Thus the project layout is as follow:
 
 * [CMakeLists.txt](CMakeLists.txt) Top-level for [CMake](https://cmake.org/cmake/help/latest/) based build.
@@ -73,18 +73,18 @@ Thus the project layout is as follow:
   * [src](FooBarApp/src) private folder.
     * [src/main.cpp](FooBarApp/src/main.cpp)
 
-# [C++ Project Build](#build)
+## [C++ Project Build](#build)
 To build the C++ project, as usual:
 ```sh
 cmake -S. -Bbuild
 cmake --build build
 ```
 
-# [License](#license)
+## [License](#license)
 
 Apache 2. See the LICENSE file for details.
 
-# Disclaimer
+## Disclaimer
 
 This is not an official Google product, it is just code that happens to be
 owned by Google.
