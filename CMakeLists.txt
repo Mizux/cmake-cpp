@@ -2,30 +2,13 @@
 cmake_minimum_required(VERSION 3.14)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-# Apple: Don't modify install_name when touching RPATH.
-if(POLICY CMP0068)
-  cmake_policy(SET CMP0068 NEW)
-endif()
-
-# Define file(GENERATE) behavior for relative paths.
-if(POLICY CMP0070)
-  cmake_policy(SET CMP0070 NEW)
-endif()
-
-# target_sources: use absolute path for INTERFACE_SOURCES.
-if(POLICY CMP0076)
-  cmake_policy(SET CMP0076 NEW)
-endif()
-
-# option() honors normal variables.
-# see: https://cmake.org/cmake/help/git-stage/policy/CMP0077.html
-if(POLICY CMP0077)
-  cmake_policy(SET CMP0077 NEW)
-endif()
-
 project(CMakeCpp VERSION 1.0 LANGUAGES CXX)
 message(STATUS "project: ${PROJECT_NAME}")
 message(STATUS "version: ${PROJECT_VERSION}")
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Force default build type to Release
 if(NOT CMAKE_BUILD_TYPE)
