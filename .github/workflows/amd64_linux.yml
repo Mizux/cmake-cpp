@@ -1,4 +1,4 @@
-name: Linux
+name: amd64 Linux
 
 on:
   push:
