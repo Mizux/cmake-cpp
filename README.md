@@ -4,17 +4,14 @@ Github-CI:
 [![Build Status][github_macos_status]][github_macos_link]
 [![Build Status][github_windows_status]][github_windows_link]
 
-[github_docker_status]: https://github.com/Mizux/cmake-cpp/workflows/Docker/badge.svg?branch=master
-[github_docker_link]: https://github.com/Mizux/cmake-cpp/actions?query=workflow%3ADocker
-
-[github_linux_status]: https://github.com/Mizux/cmake-cpp/workflows/Linux/badge.svg?branch=master
-[github_linux_link]: https://github.com/Mizux/cmake-cpp/actions?query=workflow%3ALinux
-
-[github_macos_status]: https://github.com/Mizux/cmake-cpp/workflows/MacOS/badge.svg?branch=master
-[github_macos_link]: https://github.com/Mizux/cmake-cpp/actions?query=workflow%3AMacOS
-
-[github_windows_status]: https://github.com/Mizux/cmake-cpp/workflows/Windows/badge.svg?branch=master
-[github_windows_link]: https://github.com/Mizux/cmake-cpp/actions?query=workflow%3AWindows
+[github_docker_status]: https://github.com/Mizux/cmake-cpp/actions/workflows/amd64_docker.yml/badge.svg
+[github_docker_link]: https://github.com/Mizux/cmake-cpp/actions/workflows/amd64_docker.yml
+[github_linux_status]: https://github.com/Mizux/cmake-cpp/actions/workflows/amd64_linux.yml/badge.svg
+[github_linux_link]: https://github.com/Mizux/cmake-cpp/actions/workflows/amd64_linux.yml
+[github_macos_status]: https://github.com/Mizux/cmake-cpp/actions/workflows/amd64_macos.yml/badge.svg
+[github_macos_link]: https://github.com/Mizux/cmake-cpp/actions/workflows/amd64_macos.yml
+[github_windows_status]: https://github.com/Mizux/cmake-cpp/actions/workflows/amd64_windows.yml/badge.svg
+[github_windows_link]: https://github.com/Mizux/cmake-cpp/actions/workflows/amd64_windows.yml
 
 # Introduction
 <nav for="project"> |
