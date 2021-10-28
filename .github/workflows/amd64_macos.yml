@@ -1,4 +1,4 @@
-name: MacOS
+name: amd64 macOS
 
 on:
   push:
