@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 set -eo pipefail
 
 function extract() {
@@ -55,8 +54,8 @@ function install_qemu() {
 
   # Qemu (meson based build) depends on: pkgconf, libglib2.0, python3, ninja
   ./configure \
-    --prefix=${QEMU_INSTALL} \
-    --target-list=${QEMU_TARGET} \
+    --prefix="${QEMU_INSTALL}" \
+    --target-list="${QEMU_TARGET}" \
     --audio-drv-list= \
     --disable-brlapi \
     --disable-curl \
@@ -160,26 +159,26 @@ function expand_codescape_config() {
   case "${TARGET}" in
     "mips64")
       MIPS_FLAGS="-EB -mips64r6 -mabi=64"
-      FLAVOUR="mips-r6-hard"
       #FLAVOUR="mips-r2-hard"
+      FLAVOUR="mips-r6-hard"
       ;;
     "mips64el")
       MIPS_FLAGS="-EL -mips64r6 -mabi=64"
-      FLAVOUR="mipsel-r6-hard"
       #FLAVOUR="mipsel-r2-hard"
+      FLAVOUR="mipsel-r6-hard"
       ;;
     *)
       >&2 echo 'unknown mips platform'
       exit 1 ;;
   esac
-  local -r SYSROOT_DIR=${GCC_DIR}/sysroot
+  local -r SYSROOT_DIR=${GCC_DIR}/sysroot/${FLAVOUR}
   local -r STAGING_DIR=${SYSROOT_DIR}-stage
 
   # Write a Toolchain file
   # note: This is manadatory to use a file in order to have the CMake variable
   # 'CMAKE_CROSSCOMPILING' set to TRUE.
   # ref: https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html#cross-compiling-for-linux
-  cat >"$TOOLCHAIN_FILE" <<EOL
+  cat >"${TOOLCHAIN_FILE}" <<EOL
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR ${TARGET})
 
@@ -190,11 +189,12 @@ set(tools ${GCC_DIR})
 
 set(CMAKE_C_COMPILER \${tools}/bin/mips-mti-linux-gnu-gcc)
 #set(CMAKE_C_COMPILER \${tools}/bin/mips-img-linux-gnu-gcc)
-set(CMAKE_C_FLAGS "${MIPS_FLAGS}")
+set(CMAKE_C_COMPILER_ARG "${MIPS_FLAGS}")
 
 set(CMAKE_CXX_COMPILER \${tools}/bin/mips-mti-linux-gnu-g++)
 #set(CMAKE_CXX_COMPILER \${tools}/bin/mips-img-linux-gnu-g++)
 set(CMAKE_CXX_FLAGS "${MIPS_FLAGS}")
+set(CMAKE_CXX_FLAGS "${MIPS_FLAGS} -L${SYSROOT_DIR}/usr/lib64")
 
 set(CMAKE_FIND_ROOT_PATH ${GCC_DIR})
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
@@ -280,6 +280,7 @@ function main() {
 
   assert_defined TARGET
 
+  # shellcheck disable=SC2155
   declare -r PROJECT_DIR="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
   declare -r ARCHIVE_DIR="${PROJECT_DIR}/build_cross/archives"
   declare -r BUILD_DIR="${PROJECT_DIR}/build_cross/${TARGET}"
