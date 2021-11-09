@@ -232,7 +232,7 @@ function run_test() {
   set -x
   for test_binary in \
     "${BUILD_DIR}"/bin/FooBarApp \
-    "${BUILD_DIR}"/bin/*_UT ; do
+    "${BUILD_DIR}"/bin/*_test ; do
       ${RUN_CMD} "${test_binary}"
   done
   set +x
