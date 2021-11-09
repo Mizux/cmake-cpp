@@ -61,69 +61,9 @@ endif()
 # Disable CTest targets
 set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
 include(CTest)
-if(BUILD_TESTING)
-  include(FetchContent)
-  #FetchContent_Declare(
-  #  googletest
-  #  GIT_REPOSITORY https://github.com/google/googletest.git
-  #  GIT_TAG master)
-  #set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-  #FetchContent_MakeAvailable(googletest)
-  FetchContent_Declare(
-    Catch2
-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG devel
-    GIT_SHALLOW TRUE
-    GIT_PROGRESS TRUE
-    )
-  FetchContent_MakeAvailable(Catch2)
-endif()
 
-# type size checks
-enable_language(CXX)
-include(CheckTypeSize)
-set(TYPES
-  "char"
-  "short"
-  "int"
-  "long"
-  "long int"
-  "long long"
-  "long long int"
-  "void *"
-  "intptr_t"
-  "uintptr_t")
-foreach(TYPE ${TYPES})
-  string(MAKE_C_IDENTIFIER ${TYPE} TYPE_NAME)
-  string(TOUPPER ${TYPE_NAME} TYPE_NAME)
-  string(PREPEND TYPE_NAME "SIZEOF_")
-  message(STATUS "${TYPE} -> ${TYPE_NAME}")
-  check_type_size(${TYPE} ${TYPE_NAME} LANGUAGE CXX)
-  message(STATUS "${TYPE_NAME} -> ${${TYPE_NAME}}")
-endforeach()
+include(cpp)
 
-add_subdirectory(Foo)
-add_subdirectory(Bar)
-add_subdirectory(FooBar)
-add_subdirectory(FooBarApp)
-
-# Install
-install(EXPORT CMakeCppTargets
-  NAMESPACE CMakeCpp::
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCpp
-  COMPONENT Devel)
-include(CMakePackageConfigHelpers)
-configure_package_config_file(cmake/CMakeCppConfig.cmake.in
-  "${PROJECT_BINARY_DIR}/CMakeCppConfig.cmake"
-  INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCpp"
-  NO_SET_AND_CHECK_MACRO
-  NO_CHECK_REQUIRED_COMPONENTS_MACRO)
-write_basic_package_version_file(
-  "${PROJECT_BINARY_DIR}/CMakeCppConfigVersion.cmake"
-  COMPATIBILITY SameMajorVersion)
-install(
-  FILES
-  "${PROJECT_BINARY_DIR}/CMakeCppConfig.cmake"
-  "${PROJECT_BINARY_DIR}/CMakeCppConfigVersion.cmake"
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CMakeCpp"
-  COMPONENT Devel)
+option(BUILD_EXAMPLES "Build examples" ON)
+message(STATUS "Build examples: ${BUILD_EXAMPLES}")
+add_subdirectory(examples)
