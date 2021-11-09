@@ -27,9 +27,7 @@ target_link_libraries(FooBar
   )
 add_library(${PROJECT_NAME}::FooBar ALIAS FooBar)
 
-if(BUILD_TESTING)
-  add_subdirectory(test)
-endif()
+add_subdirectory(tests)
 
 # Install
 include(GNUInstallDirs)

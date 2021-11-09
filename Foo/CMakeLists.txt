@@ -15,9 +15,7 @@ set_target_properties(Foo PROPERTIES
 #target_link_libraries(Foo PUBLIC ...)
 add_library(${PROJECT_NAME}::Foo ALIAS Foo)
 
-if(BUILD_TESTING)
-  add_subdirectory(test)
-endif()
+add_subdirectory(tests)
 
 # Install
 include(GNUInstallDirs)
