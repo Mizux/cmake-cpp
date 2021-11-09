@@ -39,8 +39,8 @@ FooBarApp: PRIVATE FooBar
 note: Since `Foo` is a public dependency of `FooBar`, then `FooBarApp` will
 *see* `Foo` inlude directories
 
-## [Project directory layout](#codemap)
-Thus the project layout is as follow:
+# [Codemap](#codemap)
+The project layout is as follow:
 
 * [CMakeLists.txt](CMakeLists.txt) Top-level for [CMake](https://cmake.org/cmake/help/latest/) based build.
 * [cmake](cmake) Subsidiary CMake files.
@@ -88,3 +88,4 @@ Apache 2. See the LICENSE file for details.
 
 This is not an official Google product, it is just code that happens to be
 owned by Google.
+

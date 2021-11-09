@@ -1,7 +1,0 @@
-tasks:
-  - init: cmake -S. -Bbuild -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-
-vscode:
-  extensions:
-    - ms-vscode.cpptools@0.27.0
-
