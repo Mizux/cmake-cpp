@@ -1,5 +1,5 @@
 # ref: https://github.com/docker-library/official-images
-name: amd64 Docker
+name: aarch64 Docker
 
 on:
   push:
@@ -13,12 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        distro: [alpine, archlinux, centos, debian, fedora, opensuse, ubuntu]
+        distro: [alpine, centos, debian, fedora, opensuse, ubuntu]
       fail-fast: false
     env:
-      DISTRO: amd64_${{ matrix.distro }}
+      DISTRO: arm64_${{ matrix.distro }}
     steps:
     - uses: actions/checkout@v2
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
     - name: Check docker
       run: |
         docker info

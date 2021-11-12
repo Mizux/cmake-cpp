@@ -18,4 +18,4 @@ jobs:
     - name: VirtualBox version
       run: virtualbox -h
     - name: Build
-      run: make --directory=ci freebsd
+      run: make --directory=ci freebsd_build

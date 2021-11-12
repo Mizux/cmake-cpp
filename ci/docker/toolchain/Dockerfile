@@ -1,6 +1,6 @@
 # Create a virtual environment with all tools installed
 # ref: https://hub.docker.com/_/ubuntu
-FROM ubuntu:rolling AS env
+FROM ubuntu:latest AS env
 LABEL maintainer="mizux.dev@gmail.com"
 # Install system build dependencies
 ENV PATH=/usr/local/bin:$PATH
@@ -9,19 +9,24 @@ RUN apt-get update -qq \
  ninja-build python3 pkgconf libglib2.0-dev \
 && apt-get clean \
 && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ENTRYPOINT ["/usr/bin/bash", "-c"]
+CMD ["/usr/bin/bash"]
 
-# Install CMake 3.19.2
-RUN wget "https://cmake.org/files/v3.19/cmake-3.19.2-Linux-x86_64.sh" \
-&& chmod a+x cmake-3.19.2-Linux-x86_64.sh \
-&& ./cmake-3.19.2-Linux-x86_64.sh --prefix=/usr/local/ --skip-license \
-&& rm cmake-3.19.2-Linux-x86_64.sh
+# Install CMake 3.21.4
+RUN wget "https://cmake.org/files/v3.21/cmake-3.21.4-linux-x86_64.sh" \
+&& chmod a+x cmake-3.21.4-linux-x86_64.sh \
+&& ./cmake-3.21.4-linux-x86_64.sh --prefix=/usr/local/ --skip-license \
+&& rm cmake-3.21.4-linux-x86_64.sh
 
 FROM env AS devel
 WORKDIR /home/project
 COPY . .
 
+ARG TARGET
+ENV TARGET ${TARGET:-unknown}
+
 FROM devel AS build
-ENV TARGET=aarch64-linux-gnu
+RUN cmake -version
 RUN ./tools/cross_compile.sh build
 
 FROM build AS test
