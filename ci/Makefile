@@ -211,10 +211,10 @@ $$(targets_$1_$2): $1_%_$2: docker/%/Dockerfile
 save_targets_$1_$2 = $(addprefix save_$1_, $(addsuffix _$2, $(DISTROS)))
 .PHONY: save_$1_$2 $$(save_targets_$1_$2)
 save_$1_$2: $$(save_targets_$1_$2)
-$$(save_targets_$1_$2): save_$1_%_$2: cache/$1_%/docker_$2.tar
-cache/$1_%/docker_$2.tar: $1_%_$2
+$$(save_targets_$1_$2): save_$1_%_$2: cache/$1/%/docker_$2.tar
+cache/$1/%/docker_$2.tar: $1_%_$2
 	@rm -f $$@
-	mkdir -p cache/$1_$$*
+	mkdir -p cache/$1/$$*
 	docker save ${IMAGE}:$1_$$*_$2 -o $$@
 
 #$$(info Create targets: $(addprefix sh_$1_, $(addsuffix _$2, $(DISTROS))) (debug).)
@@ -229,7 +229,7 @@ clean_targets_$1_$2 = $(addprefix clean_$1_, $(addsuffix _$2, $(DISTROS)))
 clean_$1_$2: $$(clean_targets_$1_$2)
 $$(clean_targets_$1_$2): clean_$1_%_$2:
 	docker image rm -f ${IMAGE}:$1_$$*_$2 2>/dev/null
-	rm -f cache/$1_$$*/docker_$2.tar
+	rm -f cache/$1/$$*/docker_$2.tar
 endef
 
 define make-platform-target =
@@ -239,7 +239,8 @@ $(foreach stage,$(STAGES),$(eval $(call make-platform-stage-target,$1,$(stage)))
 # merge
 .PHONY: clean_$1
 clean_$1: $(addprefix clean_$1_, $(STAGES))
-	-rmdir $(addprefix cache/$1_, $(DISTROS))
+	-rmdir $(addprefix cache/$1/, $(DISTROS))
+	-rmdir cache/$1
 endef
 
 $(foreach platform,$(PLATFORMS),$(eval $(call make-platform-target,$(platform))))
@@ -331,8 +332,6 @@ clean: clean_native clean_platforms clean_toolchains clean_vms
 	docker container prune -f
 	docker image prune -f
 	-rmdir cache
-$(clean_targets): clean_%: $(addprefix clean_%_, $(STAGES))
-	-rmdir cache/$*
 
 .PHONY: distclean
 distclean: clean
