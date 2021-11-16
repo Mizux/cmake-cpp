@@ -56,11 +56,12 @@ help:
 	@echo -e "\t${BOLD}clean_platforms${RESET}: Remove ALL cache and docker image."
 	@echo
 	@echo -e "\tWith ${BOLD}<platform>${RESET}:"
-	@echo -e "\t\t${BOLD}x86${RESET}: linux/386 (x86)"
 	@echo -e "\t\t${BOLD}amd64${RESET}: linux/amd64 (x86_64)"
+	@echo -e "\t\t${BOLD}386${RESET}: linux/386 (x86)"
 	@echo -e "\t\t${BOLD}arm64${RESET}: linux/arm64 (aarch64, arm64v8)"
 	@echo -e "\t\t${BOLD}arm${RESET}: linux/arm (armv7)"
-	@echo -e "\t\t${BOLD}ppc64${RESET}: linux/ppc64le (ppc64le)"
+	@echo -e "\t\t${BOLD}riscv64${RESET}: linux/riscv64 (RISC-V 64bits)"
+	@echo -e "\t\t${BOLD}ppc64le${RESET}: linux/ppc64le (PowerPC 64Bits Little Endian)"
 	@echo -e "\te.g. 'make amd64_ubuntu_test'"
 	@echo -e "\tDocker image unavailable: arm64_archlinux"
 	@echo
@@ -193,7 +194,7 @@ clean_native: $(addprefix clean_, $(STAGES))
 ##############
 ## PLATFORM ##
 ##############
-PLATFORMS = amd64 arm64
+PLATFORMS = amd64 386 arm64 arm riscv64
 
 define make-platform-stage-target =
 #$$(info PLATFORM: $1)
