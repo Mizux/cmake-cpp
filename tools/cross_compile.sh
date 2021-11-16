@@ -158,7 +158,6 @@ function expand_codescape_config() {
   local -r GCC_URL=${CODESCAPE_URL}
   unpack "${GCC_URL}" "${GCC_RELATIVE_DIR}"
 
-  local -r GCC_DIR=${ARCHIVE_DIR}/${GCC_RELATIVE_DIR}
   local MIPS_FLAGS=""
   local LIBC_DIR_SUFFIX=""
   local FLAVOUR=""
@@ -195,7 +194,9 @@ function expand_codescape_config() {
       >&2 echo 'unknown mips platform'
       exit 1 ;;
   esac
-  local -r SYSROOT_DIR=${GCC_DIR}/sysroot/${FLAVOUR}
+  local -r GCC_DIR=${ARCHIVE_DIR}/${GCC_RELATIVE_DIR}
+  #local -r SYSROOT_DIR=${GCC_DIR}/sysroot/${FLAVOUR}
+  local -r SYSROOT_DIR=${GCC_DIR}/sysroot
   local -r STAGING_DIR=${SYSROOT_DIR}-stage
 
   # Write a Toolchain file
@@ -211,13 +212,17 @@ set(CMAKE_STAGING_PREFIX ${STAGING_DIR})
 
 set(tools ${GCC_DIR})
 
+# R2
 #set(CMAKE_C_COMPILER \${tools}/bin/mips-mti-linux-gnu-gcc)
+#set(CMAKE_C_FLAGS "${MIPS_FLAGS} -L${SYSROOT_DIR}/usr/${LIBC_DIR_SUFFIX}")
+#set(CMAKE_CXX_COMPILER \${tools}/bin/mips-mti-linux-gnu-g++)
+#set(CMAKE_CXX_FLAGS "${MIPS_FLAGS} -L${SYSROOT_DIR}/usr/${LIBC_DIR_SUFFIX}")
+
+# R6
 set(CMAKE_C_COMPILER \${tools}/bin/mips-img-linux-gnu-gcc)
 set(CMAKE_C_FLAGS "${MIPS_FLAGS}")
-
-#set(CMAKE_CXX_COMPILER \${tools}/bin/mips-mti-linux-gnu-g++)
 set(CMAKE_CXX_COMPILER \${tools}/bin/mips-img-linux-gnu-g++)
-set(CMAKE_CXX_FLAGS "${MIPS_FLAGS} -L${SYSROOT_DIR}/usr/${LIBC_DIR_SUFFIX}")
+set(CMAKE_CXX_FLAGS "${MIPS_FLAGS}")
 
 set(CMAKE_FIND_ROOT_PATH ${GCC_DIR})
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
