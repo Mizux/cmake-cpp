@@ -6,7 +6,7 @@ digraph DockerDeps {
   DISTRO_IMG [label="<distro>:latest"];
   PKG [label="packages\ne.g. cmake, g++", shape=box3d];
   SRC [label="git repo", shape=folder];
-  SPL [label="sample", shape=folder];
+  SPL [label="samples", shape=folder];
 
   subgraph clusterDockerfile {
     ENV_IMG [label="cmake-cpp:<distro>_env\nenv"];

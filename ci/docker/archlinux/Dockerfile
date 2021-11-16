@@ -25,8 +25,8 @@ FROM env AS install_env
 COPY --from=build /usr/local /usr/local/
 
 FROM install_env AS install_devel
-WORKDIR /home/sample
-COPY ci/sample .
+WORKDIR /home/samples
+COPY ci/samples .
 
 FROM install_devel AS install_build
 RUN cmake -S. -Bbuild
