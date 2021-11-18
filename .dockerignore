@@ -5,12 +5,10 @@
 .gitignore
 .github
 .clang-format
-.appveyor.yml
-.travis.yml
 
 ci/Makefile
 ci/docker
-ci/doc
+ci/docs
 ci/cache
 ci/export
 
