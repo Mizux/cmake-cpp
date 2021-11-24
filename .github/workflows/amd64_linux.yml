@@ -52,10 +52,10 @@ jobs:
     - name: Check cmake
       run: cmake --version
     - name: Configure
-      run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+      run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install
     - name: Build
       run: cmake --build build --target all -v
     - name: Test
       run: cmake --build build --target test -v
     - name: Install
-      run: cmake --build build --target install -v -- DESTDIR=install
+      run: cmake --build build --target install -v
