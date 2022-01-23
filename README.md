@@ -96,6 +96,7 @@ Few links on the subject...
 ### Resources
 Project layout:
 * The Pitchfork Layout Revision 1 (cxx-pflR1)
+
 CMake:
 * https://llvm.org/docs/CMakePrimer.html
 * https://cliutils.gitlab.io/modern-cmake/
