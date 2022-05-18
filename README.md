@@ -1,7 +1,7 @@
-Github-CI:
+Github-CI:<br>
 [![Build Status][github_linux_status]][github_linux_link]
 [![Build Status][github_macos_status]][github_macos_link]
-[![Build Status][github_windows_status]][github_windows_link]
+[![Build Status][github_windows_status]][github_windows_link]<br>
 [![Build Status][github_amd64_docker_status]][github_amd64_docker_link]
 [![Build Status][github_aarch64_docker_status]][github_aarch64_docker_link]
 
