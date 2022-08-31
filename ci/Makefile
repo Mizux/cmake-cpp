@@ -61,7 +61,9 @@ help:
 	@echo -e "\t\t${BOLD}arm${RESET}: linux/arm (armv7)"
 	@echo -e "\t\t${BOLD}arm64${RESET}: linux/arm64 (aarch64, arm64v8)"
 	@echo -e "\t\t${BOLD}mips${RESET}: linux/mips (mips 32bits)"
+	@echo -e "\t\t${BOLD}mipsle${RESET}: linux/mipsle (mips 32bits Little Endian)"
 	@echo -e "\t\t${BOLD}mips64${RESET}: linux/mips64 (mips 64bits)"
+	@echo -e "\t\t${BOLD}mips64le${RESET}: linux/mips64le (mips 64bits Little Endian)"
 	@echo -e "\t\t${BOLD}ppc64${RESET}: linux/ppc64 (PowerPC 64Bits)"
 	@echo -e "\t\t${BOLD}ppc64le${RESET}: linux/ppc64le (PowerPC 64Bits Little Endian)"
 	@echo -e "\t\t${BOLD}riscv64${RESET}: linux/riscv64 (RISC-V 64bits)"
@@ -202,7 +204,14 @@ clean_native: $(addprefix clean_, $(STAGES))
 ##############
 ## PLATFORM ##
 ##############
-PLATFORMS = amd64 386 arm arm64 mips mips64 ppc ppc64 ppc64le riscv64
+# ref: https://go.dev/doc/install/source#environment
+# ref: https://github.com/containerd/containerd/blob/269548fa27e0089a8b8278fc4fc781d7f65a939b/platforms/platforms.go#L80-L94
+PLATFORMS = \
+ 386 amd64 \
+ arm arm64 \
+ mips mipsle mips64 mips64le \
+ ppc64 ppc64le \
+ riscv64
 
 define make-platform-stage-target =
 #$$(info PLATFORM: $1)
