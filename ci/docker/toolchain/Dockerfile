@@ -12,11 +12,11 @@ RUN apt-get update -qq \
 ENTRYPOINT ["/usr/bin/bash", "-c"]
 CMD ["/usr/bin/bash"]
 
-# Install CMake 3.21.4
-RUN wget "https://cmake.org/files/v3.21/cmake-3.21.4-linux-x86_64.sh" \
-&& chmod a+x cmake-3.21.4-linux-x86_64.sh \
-&& ./cmake-3.21.4-linux-x86_64.sh --prefix=/usr/local/ --skip-license \
-&& rm cmake-3.21.4-linux-x86_64.sh
+# Install CMake 3.24.1
+RUN wget "https://cmake.org/files/v3.24/cmake-3.24.1-linux-x86_64.sh" \
+&& chmod a+x cmake-3.24.1-linux-x86_64.sh \
+&& ./cmake-3.24.1-linux-x86_64.sh --prefix=/usr/local/ --skip-license \
+&& rm cmake-3.24.1-linux-x86_64.sh
 
 FROM env AS devel
 WORKDIR /home/project
@@ -26,7 +26,7 @@ ARG TARGET
 ENV TARGET ${TARGET:-unknown}
 
 FROM devel AS build
-RUN cmake -version
+RUN cmake --version
 RUN ./tools/cross_compile.sh build
 
 FROM build AS test
