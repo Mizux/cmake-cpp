@@ -237,7 +237,7 @@ local -r LIBC_DIR=${GCC_DIR}/mips-mti-linux-gnu/lib/${FLAVOUR}/${LIBC_DIR_SUFFIX
 QEMU_ARGS+=( -E LD_PRELOAD="${LIBC_DIR}/libstdc++.so.6:${LIBC_DIR}/libgcc_s.so.1" )
 }
 
-function expand_powerpc_config() {
+function expand_bootlin_config() {
   # ref: https://toolchains.bootlin.com/
   local -r GCC_DIR=${ARCHIVE_DIR}/${GCC_RELATIVE_DIR}
 
@@ -424,13 +424,13 @@ function main() {
       expand_codescape_config
       declare -r QEMU_ARCH=mips64el ;;
     ppc64le)
-      expand_powerpc_config
+      expand_bootlin_config
       declare -r QEMU_ARCH=ppc64le ;;
     ppc64)
-      expand_powerpc_config
+      expand_bootlin_config
       declare -r QEMU_ARCH=ppc64 ;;
     ppc)
-      expand_powerpc_config
+      expand_bootlin_config
       declare -r QEMU_ARCH=ppc ;;
     *)
       >&2 echo "Unknown TARGET '${TARGET}'..."
