@@ -18,14 +18,14 @@ help:
 	@echo -e "\t${BOLD}help${RESET}: display this help and exit."
 	@echo
 	@echo -e "\tBuild using docker and the host platform."
-	@echo -e "\t${BOLD}<distro>_<stage>${RESET}: build <stage> docker image for a specific distro."
-	@echo -e "\t${BOLD}save_<distro>_<stage>${RESET}: Save the <stage> docker image for a specific distro."
+	@echo -e "\t${BOLD}<distro>_<stage>${RESET}: build a <stage> docker image for a specific distro."
+	@echo -e "\t${BOLD}save_<distro>_<stage>${RESET}: Save a <stage> docker image for a specific distro."
 	@echo -e "\t${BOLD}sh_<distro>_<stage>${RESET}: run a container using the <stage> docker image specified (debug purpose)."
 	@echo -e "\t${BOLD}clean_<distro>_<stage>${RESET}: Remove cache and docker image."
 	@echo -e "\t${BOLD}<stage>${RESET}: build <stage> docker images for ALL DISTROS."
 	@echo -e "\t${BOLD}save_<stage>${RESET}: Save <stage> docker images for ALL DISTROS."
-	@echo -e "\t${BOLD}clean_<stage>${RESET}: Remove cache and docker image."
-	@echo -e "\t${BOLD}clean_native${RESET}: Remove ALL cache and docker image."
+	@echo -e "\t${BOLD}clean_<stage>${RESET}: Remove caches and docker images."
+	@echo -e "\t${BOLD}clean_native${RESET}: Remove ALL caches and docker images."
 	@echo
 	@echo -e "\tWith ${BOLD}<distro>${RESET}:"
 	@echo -e "\t\t${BOLD}alpine${RESET} (edge)"
@@ -58,10 +58,13 @@ help:
 	@echo -e "\tWith ${BOLD}<platform>${RESET}:"
 	@echo -e "\t\t${BOLD}amd64${RESET}: linux/amd64 (x86_64)"
 	@echo -e "\t\t${BOLD}386${RESET}: linux/386 (x86)"
-	@echo -e "\t\t${BOLD}arm64${RESET}: linux/arm64 (aarch64, arm64v8)"
 	@echo -e "\t\t${BOLD}arm${RESET}: linux/arm (armv7)"
-	@echo -e "\t\t${BOLD}riscv64${RESET}: linux/riscv64 (RISC-V 64bits)"
+	@echo -e "\t\t${BOLD}arm64${RESET}: linux/arm64 (aarch64, arm64v8)"
+	@echo -e "\t\t${BOLD}mips${RESET}: linux/mips (mips 32bits)"
+	@echo -e "\t\t${BOLD}mips64${RESET}: linux/mips64 (mips 64bits)"
+	@echo -e "\t\t${BOLD}ppc64${RESET}: linux/ppc64 (PowerPC 64Bits)"
 	@echo -e "\t\t${BOLD}ppc64le${RESET}: linux/ppc64le (PowerPC 64Bits Little Endian)"
+	@echo -e "\t\t${BOLD}riscv64${RESET}: linux/riscv64 (RISC-V 64bits)"
 	@echo -e "\te.g. 'make amd64_ubuntu_test'"
 	@echo -e "\tDocker image unavailable: arm64_archlinux"
 	@echo
@@ -93,21 +96,23 @@ help:
 	@echo -e "\t\t${BOLD}devel${RESET}"
 	@echo -e "\t\t${BOLD}build${RESET}"
 	@echo -e "\t\t${BOLD}test${RESET}"
+	@echo -e "\te.g. 'make mips64_build'"
 	@echo -e "\te.g. 'make aarch64-linux-gnu_test'"
 	@echo
 	@echo -e "\tBuild using a vagrant machine."
 	@echo -e "\t${BOLD}<vm>_<vms_stage>${RESET}: build the vagrant <vm> virtual machine."
+	@echo -e "\t${BOLD}sh_<vm>_<lang>${RESET}: ssh to the vagrant machine specified (debug purpose)."
 	@echo -e "\t${BOLD}clean_<vm>${RESET}: Remove virtual machine for the specified vm."
 	@echo -e "\t${BOLD}clean_vms${RESET}: Remove ALL vagrant box."
 	@echo
-	@echo -e "\t${BOLD}<vm>${RESET}:"
+	@echo -e "\tWith ${BOLD}<vm>${RESET}:"
 	@echo -e "\t\t${BOLD}freebsd${RESET} (FreeBSD)"
 	@echo
 	@echo -e "\tWith ${BOLD}<vms_stage>${RESET}:"
 	@echo -e "\t\t${BOLD}build${RESET}"
 	@echo
 	@echo -e "\tGlobal targets."
-	@echo -e "\t${BOLD}clean${RESET}: Remove cache and ALL docker images."
+	@echo -e "\t${BOLD}clean${RESET}: Remove ALL caches and docker images."
 	@echo -e "\t${BOLD}distclean${RESET}: Remove everything."
 	@echo
 	@echo -e "\t${BOLD}NOCACHE=1${RESET}: use 'docker build --no-cache' when building container (default use cache)."
@@ -141,17 +146,17 @@ DOCKER_BUILDX_CMD := docker buildx build
 endif
 DOCKER_RUN_CMD := docker run --rm --init --net=host
 
+# Currently supported distro
+DISTROS = alpine archlinux centos debian fedora opensuse ubuntu
+
 # $* stem
 # $< first prerequist
 # $@ target name
 
 ############
-## NATIVE ##
+## STAGES ##
 ############
-# Currently supported distro
-DISTROS = alpine archlinux centos debian fedora opensuse ubuntu
 STAGES = env devel build test install_env install_devel install_build install_test
-
 define make-stage-target =
 #$$(info STAGE: $1)
 #$$(info Create targets: $1 $(addsuffix _$1, $(DISTROS)).)
@@ -197,7 +202,7 @@ clean_native: $(addprefix clean_, $(STAGES))
 ##############
 ## PLATFORM ##
 ##############
-PLATFORMS = amd64 386 arm64 arm riscv64
+PLATFORMS = amd64 386 arm arm64 mips mips64 ppc ppc64 ppc64le riscv64
 
 define make-platform-stage-target =
 #$$(info PLATFORM: $1)
@@ -258,8 +263,10 @@ clean_platforms: $(addprefix clean_, $(PLATFORMS))
 TOOLCHAIN_TARGETS = \
  arm-linux-gnueabihf armv8l-linux-gnueabihf arm-linux-gnueabi armeb-linux-gnueabihf armeb-linux-gnueabi \
  aarch64-linux-gnu aarch64_be-linux-gnu \
- mips32 mips32el mips64 mips64el \
- ppc ppc64 ppc64le
+ mips32 mips32el \
+ mips64 mips64el \
+ ppc \
+ ppc64 ppc64le
 TOOLCHAIN_STAGES = env devel build test
 
 define toolchain-stage-target =
@@ -320,6 +327,12 @@ vms_build: $(vms_targets)
 $(vms_targets): %_build: vagrant/%/Vagrantfile
 	@cd vagrant/$* && vagrant destroy -f
 	cd vagrant/$* && vagrant up
+
+sh_vms_targets = $(addprefix sh_,$(addsuffix _build, $(VMS)))
+.PHONY: $(sh_vms_targets)
+$(sh_vms_targets): sh_%_build: vagrant/%/Vagrantfile
+	cd vagrant/$* && vagrant up
+	cd vagrant/$* && vagrant ssh
 
 clean_vms_targets = $(addprefix clean_, $(VMS))
 .PHONY: clean_vms $(clean_vms_targets)
