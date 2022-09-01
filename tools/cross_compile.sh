@@ -417,7 +417,7 @@ function main() {
       declare -r QEMU_ARCH=aarch64 ;;
     aarch64_be-linux-gnu)
       expand_linaro_config
-      declare -r QEMU_ARCH=DISABLED ;;
+      declare -r QEMU_ARCH=aarch64_be ;;
     aarch64)
       expand_bootlin_config
       declare -r QEMU_ARCH=aarch64 ;;
