@@ -263,6 +263,10 @@ function expand_bootlin_config() {
       local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-440fp/tarballs/powerpc-440fp--glibc--stable-2021.11-1.tar.bz2"
       local -r GCC_PREFIX="powerpc"
       ;;
+    "s390x")
+      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/s390x-z13/tarballs/s390x-z13--glibc--stable-2022.08-1.tar.bz2"
+      local -r GCC_PREFIX="s390x"
+      ;;
     *)
       >&2 echo 'unknown power platform'
       exit 1 ;;
@@ -359,6 +363,7 @@ DESCRIPTION
 \t\tmips64 mips64el (codespace)
 \t\tppc (bootlin)
 \t\tppc64 ppc64le (bootlin)
+\t\ts390x (bootlin)
 
 OPTIONS
 \t-h --help: show this help text
@@ -445,6 +450,9 @@ function main() {
     ppc)
       expand_bootlin_config
       declare -r QEMU_ARCH=ppc ;;
+    s390x)
+      expand_bootlin_config
+      declare -r QEMU_ARCH=s390x ;;
     *)
       >&2 echo "Unknown TARGET '${TARGET}'..."
       exit 1 ;;
