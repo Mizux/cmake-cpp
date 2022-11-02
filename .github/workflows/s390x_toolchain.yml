@@ -1,0 +1,22 @@
+name: s390x Toolchain
+
+on: [push, pull_request]
+
+jobs:
+  # Building using the github runner environement directly.
+  powerpc:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        targets: [
+          [s390x],
+        ]
+      fail-fast: false
+    env:
+      TARGET: ${{ matrix.targets[0] }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: make --directory=ci ${TARGET}_build
+    - name: Test
+      run: make --directory=ci ${TARGET}_test

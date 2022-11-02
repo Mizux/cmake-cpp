@@ -66,6 +66,7 @@ help:
 	@echo -e "\t\t${BOLD}ppc64${RESET}: linux/ppc64 (PowerPC 64Bits)"
 	@echo -e "\t\t${BOLD}ppc64le${RESET}: linux/ppc64le (PowerPC 64Bits Little Endian)"
 	@echo -e "\t\t${BOLD}riscv64${RESET}: linux/riscv64 (RISC-V 64bits)"
+	@echo -e "\t\t${BOLD}s390x${RESET}: linux/s390x (IBM System/390x)"
 	@echo -e "\te.g. 'make amd64_ubuntu_test'"
 	@echo -e "\tDocker image unavailable: arm64_archlinux"
 	@echo
@@ -93,6 +94,7 @@ help:
 	@echo -e "\t\t${BOLD}ppc${RESET} (bootlin toolchain)"
 	@echo -e "\t\t${BOLD}ppc64${RESET} (bootlin toolchain)"
 	@echo -e "\t\t${BOLD}ppc64le${RESET} (bootlin toolchain)"
+	@echo -e "\t\t${BOLD}s390x${RESET} (bootlin toolchain)"
 	@echo
 	@echo -e "\tWith ${BOLD}<toolchain_stage>${RESET}:"
 	@echo -e "\t\t${BOLD}env${RESET}"
@@ -212,7 +214,8 @@ PLATFORMS = \
  arm arm64 \
  mips mipsle mips64 mips64le \
  ppc64 ppc64le \
- riscv64
+ riscv64 \
+ s390x
 
 define make-platform-stage-target =
 #$$(info PLATFORM: $1)
@@ -277,7 +280,8 @@ TOOLCHAIN_TARGETS = \
  mips64 mips64el \
  aarch64 aarch64be \
  ppc \
- ppc64 ppc64le
+ ppc64 ppc64le \
+ s390x
 TOOLCHAIN_STAGES = env devel build test
 
 define toolchain-stage-target =
