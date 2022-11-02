@@ -1,0 +1,22 @@
+name: riscv64 Toolchain
+
+on: [push, pull_request]
+
+jobs:
+  # Building using the github runner environement directly.
+  riscv64:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        targets: [
+          [riscv64], # bootlin
+        ]
+      fail-fast: false
+    env:
+      TARGET: ${{ matrix.targets[0] }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: make --directory=ci ${TARGET}_build
+    - name: Test
+      run: make --directory=ci ${TARGET}_test
