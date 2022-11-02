@@ -98,32 +98,34 @@ function clean_build() {
 
 function expand_bootlin_config() {
   # ref: https://toolchains.bootlin.com/
-  local -r GCC_DIR=${ARCHIVE_DIR}/${GCC_RELATIVE_DIR}
-
   case "${TARGET}" in
     "aarch64")
-      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64/tarballs/aarch64--glibc--stable-2021.11-1.tar.bz2"
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64/tarballs/aarch64--glibc--stable-2021.11-1.tar.bz2"
       local -r GCC_PREFIX="aarch64"
       ;;
     "aarch64be")
-      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64be/tarballs/aarch64be--glibc--stable-2021.11-1.tar.bz2"
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64be/tarballs/aarch64be--glibc--stable-2021.11-1.tar.bz2"
       local -r GCC_PREFIX="aarch64_be"
       ;;
     "ppc64le")
-      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64le-power8/tarballs/powerpc64le-power8--glibc--stable-2021.11-1.tar.bz2"
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64le-power8/tarballs/powerpc64le-power8--glibc--stable-2021.11-1.tar.bz2"
       local -r GCC_PREFIX="powerpc64le"
       ;;
     "ppc64")
-      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64-power8/tarballs/powerpc64-power8--glibc--stable-2021.11-1.tar.bz2"
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64-power8/tarballs/powerpc64-power8--glibc--stable-2021.11-1.tar.bz2"
       local -r GCC_PREFIX="powerpc64"
       ;;
-    "ppc")
-      #local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-e500mc/tarballs/powerpc-e500mc--glibc--stable-2021.11-1.tar.bz2"
-      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-440fp/tarballs/powerpc-440fp--glibc--stable-2021.11-1.tar.bz2"
+    "ppc-440fp" | "ppc")
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-440fp/tarballs/powerpc-440fp--glibc--stable-2021.11-1.tar.bz2"
       local -r GCC_PREFIX="powerpc"
       ;;
+    "ppc-e500mc")
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-e500mc/tarballs/powerpc-e500mc--glibc--stable-2021.11-1.tar.bz2"
+      local -r GCC_PREFIX="powerpc"
+      QEMU_ARGS+=( -cpu "e500mc" )
+      ;;
     "s390x")
-      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/s390x-z13/tarballs/s390x-z13--glibc--stable-2022.08-1.tar.bz2"
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/s390x-z13/tarballs/s390x-z13--glibc--stable-2022.08-1.tar.bz2"
       local -r GCC_PREFIX="s390x"
       ;;
     *)
@@ -131,11 +133,11 @@ function expand_bootlin_config() {
       exit 1 ;;
   esac
 
-  local -r POWER_RELATIVE_DIR="${TARGET}"
-  unpack "${POWER_URL}" "${POWER_RELATIVE_DIR}"
-  local -r EXTRACT_DIR="${ARCHIVE_DIR}/$(basename ${POWER_URL%.tar.bz2})"
+  local -r TOOLCHAIN_RELATIVE_DIR="${TARGET}"
+  unpack "${TOOLCHAIN_URL}" "${TOOLCHAIN_RELATIVE_DIR}"
+  local -r EXTRACT_DIR="${ARCHIVE_DIR}/$(basename ${TOOLCHAIN_URL%.tar.bz2})"
 
-  local -r POWER_DIR=${ARCHIVE_DIR}/${POWER_RELATIVE_DIR}
+  local -r POWER_DIR=${ARCHIVE_DIR}/${TOOLCHAIN_RELATIVE_DIR}
   if [[ -d "${EXTRACT_DIR}" ]]; then
     mv "${EXTRACT_DIR}" "${POWER_DIR}"
   fi
@@ -361,7 +363,7 @@ DESCRIPTION
 \t\tarmeb-linux-gnueabihf armeb-linux-gnueabi (linaro)
 \t\tmips32 mips32el (codespace)
 \t\tmips64 mips64el (codespace)
-\t\tppc (bootlin)
+\t\tppc-440fp(ppc) ppc-e500mc (bootlin)
 \t\tppc64 ppc64le (bootlin)
 \t\ts390x (bootlin)
 
@@ -408,6 +410,7 @@ function main() {
   declare -a CMAKE_ADDITIONAL_ARGS=()
 
   declare -a QEMU_ARGS=()
+  # ref: https://go.dev/doc/install/source#environment
   case ${TARGET} in
     x86_64)
       declare -r QEMU_ARCH=x86_64 ;;
@@ -441,15 +444,15 @@ function main() {
     mips64el)
       expand_codescape_config
       declare -r QEMU_ARCH=mips64el ;;
-    ppc64le)
+    ppc | ppc-440fp | ppc-e500mc )
       expand_bootlin_config
-      declare -r QEMU_ARCH=ppc64le ;;
+      declare -r QEMU_ARCH=ppc ;;
     ppc64)
       expand_bootlin_config
       declare -r QEMU_ARCH=ppc64 ;;
-    ppc)
+    ppc64le)
       expand_bootlin_config
-      declare -r QEMU_ARCH=ppc ;;
+      declare -r QEMU_ARCH=ppc64le ;;
     s390x)
       expand_bootlin_config
       declare -r QEMU_ARCH=s390x ;;

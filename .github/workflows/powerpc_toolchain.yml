@@ -9,7 +9,8 @@ jobs:
     strategy:
       matrix:
         targets: [
-          [ppc],
+          [ppc-440fp],
+          [ppc-e500mc],
           [ppc64],
           [ppc64le],
         ]

@@ -91,7 +91,8 @@ help:
 	@echo -e "\t\t${BOLD}mips64el${RESET} (codespace toolchain)"
 	@echo -e "\t\t${BOLD}aarch64${RESET} (bootlin toolchain)"
 	@echo -e "\t\t${BOLD}aarch64be${RESET} (bootlin toolchain)"
-	@echo -e "\t\t${BOLD}ppc${RESET} (bootlin toolchain)"
+	@echo -e "\t\t${BOLD}ppc-440fp${RESET} (bootlin toolchain)"
+	@echo -e "\t\t${BOLD}ppc-e500mc${RESET} (bootlin toolchain)"
 	@echo -e "\t\t${BOLD}ppc64${RESET} (bootlin toolchain)"
 	@echo -e "\t\t${BOLD}ppc64le${RESET} (bootlin toolchain)"
 	@echo -e "\t\t${BOLD}s390x${RESET} (bootlin toolchain)"
@@ -279,7 +280,7 @@ TOOLCHAIN_TARGETS = \
  mips32 mips32el \
  mips64 mips64el \
  aarch64 aarch64be \
- ppc \
+ ppc-440fp ppc-e500mc \
  ppc64 ppc64le \
  s390x
 TOOLCHAIN_STAGES = env devel build test
