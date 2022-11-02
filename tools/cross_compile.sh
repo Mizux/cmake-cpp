@@ -96,48 +96,81 @@ function clean_build() {
   mkdir -p "${BUILD_DIR}"
 }
 
-function expand_linaro_config() {
-  #ref: https://releases.linaro.org/components/toolchain/binaries/
-  local -r LINARO_VERSION=7.5-2019.12
-  local -r LINARO_ROOT_URL=https://releases.linaro.org/components/toolchain/binaries/${LINARO_VERSION}
-
-  local -r GCC_VERSION=7.5.0-2019.12
-  local -r GCC_URL=${LINARO_ROOT_URL}/${TARGET}/gcc-linaro-${GCC_VERSION}-x86_64_${TARGET}.tar.xz
-  local -r GCC_RELATIVE_DIR="gcc-linaro-${GCC_VERSION}-x86_64_${TARGET}"
-  unpack "${GCC_URL}" "${GCC_RELATIVE_DIR}"
-
-  local -r SYSROOT_VERSION=2.25-2019.12
-  local -r SYSROOT_URL=${LINARO_ROOT_URL}/${TARGET}/sysroot-glibc-linaro-${SYSROOT_VERSION}-${TARGET}.tar.xz
-  local -r SYSROOT_RELATIVE_DIR=sysroot-glibc-linaro-${SYSROOT_VERSION}-${TARGET}
-  unpack "${SYSROOT_URL}" "${SYSROOT_RELATIVE_DIR}"
-
-  local -r SYSROOT_DIR=${ARCHIVE_DIR}/${SYSROOT_RELATIVE_DIR}
-  local -r STAGING_DIR=${ARCHIVE_DIR}/${SYSROOT_RELATIVE_DIR}-stage
+function expand_bootlin_config() {
+  # ref: https://toolchains.bootlin.com/
   local -r GCC_DIR=${ARCHIVE_DIR}/${GCC_RELATIVE_DIR}
+
+  case "${TARGET}" in
+    "aarch64")
+      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64/tarballs/aarch64--glibc--stable-2021.11-1.tar.bz2"
+      local -r GCC_PREFIX="aarch64"
+      ;;
+    "aarch64be")
+      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64be/tarballs/aarch64be--glibc--stable-2021.11-1.tar.bz2"
+      local -r GCC_PREFIX="aarch64_be"
+      ;;
+    "ppc64le")
+      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64le-power8/tarballs/powerpc64le-power8--glibc--stable-2021.11-1.tar.bz2"
+      local -r GCC_PREFIX="powerpc64le"
+      ;;
+    "ppc64")
+      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64-power8/tarballs/powerpc64-power8--glibc--stable-2021.11-1.tar.bz2"
+      local -r GCC_PREFIX="powerpc64"
+      ;;
+    "ppc")
+      #local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-e500mc/tarballs/powerpc-e500mc--glibc--stable-2021.11-1.tar.bz2"
+      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-440fp/tarballs/powerpc-440fp--glibc--stable-2021.11-1.tar.bz2"
+      local -r GCC_PREFIX="powerpc"
+      ;;
+    "s390x")
+      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/s390x-z13/tarballs/s390x-z13--glibc--stable-2022.08-1.tar.bz2"
+      local -r GCC_PREFIX="s390x"
+      ;;
+    *)
+      >&2 echo 'unknown power platform'
+      exit 1 ;;
+  esac
+
+  local -r POWER_RELATIVE_DIR="${TARGET}"
+  unpack "${POWER_URL}" "${POWER_RELATIVE_DIR}"
+  local -r EXTRACT_DIR="${ARCHIVE_DIR}/$(basename ${POWER_URL%.tar.bz2})"
+
+  local -r POWER_DIR=${ARCHIVE_DIR}/${POWER_RELATIVE_DIR}
+  if [[ -d "${EXTRACT_DIR}" ]]; then
+    mv "${EXTRACT_DIR}" "${POWER_DIR}"
+  fi
+
+  local -r SYSROOT_DIR="${POWER_DIR}/${GCC_PREFIX}-buildroot-linux-gnu/sysroot"
+  #local -r STAGING_DIR=${SYSROOT_DIR}-stage
 
   # Write a Toolchain file
   # note: This is manadatory to use a file in order to have the CMake variable
   # 'CMAKE_CROSSCOMPILING' set to TRUE.
   # ref: https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html#cross-compiling-for-linux
-  cat >"$TOOLCHAIN_FILE" <<EOL
+  cat >"${TOOLCHAIN_FILE}" <<EOL
 set(CMAKE_SYSTEM_NAME Linux)
-set(CMAKE_SYSTEM_PROCESSOR ${TARGET})
+set(CMAKE_SYSTEM_PROCESSOR ${GCC_PREFIX})
 
 set(CMAKE_SYSROOT ${SYSROOT_DIR})
-set(CMAKE_STAGING_PREFIX ${STAGING_DIR})
+#set(CMAKE_STAGING_PREFIX ${STAGING_DIR})
 
-set(tools ${GCC_DIR})
-set(CMAKE_C_COMPILER \${tools}/bin/${TARGET}-gcc)
-set(CMAKE_CXX_COMPILER \${tools}/bin/${TARGET}-g++)
+set(tools ${POWER_DIR})
 
+set(CMAKE_C_COMPILER \${tools}/bin/${GCC_PREFIX}-linux-gcc)
+set(CMAKE_C_FLAGS "${POWER_FLAGS}")
+set(CMAKE_CXX_COMPILER \${tools}/bin/${GCC_PREFIX}-linux-g++)
+set(CMAKE_CXX_FLAGS "${POWER_FLAGS} -L${SYSROOT_DIR}/lib")
+
+set(CMAKE_FIND_ROOT_PATH ${POWER_DIR})
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 EOL
+
 CMAKE_ADDITIONAL_ARGS+=( -DCMAKE_TOOLCHAIN_FILE="${TOOLCHAIN_FILE}" )
 QEMU_ARGS+=( -L "${SYSROOT_DIR}" )
-QEMU_ARGS+=( -E LD_LIBRARY_PATH=/lib )
+QEMU_ARGS+=( -E LD_PRELOAD="${SYSROOT_DIR}/usr/lib/libstdc++.so.6:${SYSROOT_DIR}/lib/libgcc_s.so.1" )
 }
 
 function expand_codescape_config() {
@@ -237,81 +270,48 @@ local -r LIBC_DIR=${GCC_DIR}/mips-mti-linux-gnu/lib/${FLAVOUR}/${LIBC_DIR_SUFFIX
 QEMU_ARGS+=( -E LD_PRELOAD="${LIBC_DIR}/libstdc++.so.6:${LIBC_DIR}/libgcc_s.so.1" )
 }
 
-function expand_bootlin_config() {
-  # ref: https://toolchains.bootlin.com/
+function expand_linaro_config() {
+  #ref: https://releases.linaro.org/components/toolchain/binaries/
+  local -r LINARO_VERSION=7.5-2019.12
+  local -r LINARO_ROOT_URL=https://releases.linaro.org/components/toolchain/binaries/${LINARO_VERSION}
+
+  local -r GCC_VERSION=7.5.0-2019.12
+  local -r GCC_URL=${LINARO_ROOT_URL}/${TARGET}/gcc-linaro-${GCC_VERSION}-x86_64_${TARGET}.tar.xz
+  local -r GCC_RELATIVE_DIR="gcc-linaro-${GCC_VERSION}-x86_64_${TARGET}"
+  unpack "${GCC_URL}" "${GCC_RELATIVE_DIR}"
+
+  local -r SYSROOT_VERSION=2.25-2019.12
+  local -r SYSROOT_URL=${LINARO_ROOT_URL}/${TARGET}/sysroot-glibc-linaro-${SYSROOT_VERSION}-${TARGET}.tar.xz
+  local -r SYSROOT_RELATIVE_DIR=sysroot-glibc-linaro-${SYSROOT_VERSION}-${TARGET}
+  unpack "${SYSROOT_URL}" "${SYSROOT_RELATIVE_DIR}"
+
+  local -r SYSROOT_DIR=${ARCHIVE_DIR}/${SYSROOT_RELATIVE_DIR}
+  local -r STAGING_DIR=${ARCHIVE_DIR}/${SYSROOT_RELATIVE_DIR}-stage
   local -r GCC_DIR=${ARCHIVE_DIR}/${GCC_RELATIVE_DIR}
-
-  case "${TARGET}" in
-    "aarch64")
-      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64/tarballs/aarch64--glibc--stable-2021.11-1.tar.bz2"
-      local -r GCC_PREFIX="aarch64"
-      ;;
-    "aarch64be")
-      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64be/tarballs/aarch64be--glibc--stable-2021.11-1.tar.bz2"
-      local -r GCC_PREFIX="aarch64_be"
-      ;;
-    "ppc64le")
-      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64le-power8/tarballs/powerpc64le-power8--glibc--stable-2021.11-1.tar.bz2"
-      local -r GCC_PREFIX="powerpc64le"
-      ;;
-    "ppc64")
-      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64-power8/tarballs/powerpc64-power8--glibc--stable-2021.11-1.tar.bz2"
-      local -r GCC_PREFIX="powerpc64"
-      ;;
-    "ppc")
-      #local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-e500mc/tarballs/powerpc-e500mc--glibc--stable-2021.11-1.tar.bz2"
-      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-440fp/tarballs/powerpc-440fp--glibc--stable-2021.11-1.tar.bz2"
-      local -r GCC_PREFIX="powerpc"
-      ;;
-    "s390x")
-      local -r POWER_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/s390x-z13/tarballs/s390x-z13--glibc--stable-2022.08-1.tar.bz2"
-      local -r GCC_PREFIX="s390x"
-      ;;
-    *)
-      >&2 echo 'unknown power platform'
-      exit 1 ;;
-  esac
-
-  local -r POWER_RELATIVE_DIR="${TARGET}"
-  unpack "${POWER_URL}" "${POWER_RELATIVE_DIR}"
-  local -r EXTRACT_DIR="${ARCHIVE_DIR}/$(basename ${POWER_URL%.tar.bz2})"
-
-  local -r POWER_DIR=${ARCHIVE_DIR}/${POWER_RELATIVE_DIR}
-  if [[ -d "${EXTRACT_DIR}" ]]; then
-    mv "${EXTRACT_DIR}" "${POWER_DIR}"
-  fi
-
-  local -r SYSROOT_DIR="${POWER_DIR}/${GCC_PREFIX}-buildroot-linux-gnu/sysroot"
-  #local -r STAGING_DIR=${SYSROOT_DIR}-stage
 
   # Write a Toolchain file
   # note: This is manadatory to use a file in order to have the CMake variable
   # 'CMAKE_CROSSCOMPILING' set to TRUE.
   # ref: https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html#cross-compiling-for-linux
-  cat >"${TOOLCHAIN_FILE}" <<EOL
+  cat >"$TOOLCHAIN_FILE" <<EOL
 set(CMAKE_SYSTEM_NAME Linux)
-set(CMAKE_SYSTEM_PROCESSOR ${GCC_PREFIX})
+set(CMAKE_SYSTEM_PROCESSOR ${TARGET})
 
 set(CMAKE_SYSROOT ${SYSROOT_DIR})
-#set(CMAKE_STAGING_PREFIX ${STAGING_DIR})
+set(CMAKE_STAGING_PREFIX ${STAGING_DIR})
 
-set(tools ${POWER_DIR})
+set(tools ${GCC_DIR})
+set(CMAKE_C_COMPILER \${tools}/bin/${TARGET}-gcc)
+set(CMAKE_CXX_COMPILER \${tools}/bin/${TARGET}-g++)
 
-set(CMAKE_C_COMPILER \${tools}/bin/${GCC_PREFIX}-linux-gcc)
-set(CMAKE_C_FLAGS "${POWER_FLAGS}")
-set(CMAKE_CXX_COMPILER \${tools}/bin/${GCC_PREFIX}-linux-g++)
-set(CMAKE_CXX_FLAGS "${POWER_FLAGS} -L${SYSROOT_DIR}/lib")
-
-set(CMAKE_FIND_ROOT_PATH ${POWER_DIR})
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 EOL
-
 CMAKE_ADDITIONAL_ARGS+=( -DCMAKE_TOOLCHAIN_FILE="${TOOLCHAIN_FILE}" )
 QEMU_ARGS+=( -L "${SYSROOT_DIR}" )
-QEMU_ARGS+=( -E LD_PRELOAD="${SYSROOT_DIR}/usr/lib/libstdc++.so.6:${SYSROOT_DIR}/lib/libgcc_s.so.1" )
+QEMU_ARGS+=( -E LD_LIBRARY_PATH=/lib )
 }
 
 function build() {
