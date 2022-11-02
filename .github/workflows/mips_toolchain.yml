@@ -9,10 +9,14 @@ jobs:
     strategy:
       matrix:
         targets: [
-          [mips32],
-          [mips32el],
-          [mips64],
-          [mips64el]
+          [mips32-r6],
+          [mips32el-r6],
+          [mips64-r6],
+          [mips64el-r6],
+          [mips32-r2],
+          [mips32el-r2],
+          [mips64-r2],
+          [mips64el-r2]
         ]
       fail-fast: false
     env:

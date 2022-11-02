@@ -85,10 +85,14 @@ help:
 	@echo -e "\t\t${BOLD}armeb-linux-gnueabi${RESET} (linaro toolchain)"
 	@echo -e "\t\t${BOLD}aarch64-linux-gnu${RESET} (linaro toolchain)"
 	@echo -e "\t\t${BOLD}aarch64_be-linux-gnu${RESET} (linaro toolchain)"
-	@echo -e "\t\t${BOLD}mips32${RESET} (codespace toolchain)"
-	@echo -e "\t\t${BOLD}mips64${RESET} (codespace toolchain)"
-	@echo -e "\t\t${BOLD}mips32el${RESET} (codespace toolchain)"
-	@echo -e "\t\t${BOLD}mips64el${RESET} (codespace toolchain)"
+	@echo -e "\t\t${BOLD}mips32-r6${RESET} (codespace toolchain)"
+	@echo -e "\t\t${BOLD}mips64-r6${RESET} (codespace toolchain)"
+	@echo -e "\t\t${BOLD}mips32el-r6${RESET} (codespace toolchain)"
+	@echo -e "\t\t${BOLD}mips64el-r6${RESET} (codespace toolchain)"
+	@echo -e "\t\t${BOLD}mips32-r2${RESET} (codespace toolchain)"
+	@echo -e "\t\t${BOLD}mips64-r2${RESET} (codespace toolchain)"
+	@echo -e "\t\t${BOLD}mips32el-r2${RESET} (codespace toolchain)"
+	@echo -e "\t\t${BOLD}mips64el-r2${RESET} (codespace toolchain)"
 	@echo -e "\t\t${BOLD}aarch64${RESET} (bootlin toolchain)"
 	@echo -e "\t\t${BOLD}aarch64be${RESET} (bootlin toolchain)"
 	@echo -e "\t\t${BOLD}ppc-440fp${RESET} (bootlin toolchain)"
@@ -279,8 +283,10 @@ clean_platforms: $(addprefix clean_, $(PLATFORMS))
 TOOLCHAIN_TARGETS = \
  arm-linux-gnueabihf armv8l-linux-gnueabihf arm-linux-gnueabi armeb-linux-gnueabihf armeb-linux-gnueabi \
  aarch64-linux-gnu aarch64_be-linux-gnu \
- mips32 mips32el \
- mips64 mips64el \
+ mips32-r6 mips32el-r6 \
+ mips64-r6 mips64el-r6 \
+ mips32-r2 mips32el-r2 \
+ mips64-r2 mips64el-r2 \
  aarch64 aarch64be \
  ppc-440fp ppc-e500mc \
  ppc64 ppc64le \
