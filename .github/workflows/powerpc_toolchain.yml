@@ -11,7 +11,7 @@ jobs:
         targets: [
           [ppc], # alias
           [ppc-440fp],
-          [ppc-e500mc],
+          # [ppc-e500mc], # TODO(mizux) To fix
           [ppc64], # OCI alias
           [ppc64le], # OCI alias
           [ppc64-power8],
