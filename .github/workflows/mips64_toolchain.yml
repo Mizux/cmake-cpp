@@ -1,20 +1,20 @@
-name: mips Toolchain
+name: mips64 Toolchain
 
 on: [push, pull_request]
 
 jobs:
   # Building using the github runner environement directly.
-  mips:
+  mips64:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         targets: [
-          [mips], # OCI alias
-          [mipsle], # OCI alias
-          [mips32-r6],
-          [mips32el-r6],
-          [mips32-r2],
-          [mips32el-r2],
+          [mips64], # OCI alias
+          [mips64le], # OCI alias
+          [mips64-r6],
+          [mips64el-r6],
+          [mips64-r2],
+          [mips64el-r2]
         ]
       fail-fast: false
     env:
