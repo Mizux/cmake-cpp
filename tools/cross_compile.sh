@@ -99,7 +99,7 @@ function clean_build() {
 function expand_bootlin_config() {
   # ref: https://toolchains.bootlin.com/
   case "${TARGET}" in
-    "aarch64")
+    "arm64" | "aarch64")
       local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64/tarballs/aarch64--glibc--stable-2021.11-1.tar.bz2"
       local -r GCC_PREFIX="aarch64"
       ;;
@@ -382,7 +382,7 @@ DESCRIPTION
 \tYou MUST define the following variables before running this script:
 \t* TARGET:
 \t\tx86_64
-\t\taarch64 aarch64be (bootlin)
+\t\taarch64(arm64) aarch64be (bootlin)
 \t\taarch64-linux-gnu aarch64_be-linux-gnu (linaro)
 \t\tarm-linux-gnueabihf armv8l-linux-gnueabihf arm-linux-gnueabi (linaro)
 \t\tarmeb-linux-gnueabihf armeb-linux-gnueabi (linaro)
@@ -452,7 +452,7 @@ function main() {
     aarch64_be-linux-gnu)
       expand_linaro_config
       declare -r QEMU_ARCH=aarch64_be ;;
-    aarch64)
+    arm64 | aarch64)
       expand_bootlin_config
       declare -r QEMU_ARCH=aarch64 ;;
     aarch64be)

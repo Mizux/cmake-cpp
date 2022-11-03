@@ -1,5 +1,5 @@
 # ref: https://github.com/docker-library/official-images
-name: aarch64 Docker
+name: arm64 Docker
 
 on: [push, pull_request]
 
