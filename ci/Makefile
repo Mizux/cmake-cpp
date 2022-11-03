@@ -83,22 +83,22 @@ help:
 	@echo -e "\t\t${BOLD}arm-linux-gnueabi${RESET} (linaro toolchain)"
 	@echo -e "\t\t${BOLD}armeb-linux-gnueabihf${RESET} (linaro toolchain)"
 	@echo -e "\t\t${BOLD}armeb-linux-gnueabi${RESET} (linaro toolchain)"
+	@echo -e "\t\t${BOLD}aarch64${RESET} (alias: arm64) (bootlin toolchain)"
+	@echo -e "\t\t${BOLD}aarch64be${RESET} (bootlin toolchain)"
 	@echo -e "\t\t${BOLD}aarch64-linux-gnu${RESET} (linaro toolchain)"
 	@echo -e "\t\t${BOLD}aarch64_be-linux-gnu${RESET} (linaro toolchain)"
-	@echo -e "\t\t${BOLD}mips32-r6${RESET} (codespace toolchain)"
-	@echo -e "\t\t${BOLD}mips64-r6${RESET} (codespace toolchain)"
-	@echo -e "\t\t${BOLD}mips32el-r6${RESET} (codespace toolchain)"
-	@echo -e "\t\t${BOLD}mips64el-r6${RESET} (codespace toolchain)"
+	@echo -e "\t\t${BOLD}mips32-r6${RESET} (alias: mips) (codespace toolchain)"
+	@echo -e "\t\t${BOLD}mips64-r6${RESET} (alias: mips64) (codespace toolchain)"
+	@echo -e "\t\t${BOLD}mips32el-r6${RESET} (alias: mipsle) (codespace toolchain)"
+	@echo -e "\t\t${BOLD}mips64el-r6${RESET} (alias: mips64le) (codespace toolchain)"
 	@echo -e "\t\t${BOLD}mips32-r2${RESET} (codespace toolchain)"
 	@echo -e "\t\t${BOLD}mips64-r2${RESET} (codespace toolchain)"
 	@echo -e "\t\t${BOLD}mips32el-r2${RESET} (codespace toolchain)"
 	@echo -e "\t\t${BOLD}mips64el-r2${RESET} (codespace toolchain)"
-	@echo -e "\t\t${BOLD}aarch64${RESET} (bootlin toolchain)"
-	@echo -e "\t\t${BOLD}aarch64be${RESET} (bootlin toolchain)"
-	@echo -e "\t\t${BOLD}ppc-440fp${RESET} (bootlin toolchain)"
+	@echo -e "\t\t${BOLD}ppc-440fp${RESET} (alias: ppc) (bootlin toolchain)"
 	@echo -e "\t\t${BOLD}ppc-e500mc${RESET} (bootlin toolchain)"
-	@echo -e "\t\t${BOLD}ppc64${RESET} (bootlin toolchain)"
-	@echo -e "\t\t${BOLD}ppc64le${RESET} (bootlin toolchain)"
+	@echo -e "\t\t${BOLD}ppc64-power8${RESET} (alias: ppc64) (bootlin toolchain)"
+	@echo -e "\t\t${BOLD}ppc64le-power8${RESET} (alias: ppc64le) (bootlin toolchain)"
 	@echo -e "\t\t${BOLD}riscv32${RESET} (bootlin toolchain)"
 	@echo -e "\t\t${BOLD}riscv64${RESET} (bootlin toolchain)"
 	@echo -e "\t\t${BOLD}s390x${RESET} (bootlin toolchain)"
@@ -283,13 +283,14 @@ clean_platforms: $(addprefix clean_, $(PLATFORMS))
 TOOLCHAIN_TARGETS = \
  arm-linux-gnueabihf armv8l-linux-gnueabihf arm-linux-gnueabi armeb-linux-gnueabihf armeb-linux-gnueabi \
  aarch64-linux-gnu aarch64_be-linux-gnu \
- mips32-r6 mips32el-r6 \
- mips64-r6 mips64el-r6 \
- mips32-r2 mips32el-r2 \
- mips64-r2 mips64el-r2 \
- aarch64 aarch64be \
- ppc-440fp ppc-e500mc \
- ppc64 ppc64le \
+ mips mips32-r6 mips32-r2 \
+ mipsle mips32el-r6 mips32el-r2 \
+ mips64 mips64-r6 mips64-r2 \
+ mips64le mips64el-r6 mips64el-r2 \
+ arm64 aarch64 aarch64be \
+ ppc ppc-440fp ppc-e500mc \
+ ppc64 ppc64-power8 \
+ ppc64le ppc64le-power8 \
  riscv32 riscv64 \
  s390x
 TOOLCHAIN_STAGES = env devel build test
