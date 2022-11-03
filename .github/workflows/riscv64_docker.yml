@@ -8,7 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        distro: [alpine, centos, debian, fedora, opensuse, ubuntu]
+        distro: [
+          alpine,
+          # centos,
+          # debian, # currently only debian:sid not latest
+          # fedora,
+          # opensuse,
+          ubuntu]
       fail-fast: false
     env:
       DISTRO: riscv64_${{ matrix.distro }}
