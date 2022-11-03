@@ -9,6 +9,7 @@ jobs:
     strategy:
       matrix:
         targets: [
+          [arm64], # OCI alias
           [aarch64-linux-gnu], # linaro
           [aarch64_be-linux-gnu], # linaro
           [aarch64], # bootlin
