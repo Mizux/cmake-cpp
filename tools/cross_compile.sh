@@ -107,15 +107,7 @@ function expand_bootlin_config() {
       local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64be/tarballs/aarch64be--glibc--stable-2021.11-1.tar.bz2"
       local -r GCC_PREFIX="aarch64_be"
       ;;
-    "ppc64le")
-      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64le-power8/tarballs/powerpc64le-power8--glibc--stable-2021.11-1.tar.bz2"
-      local -r GCC_PREFIX="powerpc64le"
-      ;;
-    "ppc64")
-      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64-power8/tarballs/powerpc64-power8--glibc--stable-2021.11-1.tar.bz2"
-      local -r GCC_PREFIX="powerpc64"
-      ;;
-    "ppc-440fp" | "ppc")
+    "ppc" | "ppc-440fp")
       local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-440fp/tarballs/powerpc-440fp--glibc--stable-2021.11-1.tar.bz2"
       local -r GCC_PREFIX="powerpc"
       ;;
@@ -123,6 +115,14 @@ function expand_bootlin_config() {
       local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-e500mc/tarballs/powerpc-e500mc--glibc--stable-2021.11-1.tar.bz2"
       local -r GCC_PREFIX="powerpc"
       QEMU_ARGS+=( -cpu "e500mc" )
+      ;;
+    "ppc64" | "ppc64-power8")
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64-power8/tarballs/powerpc64-power8--glibc--stable-2021.11-1.tar.bz2"
+      local -r GCC_PREFIX="powerpc64"
+      ;;
+    "ppc64le" | "ppc64le-power8")
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64le-power8/tarballs/powerpc64le-power8--glibc--stable-2021.11-1.tar.bz2"
+      local -r GCC_PREFIX="powerpc64le"
       ;;
     "riscv32")
       local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/riscv32-ilp32d/tarballs/riscv32-ilp32d--glibc--bleeding-edge-2022.08-1.tar.bz2"
@@ -473,10 +473,10 @@ function main() {
     ppc | ppc-440fp | ppc-e500mc )
       expand_bootlin_config
       declare -r QEMU_ARCH=ppc ;;
-    ppc64)
+    ppc64 | ppc64-power8)
       expand_bootlin_config
       declare -r QEMU_ARCH=ppc64 ;;
-    ppc64le)
+    ppc64le | ppc64le-power8)
       expand_bootlin_config
       declare -r QEMU_ARCH=ppc64le ;;
     riscv32)
