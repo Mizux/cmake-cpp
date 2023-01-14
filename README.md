@@ -132,7 +132,7 @@ Image has been generated using [plantuml](http://plantuml.com/):
 ```bash
 plantuml -Tsvg docs/{file}.dot
 ```
-So you can find the dot source files in [docs](docs).
+So you can find the dot source files in [ci/docs](ci/docs).
 
 ## License
 Apache 2. See the LICENSE file for details.
