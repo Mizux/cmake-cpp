@@ -1,7 +1,6 @@
 # Create a virtual environment with all tools installed
 # ref: https://hub.docker.com/_/ubuntu
 FROM ubuntu:latest AS env
-LABEL maintainer="mizux.dev@gmail.com"
 # Install system build dependencies
 ENV PATH=/usr/local/bin:$PATH
 RUN apt-get update -qq \
@@ -12,11 +11,11 @@ RUN apt-get update -qq \
 ENTRYPOINT ["/usr/bin/bash", "-c"]
 CMD ["/usr/bin/bash"]
 
-# Install CMake 3.24.1
-RUN wget "https://cmake.org/files/v3.24/cmake-3.24.1-linux-x86_64.sh" \
-&& chmod a+x cmake-3.24.1-linux-x86_64.sh \
-&& ./cmake-3.24.1-linux-x86_64.sh --prefix=/usr/local/ --skip-license \
-&& rm cmake-3.24.1-linux-x86_64.sh
+# Install CMake 3.25.2
+RUN wget "https://cmake.org/files/v3.25/cmake-3.25.2-linux-x86_64.sh" \
+&& chmod a+x cmake-3.25.2-linux-x86_64.sh \
+&& ./cmake-3.25.2-linux-x86_64.sh --prefix=/usr/local/ --skip-license \
+&& rm cmake-3.25.2-linux-x86_64.sh
 
 FROM env AS devel
 WORKDIR /home/project
