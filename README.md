@@ -1,45 +1,45 @@
 Github-CI:<br>
-[![Build Status][github_linux_status]][github_linux_link]
-[![Build Status][github_macos_status]][github_macos_link]
-[![Build Status][github_windows_status]][github_windows_link]<br>
+[![Build Status][amd64_linux_status]][amd64_linux_link]
+[![Build Status][amd64_macos_status]][amd64_macos_link]
+[![Build Status][amd64_windows_status]][amd64_windows_link]<br>
 
-[![Build Status][github_amd64_docker_status]][github_amd64_docker_link]
-[![Build Status][github_arm64_docker_status]][github_arm64_docker_link]
-[![Build Status][github_riscv64_docker_status]][github_riscv64_docker_link]<br>
+[![Build Status][amd64_docker_status]][amd64_docker_link]
+[![Build Status][arm64_docker_status]][arm64_docker_link]
+[![Build Status][riscv64_docker_status]][riscv64_docker_link]<br>
 
-[![Build Status][github_arm_toolchain_status]][github_arm_toolchain_link]
-[![Build Status][github_aarch64_toolchain_status]][github_aarch64_toolchain_link]
-[![Build Status][github_mips_toolchain_status]][github_mips_toolchain_link]
-[![Build Status][github_mips64_toolchain_status]][github_mips64_toolchain_link]
-[![Build Status][github_powerpc_toolchain_status]][github_powerpc_toolchain_link]
-[![Build Status][github_riscv64_toolchain_status]][github_riscv64_toolchain_link]<br>
+[![Build Status][arm_toolchain_status]][arm_toolchain_link]
+[![Build Status][aarch64_toolchain_status]][aarch64_toolchain_link]
+[![Build Status][mips_toolchain_status]][mips_toolchain_link]
+[![Build Status][mips64_toolchain_status]][mips64_toolchain_link]
+[![Build Status][powerpc_toolchain_status]][powerpc_toolchain_link]
+[![Build Status][riscv64_toolchain_status]][riscv64_toolchain_link]<br>
 
-[github_linux_status]: https://github.com/Mizux/cmake-cpp/actions/workflows/amd64_linux.yml/badge.svg
-[github_linux_link]: https://github.com/Mizux/cmake-cpp/actions/workflows/amd64_linux.yml
-[github_macos_status]: https://github.com/Mizux/cmake-cpp/actions/workflows/amd64_macos.yml/badge.svg
-[github_macos_link]: https://github.com/Mizux/cmake-cpp/actions/workflows/amd64_macos.yml
-[github_windows_status]: https://github.com/Mizux/cmake-cpp/actions/workflows/amd64_windows.yml/badge.svg
-[github_windows_link]: https://github.com/Mizux/cmake-cpp/actions/workflows/amd64_windows.yml
+[amd64_linux_status]: ./../../actions/workflows/amd64_linux.yml/badge.svg
+[amd64_linux_link]: ./../../actions/workflows/amd64_linux.yml
+[amd64_macos_status]: ./../../actions/workflows/amd64_macos.yml/badge.svg
+[amd64_macos_link]: ./../../actions/workflows/amd64_macos.yml
+[amd64_windows_status]: ./../../actions/workflows/amd64_windows.yml/badge.svg
+[amd64_windows_link]: ./../../actions/workflows/amd64_windows.yml
 
-[github_amd64_docker_status]: https://github.com/Mizux/cmake-cpp/actions/workflows/amd64_docker.yml/badge.svg
-[github_amd64_docker_link]: https://github.com/Mizux/cmake-cpp/actions/workflows/amd64_docker.yml
-[github_arm64_docker_status]: https://github.com/Mizux/cmake-cpp/actions/workflows/arm64_docker.yml/badge.svg
-[github_arm64_docker_link]: https://github.com/Mizux/cmake-cpp/actions/workflows/arm64_docker.yml
-[github_riscv64_docker_status]: https://github.com/Mizux/cmake-cpp/actions/workflows/riscv64_docker.yml/badge.svg
-[github_riscv64_docker_link]: https://github.com/Mizux/cmake-cpp/actions/workflows/riscv64_docker.yml
+[amd64_docker_status]: ./../../actions/workflows/amd64_docker.yml/badge.svg
+[amd64_docker_link]: ./../../actions/workflows/amd64_docker.yml
+[arm64_docker_status]: ./../../actions/workflows/arm64_docker.yml/badge.svg
+[arm64_docker_link]: ./../../actions/workflows/arm64_docker.yml
+[riscv64_docker_status]: ./../../actions/workflows/riscv64_docker.yml/badge.svg
+[riscv64_docker_link]: ./../../actions/workflows/riscv64_docker.yml
 
-[github_arm_toolchain_status]: https://github.com/Mizux/cmake-cpp/actions/workflows/arm_toolchain.yml/badge.svg
-[github_arm_toolchain_link]: https://github.com/Mizux/cmake-cpp/actions/workflows/arm_toolchain.yml
-[github_aarch64_toolchain_status]: https://github.com/Mizux/cmake-cpp/actions/workflows/aarch64_toolchain.yml/badge.svg
-[github_aarch64_toolchain_link]: https://github.com/Mizux/cmake-cpp/actions/workflows/aarch64_toolchain.yml
-[github_mips_toolchain_status]: https://github.com/Mizux/cmake-cpp/actions/workflows/mips_toolchain.yml/badge.svg
-[github_mips_toolchain_link]: https://github.com/Mizux/cmake-cpp/actions/workflows/mips_toolchain.yml
-[github_mips64_toolchain_status]: https://github.com/Mizux/cmake-cpp/actions/workflows/mips64_toolchain.yml/badge.svg
-[github_mips64_toolchain_link]: https://github.com/Mizux/cmake-cpp/actions/workflows/mips64_toolchain.yml
-[github_powerpc_toolchain_status]: https://github.com/Mizux/cmake-cpp/actions/workflows/powerpc_toolchain.yml/badge.svg
-[github_powerpc_toolchain_link]: https://github.com/Mizux/cmake-cpp/actions/workflows/powerpc_toolchain.yml
-[github_riscv64_toolchain_status]: https://github.com/Mizux/cmake-cpp/actions/workflows/riscv64_toolchain.yml/badge.svg
-[github_riscv64_toolchain_link]: https://github.com/Mizux/cmake-cpp/actions/workflows/riscv64_toolchain.yml
+[arm_toolchain_status]: ./../../actions/workflows/arm_toolchain.yml/badge.svg
+[arm_toolchain_link]: ./../../actions/workflows/arm_toolchain.yml
+[aarch64_toolchain_status]: ./../../actions/workflows/aarch64_toolchain.yml/badge.svg
+[aarch64_toolchain_link]: ./../../actions/workflows/aarch64_toolchain.yml
+[mips_toolchain_status]: ./../../actions/workflows/mips_toolchain.yml/badge.svg
+[mips_toolchain_link]: ./../../actions/workflows/mips_toolchain.yml
+[mips64_toolchain_status]: ./../../actions/workflows/mips64_toolchain.yml/badge.svg
+[mips64_toolchain_link]: ./../../actions/workflows/mips64_toolchain.yml
+[powerpc_toolchain_status]: ./../../actions/workflows/powerpc_toolchain.yml/badge.svg
+[powerpc_toolchain_link]: ./../../actions/workflows/powerpc_toolchain.yml
+[riscv64_toolchain_status]: ./../../actions/workflows/riscv64_toolchain.yml/badge.svg
+[riscv64_toolchain_link]: ./../../actions/workflows/riscv64_toolchain.yml
 
 # Introduction
 <nav for="project"> |
