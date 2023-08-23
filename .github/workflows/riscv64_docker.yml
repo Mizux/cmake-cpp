@@ -1,7 +1,7 @@
 # ref: https://github.com/docker-library/official-images
 name: riscv64 Docker
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   Distros:
