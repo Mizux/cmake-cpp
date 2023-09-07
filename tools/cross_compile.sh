@@ -102,22 +102,22 @@ function expand_bootlin_config() {
       local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64be/tarballs/aarch64be--glibc--stable-2021.11-1.tar.bz2"
       local -r GCC_PREFIX="aarch64_be"
       ;;
-    "ppc" | "ppc-440fp")
-      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-440fp/tarballs/powerpc-440fp--glibc--stable-2021.11-1.tar.bz2"
-      local -r GCC_PREFIX="powerpc"
+    "ppc64le" | "ppc64le-power8")
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64le-power8/tarballs/powerpc64le-power8--glibc--stable-2021.11-1.tar.bz2"
+      local -r GCC_PREFIX="powerpc64le"
+      ;;
+    "ppc64" | "ppc64-power8")
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64-power8/tarballs/powerpc64-power8--glibc--stable-2021.11-1.tar.bz2"
+      local -r GCC_PREFIX="powerpc64"
       ;;
     "ppc-e500mc")
       local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-e500mc/tarballs/powerpc-e500mc--glibc--stable-2021.11-1.tar.bz2"
       local -r GCC_PREFIX="powerpc"
       QEMU_ARGS+=( -cpu "e500mc" )
       ;;
-    "ppc64" | "ppc64-power8")
-      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64-power8/tarballs/powerpc64-power8--glibc--stable-2021.11-1.tar.bz2"
-      local -r GCC_PREFIX="powerpc64"
-      ;;
-    "ppc64le" | "ppc64le-power8")
-      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64le-power8/tarballs/powerpc64le-power8--glibc--stable-2021.11-1.tar.bz2"
-      local -r GCC_PREFIX="powerpc64le"
+    "ppc" | "ppc-440fp")
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-440fp/tarballs/powerpc-440fp--glibc--stable-2021.11-1.tar.bz2"
+      local -r GCC_PREFIX="powerpc"
       ;;
     "riscv32")
       local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/riscv32-ilp32d/tarballs/riscv32-ilp32d--glibc--bleeding-edge-2022.08-1.tar.bz2"
@@ -140,12 +140,12 @@ function expand_bootlin_config() {
   unpack "${TOOLCHAIN_URL}" "${TOOLCHAIN_RELATIVE_DIR}"
   local -r EXTRACT_DIR="${ARCHIVE_DIR}/$(basename ${TOOLCHAIN_URL%.tar.bz2})"
 
-  local -r POWER_DIR=${ARCHIVE_DIR}/${TOOLCHAIN_RELATIVE_DIR}
+  local -r TOOLCHAIN_DIR=${ARCHIVE_DIR}/${TOOLCHAIN_RELATIVE_DIR}
   if [[ -d "${EXTRACT_DIR}" ]]; then
-    mv "${EXTRACT_DIR}" "${POWER_DIR}"
+    mv "${EXTRACT_DIR}" "${TOOLCHAIN_DIR}"
   fi
 
-  local -r SYSROOT_DIR="${POWER_DIR}/${GCC_PREFIX}-buildroot-linux-gnu/sysroot"
+  local -r SYSROOT_DIR="${TOOLCHAIN_DIR}/${GCC_PREFIX}-buildroot-linux-gnu/sysroot"
   #local -r STAGING_DIR=${SYSROOT_DIR}-stage
 
   # Write a Toolchain file
@@ -159,14 +159,14 @@ set(CMAKE_SYSTEM_PROCESSOR ${GCC_PREFIX})
 set(CMAKE_SYSROOT ${SYSROOT_DIR})
 #set(CMAKE_STAGING_PREFIX ${STAGING_DIR})
 
-set(tools ${POWER_DIR})
+set(tools ${TOOLCHAIN_DIR})
 
 set(CMAKE_C_COMPILER \${tools}/bin/${GCC_PREFIX}-linux-gcc)
 set(CMAKE_C_FLAGS "${POWER_FLAGS}")
 set(CMAKE_CXX_COMPILER \${tools}/bin/${GCC_PREFIX}-linux-g++)
 set(CMAKE_CXX_FLAGS "${POWER_FLAGS} -L${SYSROOT_DIR}/lib")
 
-set(CMAKE_FIND_ROOT_PATH ${POWER_DIR})
+set(CMAKE_FIND_ROOT_PATH ${TOOLCHAIN_DIR})
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
@@ -427,7 +427,7 @@ function main() {
   echo "Build dir: '${BUILD_DIR}'"
   echo "toolchain file: '${TOOLCHAIN_FILE}'"
 
-  declare -a CMAKE_DEFAULT_ARGS=( -G ${CMAKE_GENERATOR:-"Unix Makefiles"} )
+  declare -a CMAKE_DEFAULT_ARGS=( -G "${CMAKE_GENERATOR:-\"Unix Makefiles\"}" )
   declare -a CMAKE_ADDITIONAL_ARGS=()
 
   declare -a QEMU_ARGS=()
@@ -465,15 +465,15 @@ function main() {
     mips64le | mips64el-r6 | mips64el-r2)
       expand_codescape_config
       declare -r QEMU_ARCH=mips64el ;;
-    ppc | ppc-440fp | ppc-e500mc )
-      expand_bootlin_config
-      declare -r QEMU_ARCH=ppc ;;
-    ppc64 | ppc64-power8)
-      expand_bootlin_config
-      declare -r QEMU_ARCH=ppc64 ;;
     ppc64le | ppc64le-power8)
       expand_bootlin_config
       declare -r QEMU_ARCH=ppc64le ;;
+    ppc64 | ppc64-power8)
+      expand_bootlin_config
+      declare -r QEMU_ARCH=ppc64 ;;
+    ppc | ppc-440fp | ppc-e500mc )
+      expand_bootlin_config
+      declare -r QEMU_ARCH=ppc ;;
     riscv32)
       expand_bootlin_config
       declare -r QEMU_ARCH=riscv32 ;;
