@@ -293,7 +293,7 @@ TOOLCHAIN_TARGETS = \
  ppc64le ppc64le-power8 \
  riscv32 riscv64 \
  s390x
-TOOLCHAIN_STAGES = env devel build test
+TOOLCHAIN_STAGES := env devel build test
 
 define toolchain-stage-target =
 #$$(info STAGE: $1)
@@ -411,7 +411,7 @@ $(clean_vms_targets): clean_%: vagrant/%/Vagrantfile
 ## CLEAN ##
 ###########
 .PHONY: clean
-clean: clean_all clean_platforms clean_toolchains clean_vms
+clean: clean_all clean_platforms clean_toolchains clean_web clean_vms
 	docker container prune -f
 	docker image prune -f
 	-rmdir cache
