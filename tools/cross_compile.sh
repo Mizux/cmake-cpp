@@ -427,7 +427,7 @@ function main() {
   echo "Build dir: '${BUILD_DIR}'"
   echo "toolchain file: '${TOOLCHAIN_FILE}'"
 
-  declare -a CMAKE_DEFAULT_ARGS=( -G "${CMAKE_GENERATOR:-\"Unix Makefiles\"}" )
+  declare -a CMAKE_DEFAULT_ARGS=( -G ${CMAKE_GENERATOR:-"Unix Makefiles"} )
   declare -a CMAKE_ADDITIONAL_ARGS=()
 
   declare -a QEMU_ARGS=()
