@@ -6,6 +6,7 @@ ENV PATH=/usr/local/bin:$PATH
 RUN pacman -Syu --noconfirm git base-devel cmake
 RUN pacman -Syu --noconfirm nodejs emscripten
 ENV PATH=/usr/lib/emscripten:$PATH
+RUN emcc -v
 
 # Add the library src to our build env
 FROM env AS devel
@@ -14,13 +15,9 @@ COPY . .
 
 FROM devel AS build
 RUN cmake -version
-RUN emcc -v
 RUN emcmake cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 RUN cmake --build build --target all -v
-#RUN cmake --build build --target install -v
 
 FROM build AS test
-#RUN cmake --build build --target test -v
+#RUN CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test
 RUN cd build && ctest -V
-RUN node build/bin/example.js
-
