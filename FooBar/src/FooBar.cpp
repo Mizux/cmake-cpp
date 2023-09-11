@@ -1,6 +1,7 @@
 #include "foobar/FooBar.hpp"
 
 #include <iostream>
+#include <memory>
 #include <string>
 #include <utility>
 
@@ -8,6 +9,8 @@
 #include "foo/Foo.hpp"
 
 namespace foobar {
+using std::make_unique;
+
 std::vector<std::string> stringVectorOutput(int level) {
   std::cout << "[" << level << "] Enter " << __func__ << "()" << std::endl;
   std::vector<std::string> result;
@@ -182,32 +185,39 @@ void FooBar::staticFunction(int64_t level) {
   std::cout << "[" << level << "] Exit " << __func__ << "(int64_t)" << std::endl;
 }
 
+FooBar::FooBar() {
+  _bar = make_unique<bar::Bar>();
+  _foo = make_unique<foo::Foo>();
+}
+
+FooBar::~FooBar() {}
+
 int FooBar::getInt() const {
-  return _bar.getInt() + _foo.getInt();
+  return _bar->getInt() + _foo->getInt();
 }
 
 void FooBar::setBarInt(int input) {
-  _bar.setInt(input);
+  _bar->setInt(input);
 }
 
 void FooBar::setFooInt(int input) {
-  _foo.setInt(input);
+  _foo->setInt(input);
 }
 
 int64_t FooBar::getInt64() const {
-  return _bar.getInt64() + _foo.getInt64();
+  return _bar->getInt64() + _foo->getInt64();
 }
 
 void FooBar::setBarInt64(int64_t input) {
-  _bar.setInt64(input);
+  _bar->setInt64(input);
 }
 
 void FooBar::setFooInt64(int64_t input) {
-  _foo.setInt64(input);
+  _foo->setInt64(input);
 }
 
 std::string FooBar::operator()() const {
-  return std::string{"\"FooBar\":{"} + _bar() + "," + _foo() + "}";
+  return std::string{"\"FooBar\":{"} + (*_bar)() + "," + (*_foo)() + "}";
 }
 
 } // namespace foobar

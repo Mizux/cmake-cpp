@@ -1,10 +1,17 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 #include <string>
 #include <vector>
-#include <bar/Bar.hpp>
-#include <foo/Foo.hpp>
+
+namespace bar {
+ class Bar;
+}
+namespace foo {
+ class Foo;
+}
+
 
 //! @namespace foobar The FooBar namespace
 namespace foobar {
@@ -101,6 +108,9 @@ class FooBar {
   //! @defgroup IntegerMembers Integer members
   //! @{
 
+  FooBar();
+  ~FooBar();
+
   /*! @brief Method (getter) of FooBar class.
    * @return A member value.*/
   int getInt() const;
@@ -132,7 +142,7 @@ class FooBar {
   std::string operator()() const;
 
  private:
-  bar::Bar _bar;
-  foo::Foo _foo;
+  std::unique_ptr<bar::Bar> _bar;
+  std::unique_ptr<foo::Foo> _foo;
 };
 } // namespace foobar

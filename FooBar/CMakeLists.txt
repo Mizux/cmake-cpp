@@ -21,7 +21,7 @@ elseif(UNIX)
     INSTALL_RPATH "$ORIGIN")
 endif()
 target_link_libraries(FooBar
-  PUBLIC
+  PRIVATE
   ${PROJECT_NAMESPACE}::Foo
   ${PROJECT_NAMESPACE}::Bar
   )
