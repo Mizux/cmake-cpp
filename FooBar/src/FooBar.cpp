@@ -220,4 +220,11 @@ std::string FooBar::operator()() const {
   return std::string{"\"FooBar\":{"} + (*_bar)() + "," + (*_foo)() + "}";
 }
 
+namespace {
+void* kVar = [] {
+  std::cerr << "kFooBar" << std::endl;
+  return nullptr;
+}();
+} // namespace
+
 } // namespace foobar

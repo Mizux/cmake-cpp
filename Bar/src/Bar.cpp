@@ -187,4 +187,12 @@ std::string Bar::operator()() const {
   return std::string{"\"Bar\":{\"int\":"} + std::to_string(_intValue) +
          ",\"int64\":" + std::to_string(_int64Value) + "}";
 }
+
+namespace {
+void* kVar = [] {
+  std::cerr << "kBar" << std::endl;
+  return nullptr;
+}();
+} // namespace
+
 } // namespace bar
