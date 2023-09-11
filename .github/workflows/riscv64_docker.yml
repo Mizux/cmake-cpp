@@ -11,10 +11,11 @@ jobs:
         distro: [
           alpine,
           # centos,
-          # debian, # currently only debian:sid not latest
+          debian, # currently only unstable not latest
           # fedora,
           # opensuse,
-          ubuntu]
+          #ubuntu,
+        ]
       fail-fast: false
     env:
       DISTRO: riscv64_${{ matrix.distro }}
