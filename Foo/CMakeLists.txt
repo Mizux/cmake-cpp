@@ -1,4 +1,4 @@
-add_library(Foo)
+add_library(Foo OBJECT)
 target_sources(Foo
   PRIVATE
     include/foo/Foo.hpp
@@ -10,6 +10,7 @@ target_include_directories(Foo
 target_compile_features(Foo PUBLIC cxx_std_20)
 set_target_properties(Foo PROPERTIES
   VERSION ${PROJECT_VERSION}
+  POSITION_INDEPENDENT_CODE ON
   PUBLIC_HEADER include/foo/Foo.hpp)
 #target_link_libraries(Foo PUBLIC ...)
 add_library(${PROJECT_NAMESPACE}::Foo ALIAS Foo)

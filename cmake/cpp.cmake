@@ -92,6 +92,36 @@ endfunction()
 add_subdirectory(Foo)
 add_subdirectory(Bar)
 add_subdirectory(FooBar)
+
+add_library(Full)
+target_include_directories(Full
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Foo/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Bar/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/FooBar/include>
+    $<INSTALL_INTERFACE:include>)
+#target_link_libraries(Full INTERFACE
+# Xcode fails to build if library doesn't contains at least one source file.
+if(XCODE)
+  file(GENERATE
+    OUTPUT ${PROJECT_BINARY_DIR}/${PROJECT_NAME}/version.cpp
+    CONTENT "namespace {char* version = \"${PROJECT_VERSION}\";}")
+  target_sources(Full PRIVATE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}/version.cpp)
+endif()
+target_sources(Full PRIVATE
+  $<TARGET_OBJECTS:Bar>
+  $<TARGET_OBJECTS:Foo>
+  $<TARGET_OBJECTS:FooBar>
+)
+add_library(${PROJECT_NAMESPACE}::Full ALIAS Full)
+install(TARGETS Full
+  EXPORT ${PROJECT_NAME}Targets
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/foobar
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  #RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  )
+
 add_subdirectory(FooBarApp)
 
 # Install
@@ -138,9 +168,8 @@ function(add_cpp_example FILE_NAME)
   target_include_directories(${EXAMPLE_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
   target_compile_features(${EXAMPLE_NAME} PRIVATE cxx_std_20)
   target_link_libraries(${EXAMPLE_NAME} PRIVATE
-    ${PROJECT_NAMESPACE}::Foo
-    ${PROJECT_NAMESPACE}::Bar
-    ${PROJECT_NAMESPACE}::FooBar)
+    ${PROJECT_NAMESPACE}::Full
+  )
 
   include(GNUInstallDirs)
   install(TARGETS ${EXAMPLE_NAME})

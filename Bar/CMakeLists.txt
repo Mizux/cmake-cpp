@@ -1,4 +1,4 @@
-add_library(Bar "")
+add_library(Bar OBJECT)
 
 target_sources(Bar
   PRIVATE
@@ -11,6 +11,7 @@ target_include_directories(Bar
 target_compile_features(Bar PUBLIC cxx_std_20)
 set_target_properties(Bar PROPERTIES
   VERSION ${PROJECT_VERSION}
+  POSITION_INDEPENDENT_CODE ON
   PUBLIC_HEADER include/bar/Bar.hpp)
 #target_link_libraries(Bar PUBLIC ...)
 add_library(${PROJECT_NAMESPACE}::Bar ALIAS Bar)
