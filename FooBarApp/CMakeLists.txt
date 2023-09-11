@@ -2,6 +2,10 @@ add_executable(FooBarApp)
 target_sources(FooBarApp
   PRIVATE
     src/main.cpp)
+target_include_directories(FooBarApp
+  PRIVATE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../FooBar/include>
+)
 target_compile_features(FooBarApp PRIVATE cxx_std_20)
 set_target_properties(FooBarApp PROPERTIES
   VERSION ${PROJECT_VERSION})
@@ -13,7 +17,8 @@ elseif(UNIX AND NOT APPLE)
   set_target_properties(FooBarApp PROPERTIES
     INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}")
 endif()
-target_link_libraries(FooBarApp PRIVATE ${PROJECT_NAMESPACE}::FooBar)
+target_link_libraries(FooBarApp PRIVATE Full)
+
 add_executable(${PROJECT_NAMESPACE}::FooBarApp ALIAS FooBarApp)
 
 if(BUILD_TESTING)
