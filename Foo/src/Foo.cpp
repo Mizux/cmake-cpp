@@ -188,4 +188,11 @@ std::string Foo::operator()() const {
          ",\"int64\":" + std::to_string(_int64Value) + "}";
 }
 
+namespace {
+void* kVar = [] {
+  std::cerr << "kFoo" << std::endl;
+  return nullptr;
+}();
+} // namespace
+
 } // namespace foo

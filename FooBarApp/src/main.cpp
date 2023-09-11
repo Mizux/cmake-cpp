@@ -3,6 +3,11 @@
 #include <iostream>
 #include <string>
 
+void* kVar = [] {
+  std::cerr << "kFooBarApp\n";
+  return nullptr;
+}();
+
 int main(int /*argc*/, char** /*argv*/) {
   foobar::freeFunction(int{0});
   std::cout << std::endl;
