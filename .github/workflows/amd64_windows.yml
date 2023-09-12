@@ -16,6 +16,8 @@ jobs:
     - name: Build
       run: cmake --build build --config Release --target ALL_BUILD -v
     - name: Test
-      run: cmake --build build --config Release --target RUN_TESTS -v
+      run: |
+        cmake --build build --config Release --target RUN_TESTS -v
+        cd build && ctest -C Release -V
     - name: Install
       run: cmake --build build --config Release --target INSTALL -v
