@@ -33,23 +33,71 @@ if(CHECK_TYPE)
   cmake_pop_check_state()
 endif()
 
+# Check dependencies
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+set(THREAD_PREFER_PTHREAD_FLAG TRUE)
+find_package(Threads REQUIRED)
+
+include(FetchContent)
+
+message(CHECK_START "Fetching Abseil-cpp")
+list(APPEND CMAKE_MESSAGE_INDENT "  ")
+set(ABSL_USE_SYSTEM_INCLUDES ON)
+# We want Abseil to declare what C++ standard it was compiled with.
+set(ABSL_PROPAGATE_CXX_STD ON)
+# We want Abseil to keep the INSTALL rules enabled, even though it is a
+# subproject. Otherwise the install rules in this project break.
+set(ABSL_ENABLE_INSTALL ON)
+FetchContent_Declare(
+  absl
+  GIT_REPOSITORY "https://github.com/abseil/abseil-cpp.git"
+  GIT_TAG "20230802.0"
+  GIT_SHALLOW TRUE
+  #PATCH_COMMAND git apply --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/../patches/abseil-cpp-20230802.0.patch"
+  OVERRIDE_FIND_PACKAGE)
+FetchContent_MakeAvailable(absl)
+list(POP_BACK CMAKE_MESSAGE_INDENT)
+message(CHECK_PASS "fetched")
+
+message(CHECK_START "Fetching Protobuf")
+list(APPEND CMAKE_MESSAGE_INDENT "  ")
+set(protobuf_BUILD_TESTS OFF)
+set(protobuf_BUILD_SHARED_LIBS OFF)
+set(protobuf_BUILD_EXPORT OFF)
+set(protobuf_MSVC_STATIC_RUNTIME OFF)
+set(protobuf_WITH_ZLIB OFF)
+FetchContent_Declare(
+  protobuf
+  GIT_REPOSITORY "https://github.com/protocolbuffers/protobuf.git"
+  GIT_TAG "v24.0"
+  GIT_SUBMODULES ""
+  GIT_SHALLOW TRUE
+  PATCH_COMMAND git apply --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/../patches/protobuf-v24.0.patch")
+FetchContent_MakeAvailable(protobuf)
+list(POP_BACK CMAKE_MESSAGE_INDENT)
+message(CHECK_PASS "fetched")
+
 if(BUILD_TESTING)
-  include(FetchContent)
+  message(CHECK_START "Fetching Googletest")
   FetchContent_Declare(
     googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG main)
+    GIT_TAG main
+    GIT_SHALLOW TRUE
+    FIND_PACKAGE_ARGS NAMES GTest GMock)
   #set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
   FetchContent_MakeAvailable(googletest)
+  message(CHECK_PASS "fetched")
 
+  message(CHECK_START "Fetching Catch2")
   FetchContent_Declare(
     Catch2
     GIT_REPOSITORY https://github.com/catchorg/Catch2.git
     GIT_TAG devel
     GIT_SHALLOW TRUE
-    GIT_PROGRESS TRUE
-  )
+    FIND_PACKAGE_ARGS)
   FetchContent_MakeAvailable(Catch2)
+  message(CHECK_PASS "fetched")
 endif()
 
 include(GNUInstallDirs)
