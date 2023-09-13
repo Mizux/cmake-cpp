@@ -1,5 +1,5 @@
 enable_language(CXX)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -76,7 +76,7 @@ function(add_cpp_test FILE_NAME)
 
   add_executable(${TEST_NAME} ${FILE_NAME})
   target_include_directories(${TEST_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-  target_compile_features(${TEST_NAME} PRIVATE cxx_std_17)
+  target_compile_features(${TEST_NAME} PRIVATE cxx_std_20)
   target_link_libraries(${TEST_NAME} PRIVATE
     Catch2 Catch2WithMain
     ${PROJECT_NAMESPACE}::Foo
@@ -136,7 +136,7 @@ function(add_cpp_example FILE_NAME)
 
   add_executable(${EXAMPLE_NAME} ${FILE_NAME})
   target_include_directories(${EXAMPLE_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-  target_compile_features(${EXAMPLE_NAME} PRIVATE cxx_std_17)
+  target_compile_features(${EXAMPLE_NAME} PRIVATE cxx_std_20)
   target_link_libraries(${EXAMPLE_NAME} PRIVATE
     ${PROJECT_NAMESPACE}::Foo
     ${PROJECT_NAMESPACE}::Bar
