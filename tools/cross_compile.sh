@@ -33,7 +33,7 @@ function install_qemu() {
     >&2 echo 'QEMU is disabled !'
     return 0
   fi
-  local -r QEMU_VERSION=${QEMU_VERSION:=8.0.0}
+  local -r QEMU_VERSION=${QEMU_VERSION:=9.0.1}
   local -r QEMU_TARGET=${QEMU_ARCH}-linux-user
 
   if echo "${QEMU_VERSION} ${QEMU_TARGET}" | cmp --silent "${QEMU_INSTALL}/.build" -; then
@@ -224,7 +224,7 @@ function expand_codescape_config() {
       local -r FLAVOUR="mips-r2-hard"
       local -r LIBC_DIR_SUFFIX="lib"
       ;;
-    "mipsle" | "mips32el-r6")
+    "mipsel" | "mips32el-r6")
       local -r MIPS_FLAGS="-EL -mips32r6 -mabi=32"
       local -r FLAVOUR="mipsel-r6-hard"
       local -r LIBC_DIR_SUFFIX="lib"
@@ -244,7 +244,7 @@ function expand_codescape_config() {
       local -r FLAVOUR="mips-r2-hard"
       local -r LIBC_DIR_SUFFIX="lib64"
       ;;
-    "mips64le" | "mips64el-r6")
+    "mips64el" | "mips64el-r6")
       local -r MIPS_FLAGS="-EL -mips64r6 -mabi=64"
       local -r FLAVOUR="mipsel-r6-hard"
       local -r LIBC_DIR_SUFFIX="lib64"
@@ -456,13 +456,13 @@ function main() {
     mips | mips32-r6 | mips32-r2)
       expand_codescape_config
       declare -r QEMU_ARCH=mips ;;
-    mipsle | mips32el-r6 | mips32el-r2)
+    mipsel | mips32el-r6 | mips32el-r2)
       expand_codescape_config
       declare -r QEMU_ARCH=mipsel ;;
     mips64 | mips64-r6 | mips64-r2)
       expand_codescape_config
       declare -r QEMU_ARCH=mips64 ;;
-    mips64le | mips64el-r6 | mips64el-r2)
+    mips64el | mips64el-r6 | mips64el-r2)
       expand_codescape_config
       declare -r QEMU_ARCH=mips64el ;;
     ppc64le | ppc64le-power8)

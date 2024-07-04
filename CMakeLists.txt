@@ -11,6 +11,7 @@ message(STATUS "${PROJECT_NAME} version: ${PROJECT_VERSION}")
 #message(STATUS "minor: ${PROJECT_VERSION_MINOR}")
 #message(STATUS "patch: ${PROJECT_VERSION_PATCH}")
 
+message(STATUS "system name: ${CMAKE_SYSTEM_NAME}")
 get_property(isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(isMultiConfig)
   if(NOT CMAKE_CONFIGURATION_TYPES)
