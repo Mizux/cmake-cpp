@@ -9,6 +9,7 @@ jobs:
     strategy:
       matrix:
         targets: [
+          # https://go.dev/doc/install/source#environment
           [arm64], # OCI alias
           [aarch64-linux-gnu], # linaro
           [aarch64_be-linux-gnu], # linaro

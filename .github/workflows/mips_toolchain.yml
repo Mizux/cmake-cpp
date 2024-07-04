@@ -9,6 +9,7 @@ jobs:
     strategy:
       matrix:
         targets: [
+          # https://go.dev/doc/install/source#environment
           [mips], # OCI alias
           [mipsle], # OCI alias
           [mips32-r6],

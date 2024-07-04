@@ -9,6 +9,7 @@ jobs:
     strategy:
       matrix:
         targets: [
+          # https://go.dev/doc/install/source#environment
           [ppc], # alias
           [ppc-440fp],
           # [ppc-e500mc], # TODO(mizux) To fix

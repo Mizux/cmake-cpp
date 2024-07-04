@@ -14,7 +14,7 @@ WORKDIR /home/project
 COPY . .
 
 FROM devel AS build
-RUN cmake -version
+RUN cmake --version
 RUN emcmake cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 RUN cmake --build build --target all -v
 

@@ -9,11 +9,12 @@ jobs:
     strategy:
       matrix:
         distro: [
+          # almalinux,
           alpine,
-          # centos,
           debian, # currently only unstable not latest
           # fedora,
           # opensuse,
+          # rockylinux,
           #ubuntu,
         ]
       fail-fast: false

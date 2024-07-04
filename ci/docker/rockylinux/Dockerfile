@@ -1,12 +1,15 @@
 # Create a virtual environment with all tools installed
-# ref: https://hub.docker.com/r/opensuse/tumbleweed
-FROM opensuse/tumbleweed AS env
+# ref: https://hub.docker.com/_/rockylinux
+FROM rockylinux:9 AS env
+
 # Install system build dependencies
 ENV PATH=/usr/local/bin:$PATH
-RUN zypper update -y \
-&& zypper install -y git patch gcc gcc-c++ cmake \
-&& zypper clean -a
-ENV CC=gcc CXX=g++
+RUN dnf -y update \
+&& dnf -y install git wget openssl-devel cmake \
+&& dnf -y groupinstall "Development Tools" \
+&& dnf clean all \
+&& rm -rf /var/cache/dnf
+CMD [ "/usr/bin/bash" ]
 
 # Add the library src to our build env
 FROM env AS devel
