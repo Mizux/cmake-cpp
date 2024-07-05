@@ -2,22 +2,25 @@ name: s390x Toolchain
 
 on: [push, pull_request, workflow_dispatch]
 
+# Building using the github runner environement directly.
 jobs:
-  # Building using the github runner environement directly.
-  powerpc:
-    runs-on: ubuntu-latest
+  s390x:
     strategy:
       matrix:
         targets: [
           # https://go.dev/doc/install/source#environment
-          [s390x],
+          s390x, # bootlin
         ]
       fail-fast: false
-    env:
-      TARGET: ${{ matrix.targets[0] }}
+    name: Linux • Toolchain ${{ matrix.targets }}
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Build
-      run: make --directory=ci ${TARGET}_build
-    - name: Test
-      run: make --directory=ci ${TARGET}_test
+    - name: Build env stage
+      run: make --directory=ci ${{ matrix.targets }}_env
+    - name: Build devel stage
+      run: make --directory=ci ${{ matrix.targets }}_devel
+    - name: Build build stage
+      run: make --directory=ci ${{ matrix.targets }}_build
+    - name: Build Test stage
+      run: make --directory=ci ${{ matrix.targets }}_test

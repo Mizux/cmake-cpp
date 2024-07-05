@@ -2,26 +2,29 @@ name: aarch64 Toolchain
 
 on: [push, pull_request, workflow_dispatch]
 
+# Building using the github runner environement directly.
 jobs:
-  # Building using the github runner environement directly.
   aarch64:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         targets: [
           # https://go.dev/doc/install/source#environment
-          [arm64], # OCI alias
-          [aarch64-linux-gnu], # linaro
-          [aarch64_be-linux-gnu], # linaro
-          [aarch64], # bootlin
-          [aarch64be] # bootlin
+          arm64, # alias to aarch64
+          aarch64-linux-gnu, # linaro
+          aarch64_be-linux-gnu, # linaro
+          aarch64, # bootlin
+          aarch64be # bootlin
         ]
       fail-fast: false
-    env:
-      TARGET: ${{ matrix.targets[0] }}
+    name: Linux • Toolchain ${{ matrix.targets }}
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Build
-      run: make --directory=ci ${TARGET}_build
-    - name: Test
-      run: make --directory=ci ${TARGET}_test
+    - name: Build env stage
+      run: make --directory=ci ${{ matrix.targets }}_env
+    - name: Build devel stage
+      run: make --directory=ci ${{ matrix.targets }}_devel
+    - name: Build build stage
+      run: make --directory=ci ${{ matrix.targets }}_build
+    - name: Build Test stage
+      run: make --directory=ci ${{ matrix.targets }}_test

@@ -2,27 +2,30 @@ name: mips64 Toolchain
 
 on: [push, pull_request, workflow_dispatch]
 
+# Building using the github runner environement directly.
 jobs:
-  # Building using the github runner environement directly.
   mips64:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         targets: [
           # https://go.dev/doc/install/source#environment
-          [mips64], # OCI alias
-          [mips64le], # OCI alias
-          [mips64-r6],
-          [mips64el-r6],
-          [mips64-r2],
-          [mips64el-r2]
+          mips64, # alias to mips64-r6
+          mips64le, # alias to mips64el-r6
+          mips64-r6, # codescape
+          mips64el-r6, # codescape
+          mips64-r2, # codescape
+          mips64el-r2 # codescape
         ]
       fail-fast: false
-    env:
-      TARGET: ${{ matrix.targets[0] }}
+    name: Linux • Toolchain ${{ matrix.targets }}
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Build
-      run: make --directory=ci ${TARGET}_build
-    - name: Test
-      run: make --directory=ci ${TARGET}_test
+    - name: Build env stage
+      run: make --directory=ci ${{ matrix.targets }}_env
+    - name: Build devel stage
+      run: make --directory=ci ${{ matrix.targets }}_devel
+    - name: Build build stage
+      run: make --directory=ci ${{ matrix.targets }}_build
+    - name: Build Test stage
+      run: make --directory=ci ${{ matrix.targets }}_test
