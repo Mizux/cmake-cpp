@@ -10,7 +10,7 @@ jobs:
         targets: [
           # https://go.dev/doc/install/source#environment
           mips, # alias to mips32-r6
-          mipsle, # alias to mips32el-r6
+          mipsel, # alias to mips32el-r6
           mips32-r6, # codespace
           mips32el-r6, # codespace
           mips32-r2, # codespace

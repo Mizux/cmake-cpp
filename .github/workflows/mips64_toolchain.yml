@@ -10,7 +10,7 @@ jobs:
         targets: [
           # https://go.dev/doc/install/source#environment
           mips64, # alias to mips64-r6
-          mips64le, # alias to mips64el-r6
+          mips64el, # alias to mips64el-r6
           mips64-r6, # codescape
           mips64el-r6, # codescape
           mips64-r2, # codescape

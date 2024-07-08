@@ -85,8 +85,8 @@ help:
 	@echo -e "\t\t${BOLD}aarch64be${RESET} (alias: arm64be) (bootlin toolchain)"
 	@echo -e "\t\t${BOLD}mips32-r6${RESET} (alias: mips) (codespace toolchain)"
 	@echo -e "\t\t${BOLD}mips64-r6${RESET} (alias: mips64) (codespace toolchain)"
-	@echo -e "\t\t${BOLD}mips32el-r6${RESET} (alias: mipsle) (codespace toolchain)"
-	@echo -e "\t\t${BOLD}mips64el-r6${RESET} (alias: mips64le) (codespace toolchain)"
+	@echo -e "\t\t${BOLD}mips32el-r6${RESET} (alias: mipsel) (codespace toolchain)"
+	@echo -e "\t\t${BOLD}mips64el-r6${RESET} (alias: mips64el) (codespace toolchain)"
 	@echo -e "\t\t${BOLD}mips32-r2${RESET} (codespace toolchain)"
 	@echo -e "\t\t${BOLD}mips64-r2${RESET} (codespace toolchain)"
 	@echo -e "\t\t${BOLD}mips32el-r2${RESET} (codespace toolchain)"
@@ -106,7 +106,7 @@ help:
 	@echo -e "\t\t${BOLD}build${RESET}"
 	@echo -e "\t\t${BOLD}test${RESET}"
 	@echo -e "\te.g. 'make mips64_build'"
-	@echo -e "\te.g. 'make aarch64-linux-gnu_test'"
+	@echo -e "\te.g. 'make arm64_test'"
 	@echo
 	@echo -e "\tBuild using a vagrant machine."
 	@echo -e "\t${BOLD}<vm>_<vms_stage>${RESET}: build the vagrant <vm> virtual machine."
@@ -281,15 +281,15 @@ clean_platforms: $(addprefix clean_, $(PLATFORMS))
 ###############
 ## TOOLCHAIN ##
 ###############
-TOOLCHAIN_TARGETS = \
+TOOLCHAIN_TARGETS := \
  arm armv7-eabihf \
  armeb armebv7-eabihf \
  arm64 aarch64 \
  arm64be aarch64be \
  mips mips32-r6 mips32-r2 \
- mipsle mips32el-r6 mips32el-r2 \
+ mipsel mips32el-r6 mips32el-r2 \
  mips64 mips64-r6 mips64-r2 \
- mips64le mips64el-r6 mips64el-r2 \
+ mips64el mips64el-r6 mips64el-r2 \
  ppc ppc-440fp ppc-e500mc \
  ppc64 ppc64-power8 \
  ppc64le ppc64le-power8 \

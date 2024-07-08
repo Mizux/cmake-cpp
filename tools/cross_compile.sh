@@ -202,7 +202,7 @@ function expand_codescape_config() {
   # mips-img: MIPS32R6 and MIPS64R6
   # mips-mti: MIPS32R2 and MIPS64R2
   case "${TARGET}" in
-    "mips" | "mipsle" | "mips64" | "mips64le" | \
+    "mips" | "mipsel" | "mips64" | "mips64el" | \
     "mips32-r6" | "mips32el-r6" | "mips64-r6" | "mips64el-r6" )
       # IMG Toolchain MIPS32R6 and MIPS64R6
       # ref: https://codescape.mips.com/components/toolchain/2021.09-01/downloads.html
@@ -243,7 +243,7 @@ function expand_codescape_config() {
       local -r FLAVOUR="mips-r2-hard"
       local -r LIBC_DIR_SUFFIX="lib"
       ;;
-    "mipsle" | "mips32el-r6")
+    "mipsel" | "mips32el-r6")
       local -r MIPS_FLAGS="-EL -mips32r6 -mabi=32"
       local -r FLAVOUR="mipsel-r6-hard"
       local -r LIBC_DIR_SUFFIX="lib"
@@ -263,7 +263,7 @@ function expand_codescape_config() {
       local -r FLAVOUR="mips-r2-hard"
       local -r LIBC_DIR_SUFFIX="lib64"
       ;;
-    "mips64le" | "mips64el-r6")
+    "mips64el" | "mips64el-r6")
       local -r MIPS_FLAGS="-EL -mips64r6 -mabi=64"
       local -r FLAVOUR="mipsel-r6-hard"
       local -r LIBC_DIR_SUFFIX="lib64"
@@ -354,8 +354,8 @@ DESCRIPTION
 \t\tx86_64
 \t\tarmv7-eabihf(arm) armebv7-eabihf(armeb) (bootlin)
 \t\taarch64(arm64) aarch64be(arm64be) (bootlin)
-\t\tmips32-r6(mips) mips32el-r6(mipsle) mips32-r2 mips32el-r2 (codespace)
-\t\tmips64-r6(mips64) mips64el-r6(mips64le) mips64-r2 mips64el-r2 (codespace)
+\t\tmips32-r6(mips) mips32el-r6(mipsel) mips32-r2 mips32el-r2 (codespace)
+\t\tmips64-r6(mips64) mips64el-r6(mips64el) mips64-r2 mips64el-r2 (codespace)
 \t\tppc-440fp(ppc) ppc-e500mc (bootlin)
 \t\tppc64 ppc64le (bootlin)
 \t\triscv32 riscv64 (bootlin)
@@ -425,13 +425,13 @@ function main() {
     mips | mips32-r6 | mips32-r2)
       expand_codescape_config
       declare -r QEMU_ARCH=mips ;;
-    mipsle | mips32el-r6 | mips32el-r2)
+    mipsel | mips32el-r6 | mips32el-r2)
       expand_codescape_config
       declare -r QEMU_ARCH=mipsel ;;
     mips64 | mips64-r6 | mips64-r2)
       expand_codescape_config
       declare -r QEMU_ARCH=mips64 ;;
-    mips64le | mips64el-r6 | mips64el-r2)
+    mips64el | mips64el-r6 | mips64el-r2)
       expand_codescape_config
       declare -r QEMU_ARCH=mips64el ;;
 
