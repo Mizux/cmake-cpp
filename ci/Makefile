@@ -79,13 +79,6 @@ help:
 	@echo -e "\t${BOLD}clean_toolchains${RESET}: Remove ALL cache and docker image."
 	@echo
 	@echo -e "\tWith ${BOLD}<toolchain>${RESET}:"
-	@echo -e "\t\t${BOLD}arm-linux-gnueabihf${RESET} (linaro toolchain)"
-	@echo -e "\t\t${BOLD}armv8l-linux-gnueabihf${RESET} (linaro toolchain)"
-	@echo -e "\t\t${BOLD}arm-linux-gnueabi${RESET} (linaro toolchain)"
-	@echo -e "\t\t${BOLD}armeb-linux-gnueabihf${RESET} (linaro toolchain)"
-	@echo -e "\t\t${BOLD}armeb-linux-gnueabi${RESET} (linaro toolchain)"
-	@echo -e "\t\t${BOLD}aarch64-linux-gnu${RESET} (linaro toolchain)"
-	@echo -e "\t\t${BOLD}aarch64_be-linux-gnu${RESET} (linaro toolchain)"
 	@echo -e "\t\t${BOLD}armv7-eabihf${RESET} (alias: arm) (bootlin toolchain)"
 	@echo -e "\t\t${BOLD}armebv7-eabihf${RESET} (alias: armeb) (bootlin toolchain)"
 	@echo -e "\t\t${BOLD}aarch64${RESET} (alias: arm64) (bootlin toolchain)"
@@ -289,16 +282,14 @@ clean_platforms: $(addprefix clean_, $(PLATFORMS))
 ## TOOLCHAIN ##
 ###############
 TOOLCHAIN_TARGETS = \
- arm-linux-gnueabihf armv8l-linux-gnueabihf arm-linux-gnueabi armeb-linux-gnueabihf armeb-linux-gnueabi \
- aarch64-linux-gnu aarch64_be-linux-gnu \
- mips mips32-r6 mips32-r2 \
- mipsle mips32el-r6 mips32el-r2 \
- mips64 mips64-r6 mips64-r2 \
- mips64le mips64el-r6 mips64el-r2 \
  arm armv7-eabihf \
  armeb armebv7-eabihf \
  arm64 aarch64 \
  arm64be aarch64be \
+ mips mips32-r6 mips32-r2 \
+ mipsle mips32el-r6 mips32el-r2 \
+ mips64 mips64-r6 mips64-r2 \
+ mips64le mips64el-r6 mips64el-r2 \
  ppc ppc-440fp ppc-e500mc \
  ppc64 ppc64-power8 \
  ppc64le ppc64le-power8 \

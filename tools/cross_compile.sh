@@ -311,50 +311,6 @@ local -r LIBC_DIR=${GCC_DIR}/${GCC_PREFIX}/lib/${FLAVOUR}/${LIBC_DIR_SUFFIX}
 QEMU_ARGS+=( -E LD_PRELOAD="${LIBC_DIR}/libstdc++.so.6:${LIBC_DIR}/libgcc_s.so.1" )
 }
 
-function expand_linaro_config() {
-  #ref: https://releases.linaro.org/components/toolchain/binaries/
-  local -r LINARO_VERSION=7.5-2019.12
-  local -r LINARO_ROOT_URL=https://releases.linaro.org/components/toolchain/binaries/${LINARO_VERSION}
-
-  local -r GCC_VERSION=7.5.0-2019.12
-  local -r GCC_URL=${LINARO_ROOT_URL}/${TARGET}/gcc-linaro-${GCC_VERSION}-x86_64_${TARGET}.tar.xz
-  local -r GCC_RELATIVE_DIR="gcc-linaro-${GCC_VERSION}-x86_64_${TARGET}"
-  unpack "${GCC_URL}" "${GCC_RELATIVE_DIR}"
-
-  local -r SYSROOT_VERSION=2.25-2019.12
-  local -r SYSROOT_URL=${LINARO_ROOT_URL}/${TARGET}/sysroot-glibc-linaro-${SYSROOT_VERSION}-${TARGET}.tar.xz
-  local -r SYSROOT_RELATIVE_DIR=sysroot-glibc-linaro-${SYSROOT_VERSION}-${TARGET}
-  unpack "${SYSROOT_URL}" "${SYSROOT_RELATIVE_DIR}"
-
-  local -r SYSROOT_DIR=${ARCHIVE_DIR}/${SYSROOT_RELATIVE_DIR}
-  local -r STAGING_DIR=${ARCHIVE_DIR}/${SYSROOT_RELATIVE_DIR}-stage
-  local -r GCC_DIR=${ARCHIVE_DIR}/${GCC_RELATIVE_DIR}
-
-  # Write a Toolchain file
-  # note: This is manadatory to use a file in order to have the CMake variable
-  # 'CMAKE_CROSSCOMPILING' set to TRUE.
-  # ref: https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html#cross-compiling-for-linux
-  cat >"$TOOLCHAIN_FILE" <<EOL
-set(CMAKE_SYSTEM_NAME Linux)
-set(CMAKE_SYSTEM_PROCESSOR ${TARGET})
-
-set(CMAKE_SYSROOT ${SYSROOT_DIR})
-set(CMAKE_STAGING_PREFIX ${STAGING_DIR})
-
-set(tools ${GCC_DIR})
-set(CMAKE_C_COMPILER \${tools}/bin/${TARGET}-gcc)
-set(CMAKE_CXX_COMPILER \${tools}/bin/${TARGET}-g++)
-
-set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
-EOL
-CMAKE_ADDITIONAL_ARGS+=( -DCMAKE_TOOLCHAIN_FILE="${TOOLCHAIN_FILE}" )
-QEMU_ARGS+=( -L "${SYSROOT_DIR}" )
-QEMU_ARGS+=( -E LD_LIBRARY_PATH=/lib )
-}
-
 function build() {
   cd "${PROJECT_DIR}" || exit 2
   set -x
@@ -398,9 +354,6 @@ DESCRIPTION
 \t\tx86_64
 \t\tarmv7-eabihf(arm) armebv7-eabihf(armeb) (bootlin)
 \t\taarch64(arm64) aarch64be(arm64be) (bootlin)
-\t\taarch64-linux-gnu aarch64_be-linux-gnu (linaro)
-\t\tarm-linux-gnueabihf armv8l-linux-gnueabihf arm-linux-gnueabi (linaro)
-\t\tarmeb-linux-gnueabihf armeb-linux-gnueabi (linaro)
 \t\tmips32-r6(mips) mips32el-r6(mipsle) mips32-r2 mips32el-r2 (codespace)
 \t\tmips64-r6(mips64) mips64el-r6(mips64le) mips64-r2 mips64el-r2 (codespace)
 \t\tppc-440fp(ppc) ppc-e500mc (bootlin)
@@ -455,19 +408,6 @@ function main() {
   case ${TARGET} in
     x86_64)
       declare -r QEMU_ARCH=x86_64 ;;
-
-    arm-linux-gnueabihf | armv8l-linux-gnueabihf | arm-linux-gnueabi)
-      expand_linaro_config
-      declare -r QEMU_ARCH=arm ;;
-    armeb-linux-gnueabihf | armeb-linux-gnueabi)
-      expand_linaro_config
-      declare -r QEMU_ARCH=DISABLED ;;
-    aarch64-linux-gnu)
-      expand_linaro_config
-      declare -r QEMU_ARCH=aarch64 ;;
-    aarch64_be-linux-gnu)
-      expand_linaro_config
-      declare -r QEMU_ARCH=aarch64_be ;;
 
     arm | armv7-eabihf)
       expand_bootlin_config

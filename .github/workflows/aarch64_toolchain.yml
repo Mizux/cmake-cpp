@@ -11,8 +11,6 @@ jobs:
           # https://go.dev/doc/install/source#environment
           arm64, # alias to aarch64
           arm64be, # alias to aarch64be
-          aarch64-linux-gnu, # linaro
-          aarch64_be-linux-gnu, # linaro
           aarch64, # bootlin
           aarch64be # bootlin
         ]
