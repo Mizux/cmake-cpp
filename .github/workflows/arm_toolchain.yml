@@ -28,6 +28,8 @@ jobs:
       run: make --directory=ci ${{ matrix.targets }}_env
     - name: Build devel stage
       run: make --directory=ci ${{ matrix.targets }}_devel
+    - name: Build toolchain stage
+      run: make --directory=ci ${{ matrix.targets }}_toolchain
     - name: Build build stage
       run: make --directory=ci ${{ matrix.targets }}_build
     - name: Build Test stage

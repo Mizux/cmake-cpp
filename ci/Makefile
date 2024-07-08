@@ -109,6 +109,7 @@ help:
 	@echo -e "\tWith ${BOLD}<toolchain_stage>${RESET}:"
 	@echo -e "\t\t${BOLD}env${RESET}"
 	@echo -e "\t\t${BOLD}devel${RESET}"
+	@echo -e "\t\t${BOLD}toolchain${RESET}"
 	@echo -e "\t\t${BOLD}build${RESET}"
 	@echo -e "\t\t${BOLD}test${RESET}"
 	@echo -e "\te.g. 'make mips64_build'"
@@ -303,7 +304,7 @@ TOOLCHAIN_TARGETS = \
  ppc64le ppc64le-power8 \
  riscv32 riscv64 \
  s390x
-TOOLCHAIN_STAGES := env devel build test
+TOOLCHAIN_STAGES := env devel toolchain build test
 
 define toolchain-stage-target =
 #$$(info STAGE: $1)
