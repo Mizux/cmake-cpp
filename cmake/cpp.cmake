@@ -39,7 +39,14 @@ set(THREAD_PREFER_PTHREAD_FLAG TRUE)
 find_package(Threads REQUIRED)
 
 include(FetchContent)
+set(FETCHCONTENT_QUIET OFF)
+set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_Fortran_COMPILER OFF)
 
+# ##############################################################################
+# ABSEIL-CPP
+# ##############################################################################
 message(CHECK_START "Fetching Abseil-cpp")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 set(ABSL_USE_SYSTEM_INCLUDES ON)
@@ -59,6 +66,9 @@ FetchContent_MakeAvailable(absl)
 list(POP_BACK CMAKE_MESSAGE_INDENT)
 message(CHECK_PASS "fetched")
 
+# ##############################################################################
+# Protobuf
+# ##############################################################################
 message(CHECK_START "Fetching Protobuf")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 set(protobuf_BUILD_TESTS OFF)
