@@ -105,48 +105,48 @@ function expand_bootlin_config() {
       local -r GCC_SUFFIX="eabihf"
       ;;
     "arm64" | "aarch64")
-      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64/tarballs/aarch64--glibc--stable-2021.11-1.tar.bz2"
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64/tarballs/aarch64--glibc--stable-2024.02-1.tar.bz2"
       local -r GCC_PREFIX="aarch64"
       local -r GCC_SUFFIX=""
       ;;
     "arm64be" | "aarch64be")
-      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64be/tarballs/aarch64be--glibc--stable-2021.11-1.tar.bz2"
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64be/tarballs/aarch64be--glibc--stable-2024.02-1.tar.bz2"
       local -r GCC_PREFIX="aarch64_be"
       local -r GCC_SUFFIX=""
       ;;
     "ppc" | "ppc-440fp")
-      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-440fp/tarballs/powerpc-440fp--glibc--stable-2021.11-1.tar.bz2"
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-440fp/tarballs/powerpc-440fp--glibc--stable-2024.02-1.tar.bz2"
       local -r GCC_PREFIX="powerpc"
       local -r GCC_SUFFIX=""
       ;;
     "ppc-e500mc")
-      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-e500mc/tarballs/powerpc-e500mc--glibc--stable-2021.11-1.tar.bz2"
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-e500mc/tarballs/powerpc-e500mc--glibc--stable-2024.02-1.tar.bz2"
       local -r GCC_PREFIX="powerpc"
       local -r GCC_SUFFIX=""
       QEMU_ARGS+=( -cpu "e500mc" )
       ;;
     "ppc64" | "ppc64-power8")
-      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64-power8/tarballs/powerpc64-power8--glibc--stable-2021.11-1.tar.bz2"
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64-power8/tarballs/powerpc64-power8--glibc--stable-2024.02-1.tar.bz2"
       local -r GCC_PREFIX="powerpc64"
       local -r GCC_SUFFIX=""
       ;;
     "ppc64le" | "ppc64le-power8")
-      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64le-power8/tarballs/powerpc64le-power8--glibc--stable-2021.11-1.tar.bz2"
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64le-power8/tarballs/powerpc64le-power8--glibc--stable-2024.02-1.tar.bz2"
       local -r GCC_PREFIX="powerpc64le"
       local -r GCC_SUFFIX=""
       ;;
     "riscv32")
-      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/riscv32-ilp32d/tarballs/riscv32-ilp32d--glibc--bleeding-edge-2022.08-1.tar.bz2"
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/riscv32-ilp32d/tarballs/riscv32-ilp32d--glibc--bleeding-edge-2024.02-1.tar.bz2"
       local -r GCC_PREFIX="riscv32"
       local -r GCC_SUFFIX=""
       ;;
     "riscv64")
-      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/riscv64-lp64d/tarballs/riscv64-lp64d--glibc--stable-2022.08-1.tar.bz2"
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/riscv64-lp64d/tarballs/riscv64-lp64d--glibc--stable-2024.02-1.tar.bz2"
       local -r GCC_PREFIX="riscv64"
       local -r GCC_SUFFIX=""
       ;;
     "s390x")
-      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/s390x-z13/tarballs/s390x-z13--glibc--stable-2022.08-1.tar.bz2"
+      local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/s390x-z13/tarballs/s390x-z13--glibc--stable-2024.02-1.tar.bz2"
       local -r GCC_PREFIX="s390x"
       local -r GCC_SUFFIX=""
       ;;
