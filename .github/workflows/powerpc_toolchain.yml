@@ -10,11 +10,10 @@ jobs:
         targets: [
           # https://go.dev/doc/install/source#environment
           ppc, # alias to ppc-440fp
-          ppc-440fp, # bootlin
-          # [ppc-e500mc], # bootlin TODO(mizux) To fix
-
           ppc64, # alias to ppc64-power8
           ppc64le, # alias ppc64le-power8
+          ppc-440fp, # bootlin
+          # [ppc-e500mc], # bootlin TODO(mizux) To fix
           ppc64-power8, # bootlin
           ppc64le-power8, # bootlin
         ]

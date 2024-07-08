@@ -9,11 +9,15 @@ jobs:
       matrix:
         targets: [
           # https://go.dev/doc/install/source#environment
+          arm, # alias to armv7-eabihf
+          armeb, # alias to armv7eb-eabihf
           arm-linux-gnueabihf, # linaro
           armv8l-linux-gnueabihf, # linaro
           arm-linux-gnueabi, # linaro
           armeb-linux-gnueabihf, # linaro
-          armeb-linux-gnueabi # linaro
+          armeb-linux-gnueabi, # linaro
+          armv7-eabihf, # bootlin
+          armebv7-eabihf #bootlin
         ]
       fail-fast: false
     name: Linux • Toolchain ${{ matrix.targets }}
