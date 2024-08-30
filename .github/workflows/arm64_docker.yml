@@ -11,8 +11,8 @@ jobs:
           almalinux,
           alpine,
           debian,
-          fedora,
-          opensuse,
+          #fedora, # timeout
+          #opensuse, # timeout
           rockylinux,
           ubuntu
         ]
