@@ -400,7 +400,6 @@ VAGRANT_VMS := \
  netbsd \
  openbsd
 
-
 vms_targets := $(addsuffix _build, $(VAGRANT_VMS))
 .PHONY: vms_build $(vms_targets)
 vms_build: $(vms_targets)
