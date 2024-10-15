@@ -1,5 +1,6 @@
 Github-CI:<br>
 [![Build Status][amd64_linux_status]][amd64_linux_link]
+[![Build Status][arm64_macos_status]][arm64_macos_link]
 [![Build Status][amd64_macos_status]][amd64_macos_link]
 [![Build Status][amd64_windows_status]][amd64_windows_link]<br>
 
@@ -16,6 +17,8 @@ Github-CI:<br>
 
 [amd64_linux_status]: ./../../actions/workflows/amd64_linux.yml/badge.svg
 [amd64_linux_link]: ./../../actions/workflows/amd64_linux.yml
+[arm64_macos_status]: ./../../actions/workflows/arm64_macos.yml/badge.svg
+[arm64_macos_link]: ./../../actions/workflows/arm64_macos.yml
 [amd64_macos_status]: ./../../actions/workflows/amd64_macos.yml/badge.svg
 [amd64_macos_link]: ./../../actions/workflows/amd64_macos.yml
 [amd64_windows_status]: ./../../actions/workflows/amd64_windows.yml/badge.svg

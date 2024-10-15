@@ -10,9 +10,7 @@ set_target_properties(sample PROPERTIES
   CXX_STANDARD 17
   CXX_STANDARD_REQUIRED ON
   VERSION ${PROJECT_VERSION})
-target_link_libraries(sample PRIVATE
-  CMakeCpp::Full
-)
+target_link_libraries(sample PRIVATE CMakeCpp::Full)
 
 if(BUILD_TESTING)
   add_test(NAME sample_UT COMMAND sample)
