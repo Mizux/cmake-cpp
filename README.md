@@ -45,6 +45,7 @@ Github-CI:<br>
 [riscv64_toolchain_link]: ./../../actions/workflows/riscv64_toolchain.yml
 
 # Introduction
+
 <nav for="project"> |
 <a href="#requirement">Requirement</a> |
 <a href="#codemap">Codemap</a> |
@@ -52,6 +53,7 @@ Github-CI:<br>
 <a href="#build">Build</a> |
 <a href="ci/README.md">CI</a> |
 <a href="#appendices">Appendices</a> |
+<a href="#contributing">Contributing</a> |
 <a href="#license">License</a> |
 </nav>
 
@@ -60,11 +62,13 @@ This is an example of how to create a Modern [CMake](https://cmake.org/) C++ Pro
 This project should run on GNU/Linux, MacOS and Windows.
 
 ## Requirement
+
 You'll need:
 
 * "CMake >= 3.16".
 
 ## Codemap
+
 The project layout is as follow:
 
 * [CMakeLists.txt](CMakeLists.txt) Top-level for [CMake](https://cmake.org/cmake/help/latest/) based build.
@@ -99,8 +103,10 @@ The project layout is as follow:
     * [src/main.cpp](FooBarApp/src/main.cpp)
 
 ## Dependencies
+
 To complexify a little, the CMake project is composed of three libraries (Foo, Bar and FooBar)
-with the following dependencies:  
+with the following dependencies:
+
 ```sh
 Foo:
 Bar:
@@ -112,35 +118,53 @@ note: Since `Foo` is a public dependency of `FooBar`, then `FooBarApp` will
 *see* `Foo` inlude directories
 
 ## Build
+
 To build the C++ project, as usual:
+
 ```sh
 cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 cmake --build build --config Release
+CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test
+```
+## Build directory layout
+Since we want to use the [CMAKE_BINARY_DIR](https://cmake.org/cmake/help/latest/variable/CMAKE_BINARY_DIR.html) to generate the binary package.  
+We want this layout (tree build --prune -P "*.so|FooApp"):
+
+```
+build
+├── bin
+│   └── FooBarApp
+└── lib
+    └── lib*.so
 ```
 
 ## Appendices
+
 Few links on the subject...
 
 ### Resources
+
 Project layout:
-* The Pitchfork Layout Revision 1 (cxx-pflR1)
+* [The Pitchfork Layout Revision 1 (cxx-pflR1)](https://github.com/vector-of-bool/pitchfork)
 
 CMake:
 * https://llvm.org/docs/CMakePrimer.html
 * https://cliutils.gitlab.io/modern-cmake/
 * https://cgold.readthedocs.io/en/latest/
 
-### Misc
-Image has been generated using [plantuml](http://plantuml.com/):
-```bash
-plantuml -Tsvg docs/{file}.dot
-```
-So you can find the dot source files in [ci/docs](ci/docs).
+# Contributing
+
+The [CONTRIBUTING.md](./CONTRIBUTING.md) file contains instructions on how to
+file the Contributor License Agreement before sending any pull requests (PRs).
+Of course, if you're new to the project, it's usually best to discuss any
+proposals and reach consensus before sending your first PR.
 
 ## License
+
 Apache 2. See the LICENSE file for details.
 
 ## Disclaimer
+
 This is not an official Google product, it is just code that happens to be
 owned by Google.
 
