@@ -1,5 +1,4 @@
-add_library(Bar OBJECT)
-
+add_library(Bar)
 target_sources(Bar
   PRIVATE
     include/bar/Bar.hpp
@@ -13,6 +12,11 @@ set_target_properties(Bar PROPERTIES
   VERSION ${PROJECT_VERSION}
   POSITION_INDEPENDENT_CODE ON
   PUBLIC_HEADER include/bar/Bar.hpp)
+if(APPLE)
+  set_target_properties(Bar PROPERTIES INSTALL_RPATH "@loader_path")
+elseif(UNIX)
+  set_target_properties(Bar PROPERTIES INSTALL_RPATH "$ORIGIN")
+endif()
 target_link_libraries(Bar PRIVATE absl::log)
 add_library(${PROJECT_NAMESPACE}::Bar ALIAS Bar)
 
