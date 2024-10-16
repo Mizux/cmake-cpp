@@ -19,7 +19,7 @@ elseif(UNIX)
     POSITION_INDEPENDENT_CODE ON
     INSTALL_RPATH "$ORIGIN")
 endif()
-target_link_libraries(FooBar PRIVATE absl::log Bar Foo)
+target_link_libraries(FooBar PUBLIC absl::log Bar Foo)
 add_library(${PROJECT_NAMESPACE}::FooBar ALIAS FooBar)
 
 add_subdirectory(tests)

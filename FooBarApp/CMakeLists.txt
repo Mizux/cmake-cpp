@@ -25,7 +25,7 @@ target_link_libraries(FooBarApp PRIVATE
   absl::log_severity
   absl::strings
   protobuf::libprotobuf
-  CMakeCpp::Full
+  CMakeCpp::FooBar
 )
 
 add_executable(${PROJECT_NAMESPACE}::FooBarApp ALIAS FooBarApp)
