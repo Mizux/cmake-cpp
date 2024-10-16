@@ -1,8 +1,3 @@
-enable_language(CXX)
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
 # Check primitive types
 option(CHECK_TYPE "Check primitive type size" OFF)
 if(CHECK_TYPE)
@@ -33,83 +28,6 @@ if(CHECK_TYPE)
   cmake_pop_check_state()
 endif()
 
-# Check dependencies
-set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
-set(THREAD_PREFER_PTHREAD_FLAG TRUE)
-find_package(Threads REQUIRED)
-
-include(FetchContent)
-set(FETCHCONTENT_QUIET OFF)
-set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-set(CMAKE_Fortran_COMPILER OFF)
-
-# ##############################################################################
-# ABSEIL-CPP
-# ##############################################################################
-message(CHECK_START "Fetching Abseil-cpp")
-list(APPEND CMAKE_MESSAGE_INDENT "  ")
-set(ABSL_USE_SYSTEM_INCLUDES ON)
-# We want Abseil to declare what C++ standard it was compiled with.
-set(ABSL_PROPAGATE_CXX_STD ON)
-# We want Abseil to keep the INSTALL rules enabled, even though it is a
-# subproject. Otherwise the install rules in this project break.
-set(ABSL_ENABLE_INSTALL ON)
-FetchContent_Declare(
-  absl
-  GIT_REPOSITORY "https://github.com/abseil/abseil-cpp.git"
-  GIT_TAG "20240116.2"
-  GIT_SHALLOW TRUE
-  PATCH_COMMAND git apply --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/../patches/abseil-cpp-20240116.2.patch"
-  OVERRIDE_FIND_PACKAGE)
-FetchContent_MakeAvailable(absl)
-list(POP_BACK CMAKE_MESSAGE_INDENT)
-message(CHECK_PASS "fetched")
-
-# ##############################################################################
-# Protobuf
-# ##############################################################################
-message(CHECK_START "Fetching Protobuf")
-list(APPEND CMAKE_MESSAGE_INDENT "  ")
-set(protobuf_BUILD_TESTS OFF)
-set(protobuf_BUILD_SHARED_LIBS OFF)
-set(protobuf_BUILD_EXPORT OFF)
-set(protobuf_MSVC_STATIC_RUNTIME OFF)
-set(protobuf_WITH_ZLIB OFF)
-FetchContent_Declare(
-  protobuf
-  GIT_REPOSITORY "https://github.com/protocolbuffers/protobuf.git"
-  GIT_TAG "v27.2"
-  GIT_SUBMODULES ""
-  GIT_SHALLOW TRUE
-  PATCH_COMMAND git apply --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/../patches/protobuf-v27.2.patch")
-FetchContent_MakeAvailable(protobuf)
-list(POP_BACK CMAKE_MESSAGE_INDENT)
-message(CHECK_PASS "fetched")
-
-if(BUILD_TESTING)
-  message(CHECK_START "Fetching Googletest")
-  FetchContent_Declare(
-    googletest
-    GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG main
-    GIT_SHALLOW TRUE
-    FIND_PACKAGE_ARGS NAMES GTest GMock)
-  #set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-  FetchContent_MakeAvailable(googletest)
-  message(CHECK_PASS "fetched")
-
-  message(CHECK_START "Fetching Catch2")
-  FetchContent_Declare(
-    Catch2
-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG devel
-    GIT_SHALLOW TRUE
-    FIND_PACKAGE_ARGS)
-  FetchContent_MakeAvailable(Catch2)
-  message(CHECK_PASS "fetched")
-endif()
-
 include(GNUInstallDirs)
 
 # add_cpp_test()
@@ -136,7 +54,8 @@ function(add_cpp_test FILE_NAME)
   target_include_directories(${TEST_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
   target_compile_features(${TEST_NAME} PRIVATE cxx_std_20)
   target_link_libraries(${TEST_NAME} PRIVATE
-    Catch2 Catch2WithMain
+    #GTest::gtest_main
+    Catch2::Catch2WithMain
     ${PROJECT_NAMESPACE}::Foo
     ${PROJECT_NAMESPACE}::Bar
     ${PROJECT_NAMESPACE}::FooBar)
@@ -152,13 +71,6 @@ add_subdirectory(Bar)
 add_subdirectory(FooBar)
 
 add_library(Full)
-target_include_directories(Full
-  PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Foo/include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Bar/include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/FooBar/include>
-    $<INSTALL_INTERFACE:include>)
-#target_link_libraries(Full INTERFACE
 # Xcode fails to build if library doesn't contains at least one source file.
 if(XCODE)
   file(GENERATE
@@ -171,6 +83,20 @@ target_sources(Full PRIVATE
   $<TARGET_OBJECTS:Foo>
   $<TARGET_OBJECTS:FooBar>
 )
+target_include_directories(Full
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Foo/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Bar/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/FooBar/include>
+    $<INSTALL_INTERFACE:include>)
+target_compile_features(Full PUBLIC cxx_std_20)
+set_target_properties(Full PROPERTIES VERSION ${PROJECT_VERSION})
+if(APPLE)
+  set_target_properties(Full PROPERTIES INSTALL_RPATH "@loader_path")
+elseif(UNIX)
+  set_target_properties(Full PROPERTIES INSTALL_RPATH "$ORIGIN")
+endif()
+target_link_libraries(Full PRIVATE absl::log)
 add_library(${PROJECT_NAMESPACE}::Full ALIAS Full)
 install(TARGETS Full
   EXPORT ${PROJECT_NAME}Targets
@@ -178,7 +104,7 @@ install(TARGETS Full
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   #RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  )
+)
 
 add_subdirectory(FooBarApp)
 

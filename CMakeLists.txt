@@ -1,8 +1,9 @@
 # This file is just an orchestration
-cmake_minimum_required(VERSION 3.16..3.27)
+cmake_minimum_required(VERSION 3.16..3.31)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-option(CMAKE_EXPORT_COMPILE_COMMANDS "Export compile command" TRUE)
+# Enable output of compile commands during generation.
+option(CMAKE_EXPORT_COMPILE_COMMANDS "Export compile command" ON)
 
 project(CMakeCpp VERSION 1.0.0 LANGUAGES CXX)
 set(PROJECT_NAMESPACE CMakeCpp)
@@ -12,6 +13,14 @@ message(STATUS "${PROJECT_NAME} version: ${PROJECT_VERSION}")
 #message(STATUS "patch: ${PROJECT_VERSION_PATCH}")
 
 message(STATUS "system name: ${CMAKE_SYSTEM_NAME}")
+# Set max os target version.
+set(CMAKE_OSX_DEPLOYMENT_TARGET 10.15)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Default Build Type to be Release
 get_property(isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(isMultiConfig)
   if(NOT CMAKE_CONFIGURATION_TYPES)
@@ -67,8 +76,47 @@ endif()
 set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
 include(CTest)
 
+option(BUILD_ZLIB "Build the ZLIB dependency Library" ON)
+message(STATUS "Build ZLIB: ${BUILD_ZLIB}")
+
+option(BUILD_absl "Build the abseil-cpp dependency Library" ON)
+message(STATUS "Build abseil-cpp: ${BUILD_absl}")
+
+option(BUILD_Protobuf "Build the Protobuf dependency Library" ON)
+message(STATUS "Build protobuf: ${BUILD_Protobuf}")
+
+if(BUILD_TESTING)
+  option(BUILD_Catch2 "Build Catch2" ON)
+  message(STATUS "Build Catch2: ${BUILD_Catch2}")
+
+  option(BUILD_re2 "Build the re2 dependency Library" ON)
+  message(STATUS "Build re2: ${BUILD_re2}")
+
+  option(BUILD_googletest "Build googletest" ON)
+  message(STATUS "Build googletest: ${BUILD_googletest}")
+
+  option(BUILD_benchmark "Build benchmark" ON)
+  message(STATUS "Build benchmark: ${BUILD_benchmark}")
+else()
+  set(BUILD_Catch2 OFF)
+  set(BUILD_re2 OFF)
+  set(BUILD_googletest OFF)
+  set(BUILD_benchmark OFF)
+endif()
+
+# Find system deps
+include(system_deps)
+
+# Build Needed dependencies
+add_subdirectory(cmake/dependencies dependencies)
+
+include(host)
+# verify deps
+include(check_deps)
+
 include(cpp)
 
+## Examples
 option(BUILD_EXAMPLES "Build examples" ON)
 message(STATUS "Build examples: ${BUILD_EXAMPLES}")
 add_subdirectory(examples)

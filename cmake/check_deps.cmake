@@ -1,0 +1,61 @@
+# Check dependencies
+if(NOT TARGET ZLIB::ZLIB)
+  message(FATAL_ERROR "Target ZLIB::ZLIB not available.")
+endif()
+
+if(NOT TARGET absl::base)
+  message(FATAL_ERROR "Target absl::base not available.")
+endif()
+set(ABSL_DEPS
+  absl::base
+  absl::core_headers
+  absl::absl_check
+  absl::absl_log
+  absl::check
+  absl::die_if_null
+  absl::flags
+  absl::flags_commandlineflag
+  absl::flags_marshalling
+  absl::flags_parse
+  absl::flags_reflection
+  absl::flags_usage
+  absl::log
+  absl::log_flags
+  absl::log_globals
+  absl::log_initialize
+  absl::log_internal_message
+  absl::cord
+  absl::random_random
+  absl::raw_hash_set
+  absl::hash
+  absl::leak_check
+  absl::memory
+  absl::meta
+  absl::stacktrace
+  absl::status
+  absl::statusor
+  absl::str_format
+  absl::strings
+  absl::synchronization
+  absl::time
+  absl::any
+  )
+
+if(NOT TARGET protobuf::libprotobuf)
+  message(FATAL_ERROR "Target protobuf::libprotobuf not available.")
+endif()
+
+# CXX Test
+if(BUILD_TESTING)
+  if(NOT TARGET Catch2::Catch2)
+    message(FATAL_ERROR "Target Catch2::Catch2 not available.")
+  endif()
+
+  if(NOT TARGET re2::re2)
+    message(FATAL_ERROR "Target re2::re2 not available.")
+  endif()
+
+  if(NOT TARGET GTest::gtest_main)
+    message(FATAL_ERROR "Target GTest::gtest_main not available.")
+  endif()
+endif()
