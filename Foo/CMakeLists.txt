@@ -12,7 +12,7 @@ set_target_properties(Foo PROPERTIES
   VERSION ${PROJECT_VERSION}
   POSITION_INDEPENDENT_CODE ON
   PUBLIC_HEADER include/foo/Foo.hpp)
-#target_link_libraries(Foo PUBLIC ...)
+target_link_libraries(Foo PRIVATE absl::log)
 add_library(${PROJECT_NAMESPACE}::Foo ALIAS Foo)
 
 add_subdirectory(tests)
