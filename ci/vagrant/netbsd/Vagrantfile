@@ -12,10 +12,10 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.guest = :freebsd
-  config.vm.box = "generic/freebsd14"
+  config.vm.guest = :netbsd
+  config.vm.box = "generic/netbsd9"
   config.vm.provider "virtualbox" do |v|
-    v.name = "ci_freebsd"
+    v.name = "ci_netbsd"
   end
   config.ssh.shell = "sh"
 

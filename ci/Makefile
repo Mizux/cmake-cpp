@@ -433,4 +433,4 @@ clean: clean_all clean_platforms clean_toolchains clean_web clean_vms
 distclean: clean
 	-docker container rm -f $$(docker container ls -aq)
 	-docker image rm -f $$(docker image ls -aq)
-	-vagrant box remove -f generic/freebsd12
+	-vagrant box remove -f generic/freebsd14
