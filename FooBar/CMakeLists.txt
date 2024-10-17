@@ -1,4 +1,4 @@
-add_library(FooBar OBJECT)
+add_library(FooBar)
 target_sources(FooBar
   PRIVATE
     include/foobar/FooBar.hpp
@@ -10,14 +10,13 @@ target_include_directories(FooBar
 target_compile_features(FooBar PUBLIC cxx_std_20)
 set_target_properties(FooBar PROPERTIES
   VERSION ${PROJECT_VERSION}
+  POSITION_INDEPENDENT_CODE ON
   PUBLIC_HEADER include/foobar/FooBar.hpp)
 # note: macOS is APPLE and also UNIX !
 if(APPLE)
   set_target_properties(FooBar PROPERTIES INSTALL_RPATH "@loader_path")
 elseif(UNIX)
-  set_target_properties(FooBar PROPERTIES
-    POSITION_INDEPENDENT_CODE ON
-    INSTALL_RPATH "$ORIGIN")
+  set_target_properties(FooBar PROPERTIES INSTALL_RPATH "$ORIGIN")
 endif()
 target_link_libraries(FooBar PUBLIC absl::log Bar Foo)
 add_library(${PROJECT_NAMESPACE}::FooBar ALIAS FooBar)
