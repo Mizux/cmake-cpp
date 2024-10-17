@@ -120,7 +120,8 @@ if(BUILD_googletest)
     GIT_SHALLOW TRUE
     PATCH_COMMAND git apply --ignore-whitespace
     "${CMAKE_CURRENT_LIST_DIR}/../../patches/googletest-v1.15.2.patch"
-    FIND_PACKAGE_ARGS NAMES GTest GMock)
+    #FIND_PACKAGE_ARGS NAMES GTest GMock
+  )
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
   set(INSTALL_GTEST OFF)
   set(GTEST_HAS_ABSL ON)
