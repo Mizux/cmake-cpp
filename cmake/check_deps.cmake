@@ -47,10 +47,6 @@ endif()
 
 # CXX Test
 if(BUILD_TESTING)
-  if(NOT TARGET Catch2::Catch2)
-    message(FATAL_ERROR "Target Catch2::Catch2 not available.")
-  endif()
-
   if(NOT TARGET re2::re2)
     message(FATAL_ERROR "Target re2::re2 not available.")
   endif()

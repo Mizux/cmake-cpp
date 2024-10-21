@@ -20,7 +20,6 @@ elseif(UNIX)
 endif()
 target_link_libraries(example PRIVATE
   #GTest::gtest_main
-  Catch2::Catch2WithMain
   ${PROJECT_NAMESPACE}::Foo
   ${PROJECT_NAMESPACE}::Bar
   ${PROJECT_NAMESPACE}::FooBar

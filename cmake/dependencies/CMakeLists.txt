@@ -79,20 +79,6 @@ endif()
 ###############
 ##  TESTING  ##
 ###############
-if(BUILD_Catch2)
-  message(CHECK_START "Fetching Catch2")
-  list(APPEND CMAKE_MESSAGE_INDENT "  ")
-  FetchContent_Declare(
-    Catch2
-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG devel
-    GIT_SHALLOW TRUE
-    FIND_PACKAGE_ARGS)
-  FetchContent_MakeAvailable(Catch2)
-  list(POP_BACK CMAKE_MESSAGE_INDENT)
-  message(CHECK_PASS "fetched")
-endif()
-
 if(BUILD_re2)
   message(CHECK_START "Fetching re2")
   list(APPEND CMAKE_MESSAGE_INDENT "  ")

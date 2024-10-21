@@ -23,10 +23,6 @@ endif()
 
 # CXX Test
 if(BUILD_TESTING)
-  if(NOT BUILD_Catch2)
-    find_package(Catch2 REQUIRED)
-  endif()
-
   if(NOT BUILD_re2)
     find_package(re2 REQUIRED)
   endif()

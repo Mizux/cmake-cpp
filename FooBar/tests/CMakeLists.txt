@@ -19,8 +19,7 @@ elseif(UNIX)
     INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}:$ORIGIN")
 endif()
 target_link_libraries(foobar_test PRIVATE
-  #GTest::gtest_main
-  Catch2::Catch2WithMain
+  GTest::gtest_main
   ${PROJECT_NAMESPACE}::FooBar)
 
 add_test(NAME foobar_test COMMAND foobar_test)
