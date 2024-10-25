@@ -10,7 +10,6 @@ Github-CI:<br>
 
 [![Build Status][arm_toolchain_status]][arm_toolchain_link]
 [![Build Status][aarch64_toolchain_status]][aarch64_toolchain_link]
-[![Build Status][mips_toolchain_status]][mips_toolchain_link]
 [![Build Status][mips64_toolchain_status]][mips64_toolchain_link]
 [![Build Status][powerpc_toolchain_status]][powerpc_toolchain_link]
 [![Build Status][riscv64_toolchain_status]][riscv64_toolchain_link]<br>
@@ -35,8 +34,6 @@ Github-CI:<br>
 [arm_toolchain_link]: ./../../actions/workflows/arm_toolchain.yml
 [aarch64_toolchain_status]: ./../../actions/workflows/aarch64_toolchain.yml/badge.svg
 [aarch64_toolchain_link]: ./../../actions/workflows/aarch64_toolchain.yml
-[mips_toolchain_status]: ./../../actions/workflows/mips_toolchain.yml/badge.svg
-[mips_toolchain_link]: ./../../actions/workflows/mips_toolchain.yml
 [mips64_toolchain_status]: ./../../actions/workflows/mips64_toolchain.yml/badge.svg
 [mips64_toolchain_link]: ./../../actions/workflows/mips64_toolchain.yml
 [powerpc_toolchain_status]: ./../../actions/workflows/powerpc_toolchain.yml/badge.svg
