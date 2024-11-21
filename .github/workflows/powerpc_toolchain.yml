@@ -21,12 +21,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build env stage
-      run: make --directory=ci ${{ matrix.targets }}_env
+      run: make --directory=ci toolchain_${{ matrix.targets }}_env
     - name: Build devel stage
-      run: make --directory=ci ${{ matrix.targets }}_devel
+      run: make --directory=ci toolchain_${{ matrix.targets }}_devel
     - name: Build toolchain stage
-      run: make --directory=ci ${{ matrix.targets }}_toolchain
+      run: make --directory=ci toolchain_${{ matrix.targets }}_toolchain
     - name: Build build stage
-      run: make --directory=ci ${{ matrix.targets }}_build
+      run: make --directory=ci toolchain_${{ matrix.targets }}_build
     - name: Build Test stage
-      run: make --directory=ci ${{ matrix.targets }}_test
+      run: make --directory=ci toolchain_${{ matrix.targets }}_test
