@@ -129,10 +129,13 @@ help:
 	@echo -e "\t${BOLD}clean_vms${RESET}: Remove ALL vagrant box."
 	@echo
 	@echo -e "\tWith ${BOLD}<vm>${RESET}:"
-	@echo -e "\t\t${BOLD}freebsd${RESET} (FreeBSD)"
+	@echo -e "\t\t${BOLD}freebsd${RESET} (FreeBSD 14)"
+	@echo -e "\t\t${BOLD}netbsd${RESET} (NetBSD 9)"
+	@echo -e "\t\t${BOLD}openbsd${RESET} (OpenBSD 7)"
 	@echo
 	@echo -e "\tWith ${BOLD}<vms_stage>${RESET}:"
 	@echo -e "\t\t${BOLD}build${RESET}"
+	@echo -e "\te.g. 'make freebsd_build'"
 	@echo
 	@echo -e "\tGlobal targets."
 	@echo -e "\t${BOLD}clean${RESET}: Remove ALL caches and docker images."
@@ -390,7 +393,7 @@ cache/web/docker_$1.tar: web_$1
 #$$(info Create target: sh_web_$1 (debug).)
 .PHONY: sh_web_$1
 sh_web_$1: web_$1
-	${DOCKER_RUN_CMD} -it --name ${IMAGE}_web_$1 ${IMAGE}:web_$1
+	${DOCKER_RUN_CMD} -it --name ${PROJECT}_web_$1 ${IMAGE}:web_$1
 
 #$$(info Create target: clean_web_$1.)
 .PHONY: clean_web_$1
