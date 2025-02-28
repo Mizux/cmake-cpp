@@ -15,14 +15,14 @@ jobs:
           almalinux,
           alpine,
           debian,
-          #fedora, # timeout
-          #opensuse, # timeout
+          fedora,
+          opensuse,
           rockylinux,
           ubuntu
         ]
       fail-fast: false
     name: arm64•${{matrix.distro}}
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
     - name: Set up QEMU
