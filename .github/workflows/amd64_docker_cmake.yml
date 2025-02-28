@@ -1,0 +1,56 @@
+# ref: https://github.com/docker-library/official-images
+name: amd64 Docker CMake
+
+on: [push, pull_request, workflow_dispatch]
+
+concurrency:
+  group: ${{github.workflow}}-${{github.ref}}
+  cancel-in-progress: true
+
+jobs:
+  docker:
+    strategy:
+      matrix:
+        platform: [amd64] # arm64 riscv64
+        distro: [
+          almalinux,
+          alpine,
+          archlinux,
+          debian,
+          fedora,
+          opensuse,
+          rockylinux,
+          ubuntu
+        ]
+      fail-fast: false
+    name: ${{matrix.platform}}•${{matrix.distro}}•CMake
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check docker
+        run: |
+          docker info
+          docker buildx ls
+      - name: Build env image
+        run: make --directory=ci ${{matrix.platform}}_${{matrix.distro}}_env
+      - name: Build devel image
+        run: make --directory=ci ${{matrix.platform}}_${{matrix.distro}}_devel
+      - name: Build project
+        run: make --directory=ci ${{matrix.platform}}_${{matrix.distro}}_build
+      - name: Test project
+        run: make --directory=ci ${{matrix.platform}}_${{matrix.distro}}_test
+
+      - name: Build install env image
+        run: make --directory=ci ${{matrix.platform}}_${{matrix.distro}}_install_env
+      - name: Build install devel image
+        run: make --directory=ci ${{matrix.platform}}_${{matrix.distro}}_install_devel
+      - name: Build install project
+        run: make --directory=ci ${{matrix.platform}}_${{matrix.distro}}_install_build
+      - name: Test install project
+        run: make --directory=ci ${{matrix.platform}}_${{matrix.distro}}_install_test
+
+  amd64_docker_cmake:
+    runs-on: ubuntu-latest
+    needs: docker
+    steps:
+      - uses: actions/checkout@v4

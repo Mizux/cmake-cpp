@@ -1,7 +1,11 @@
 # ref: https://toolchains.bootlin.com/
-name: arm Toolchain
+name: arm Toolchain CMake
 
 on: [push, pull_request, workflow_dispatch]
+
+concurrency:
+  group: ${{github.workflow}}-${{github.ref}}
+  cancel-in-progress: true
 
 # Building using the github runner environement directly.
 jobs:
@@ -16,17 +20,17 @@ jobs:
           armebv7-eabihf #bootlin
         ]
       fail-fast: false
-    name: Linux • Toolchain ${{ matrix.targets }}
+    name: Linux•Toolchain ${{matrix.targets}}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Build env stage
-      run: make --directory=ci toolchain_${{ matrix.targets }}_env
+      run: make --directory=ci toolchain_${{matrix.targets}}_env
     - name: Build devel stage
-      run: make --directory=ci toolchain_${{ matrix.targets }}_devel
+      run: make --directory=ci toolchain_${{matrix.targets}}_devel
     - name: Build toolchain stage
-      run: make --directory=ci toolchain_${{ matrix.targets }}_toolchain
+      run: make --directory=ci toolchain_${{matrix.targets}}_toolchain
     - name: Build build stage
-      run: make --directory=ci toolchain_${{ matrix.targets }}_build
+      run: make --directory=ci toolchain_${{matrix.targets}}_build
     - name: Build Test stage
-      run: make --directory=ci toolchain_${{ matrix.targets }}_test
+      run: make --directory=ci toolchain_${{matrix.targets}}_test

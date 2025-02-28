@@ -1,6 +1,10 @@
-name: amd64 FreeBSD
+name: amd64 FreeBSD CMake
 
 on: [push, pull_request, workflow_dispatch]
+
+concurrency:
+  group: ${{github.workflow}}-${{github.ref}}
+  cancel-in-progress: true
 
 jobs:
   # Only macos runner provide virtualisation with vagrant/virtualbox installed.
