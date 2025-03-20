@@ -121,7 +121,7 @@ To build the C++ project, as usual:
 ```sh
 cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 cmake --build build --config Release
-CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test
+CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --config Release --target test
 ```
 ## Build directory layout
 Since we want to use the [CMAKE_BINARY_DIR](https://cmake.org/cmake/help/latest/variable/CMAKE_BINARY_DIR.html) to generate the binary package.  
