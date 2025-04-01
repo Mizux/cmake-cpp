@@ -9,25 +9,29 @@ find_package(Threads REQUIRED)
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
 
 # libprotobuf force us to depends on ZLIB::ZLIB target
-if(NOT BUILD_ZLIB)
+if(NOT BUILD_ZLIB AND NOT TARGET ZLIB::ZLIB)
  find_package(ZLIB REQUIRED)
 endif()
 
-if(NOT BUILD_absl)
+if(NOT BUILD_absl AND NOT TARGET absl::base)
   find_package(absl REQUIRED)
 endif()
 
-if(NOT BUILD_Protobuf)
+if(NOT BUILD_Protobuf AND NOT TARGET protobuf::libprotobuf)
   find_package(Protobuf REQUIRED)
+endif()
+
+if(NOT BUILD_re2 AND NOT TARGET re2::re2)
+  find_package(re2 REQUIRED)
 endif()
 
 # CXX Test
 if(BUILD_TESTING)
-  if(NOT BUILD_re2)
-    find_package(re2 REQUIRED)
+  if(NOT BUILD_googletest AND NOT TARGET GTest::gtest_main)
+    find_package(GTest REQUIRED)
   endif()
 
-  if(NOT BUILD_googletest)
-    find_package(GTest REQUIRED)
+  if(NOT BUILD_benchmark AND NOT TARGET benchmark::benchmark)
+    find_package(benchmark REQUIRED)
   endif()
 endif()

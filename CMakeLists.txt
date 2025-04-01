@@ -85,20 +85,18 @@ message(STATUS "Build abseil-cpp: ${BUILD_absl}")
 option(BUILD_Protobuf "Build the Protobuf dependency Library" ON)
 message(STATUS "Build protobuf: ${BUILD_Protobuf}")
 
+option(BUILD_re2 "Build the re2 dependency Library" ON)
+message(STATUS "Build re2: ${BUILD_re2}")
+
 if(BUILD_TESTING)
-  option(BUILD_re2 "Build the re2 dependency Library" ON)
-  message(STATUS "Build re2: ${BUILD_re2}")
-
   option(BUILD_googletest "Build googletest" ON)
-  message(STATUS "Build googletest: ${BUILD_googletest}")
-
   option(BUILD_benchmark "Build benchmark" ON)
-  message(STATUS "Build benchmark: ${BUILD_benchmark}")
 else()
-  set(BUILD_re2 OFF)
   set(BUILD_googletest OFF)
   set(BUILD_benchmark OFF)
 endif()
+message(STATUS "Build googletest: ${BUILD_googletest}")
+message(STATUS "Build benchmark: ${BUILD_benchmark}")
 
 # Find system deps
 include(system_deps)
