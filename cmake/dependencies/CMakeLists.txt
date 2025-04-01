@@ -40,11 +40,12 @@ if(BUILD_absl)
   FetchContent_Declare(
     absl
     GIT_REPOSITORY "https://github.com/abseil/abseil-cpp.git"
-    GIT_TAG "20240722.0"
+    GIT_TAG "20250127.1"
     GIT_SHALLOW TRUE
     PATCH_COMMAND git apply --ignore-whitespace
-    "${CMAKE_CURRENT_LIST_DIR}/../../patches/abseil-cpp-20240722.0.patch"
-    OVERRIDE_FIND_PACKAGE)
+    "${CMAKE_CURRENT_LIST_DIR}/../../patches/abseil-cpp-20250127.1.patch"
+    OVERRIDE_FIND_PACKAGE
+  )
   FetchContent_MakeAvailable(absl)
   list(POP_BACK CMAKE_MESSAGE_INDENT)
   message(CHECK_PASS "fetched")
@@ -61,24 +62,23 @@ if(BUILD_Protobuf)
   set(protobuf_BUILD_EXPORT OFF)
   set(protobuf_MSVC_STATIC_RUNTIME OFF)
   #set(protobuf_BUILD_LIBUPB ON)
-  set(protobuf_WITH_ZLIB OFF)
   FetchContent_Declare(
     Protobuf
     GIT_REPOSITORY "https://github.com/protocolbuffers/protobuf.git"
-    GIT_TAG "v27.3"
+    GIT_TAG "v30.2"
     GIT_SHALLOW TRUE
     GIT_SUBMODULES ""
     PATCH_COMMAND git apply --ignore-whitespace
-    "${CMAKE_CURRENT_LIST_DIR}/../../patches/protobuf-v27.3.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/../../patches/protobuf-v30.2.patch"
   )
   FetchContent_MakeAvailable(Protobuf)
   list(POP_BACK CMAKE_MESSAGE_INDENT)
   message(CHECK_PASS "fetched")
 endif()
 
-###############
-##  TESTING  ##
-###############
+# ##############################################################################
+# RE2
+# ##############################################################################
 if(BUILD_re2)
   message(CHECK_START "Fetching re2")
   list(APPEND CMAKE_MESSAGE_INDENT "  ")
@@ -96,17 +96,20 @@ if(BUILD_re2)
   message(CHECK_PASS "fetched")
 endif()
 
+###############
+##  TESTING  ##
+###############
 if(BUILD_googletest)
   message(CHECK_START "Fetching googletest")
   list(APPEND CMAKE_MESSAGE_INDENT "  ")
   FetchContent_Declare(
     googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG v1.15.2
+    GIT_TAG v1.16.0
     GIT_SHALLOW TRUE
     PATCH_COMMAND git apply --ignore-whitespace
-    "${CMAKE_CURRENT_LIST_DIR}/../../patches/googletest-v1.15.2.patch"
-    #FIND_PACKAGE_ARGS NAMES GTest GMock
+    "${CMAKE_CURRENT_LIST_DIR}/../../patches/googletest-v1.16.0.patch"
+    #PATCH_COMMAND git apply --ignore-whitespace ""
   )
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
   set(INSTALL_GTEST OFF)
@@ -122,7 +125,7 @@ if(BUILD_benchmark)
   FetchContent_Declare(
     benchmark
     GIT_REPOSITORY https://github.com/google/benchmark.git
-    GIT_TAG v1.8.4
+    GIT_TAG v1.9.1
     GIT_SHALLOW TRUE
     #PATCH_COMMAND git apply --ignore-whitespace ""
   )
