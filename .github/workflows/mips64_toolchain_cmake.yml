@@ -18,8 +18,6 @@ jobs:
           mips64el, # alias to mips64el-r6
           mips64-r6, # codescape
           mips64el-r6, # codescape
-          mips64-r2, # codescape
-          mips64el-r2 # codescape
         ]
       fail-fast: false
     name: Linux•Toolchain ${{matrix.targets}}
