@@ -6,8 +6,7 @@ FROM ubuntu:latest AS env
 ENV PATH=/usr/local/bin:$PATH
 RUN apt update -q \
 && DEBIAN_FRONTEND=noninteractive apt install -yq \
- git wget libssl-dev \
- build-essential cmake \
+ git wget libssl-dev build-essential cmake \
 && apt-get clean \
 && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
