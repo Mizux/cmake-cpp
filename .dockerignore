@@ -6,22 +6,24 @@
 .github
 .clang-format
 
+AUTHORS
+CONTRIBUTING.md
+CONTRIBUTORS
+LICENSE
+README.md
+docs
+
 # CMake
 cmake/docs
 cmake/README.md
 
+# CI
+ci/Makefile
 ci/docker
 ci/docs
 ci/cache
-ci/Makefile
 
-AUTHORS
-CONTRIBUTORS
-LICENSE
-README.md
-CONTRIBUTING.md
-
-# Native cmake build
+# Native build
 build/
 build*/
 
