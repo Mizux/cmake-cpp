@@ -61,7 +61,7 @@ macro(get_cpp_proto PROTO_HDRS PROTO_SRCS)
       COMMAND ${PROTOC_PRG}
         "--proto_path=${PROJECT_SOURCE_DIR}"
         ${PROTO_DIRS}
-        "--cpp_out=${PROJECT_BINARY_DIR}"
+        "--cpp_out=dllexport_decl=PROTO_DLL:${PROJECT_BINARY_DIR}"
         ${PROTO_FILE}
       DEPENDS ${PROTO_NAME}.proto ${PROTOC_PRG}
       COMMENT "Generate C++ protocol buffer for ${PROTO_FILE}"
@@ -72,14 +72,9 @@ macro(get_cpp_proto PROTO_HDRS PROTO_SRCS)
   endforeach()
 endmacro()
 
-
-add_subdirectory(Foo)
-add_subdirectory(Bar)
-add_subdirectory(FooBar)
-
-add_subdirectory(FooBarApp)
-
-# Install
+###################
+## CMake Install ##
+###################
 install(EXPORT ${PROJECT_NAME}Targets
   NAMESPACE ${PROJECT_NAMESPACE}::
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}

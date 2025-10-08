@@ -83,7 +83,7 @@ option(BUILD_ZLIB "Build the ZLIB dependency Library" ON)
 message(STATUS "Build ZLIB: ${BUILD_ZLIB}")
 
 option(BUILD_absl "Build the abseil-cpp dependency Library" ON)
-message(STATUS "Build abseil-cpp: ${BUILD_absl}")
+message(STATUS "Build absl: ${BUILD_absl}")
 
 option(BUILD_re2 "Build the RE2 dependency Library" ON)
 message(STATUS "Build re2: ${BUILD_re2}")
@@ -101,6 +101,9 @@ endif()
 message(STATUS "Build googletest: ${BUILD_googletest}")
 message(STATUS "Build benchmark: ${BUILD_benchmark}")
 
+option(BUILD_EXAMPLES "Build examples" ON)
+message(STATUS "Build examples: ${BUILD_EXAMPLES}")
+
 # Find system deps
 include(system_deps)
 
@@ -113,7 +116,9 @@ include(check_deps)
 
 include(cpp)
 
-## Examples
-option(BUILD_EXAMPLES "Build examples" ON)
-message(STATUS "Build examples: ${BUILD_EXAMPLES}")
+add_subdirectory(Foo)
+add_subdirectory(Bar)
+add_subdirectory(FooBar)
+add_subdirectory(FooBarApp)
+
 add_subdirectory(examples)
