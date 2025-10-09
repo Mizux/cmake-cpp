@@ -16,10 +16,7 @@ WORKDIR /home/project
 COPY . .
 
 FROM devel AS build
-# To remove once https://gitlab.archlinux.org/archlinux/packaging/packages/emscripten/-/issues/7 is fixed
-RUN ln -s em-config.py /usr/lib/emscripten/em-config
-# To replace by emcmake once https://gitlab.archlinux.org/archlinux/packaging/packages/emscripten/-/issues/7 is fixed
-RUN emcmake.py cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=make
+RUN emcmake cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=make
 RUN cmake --build build --target all -v
 #RUN cmake --build build --target install -v
 
