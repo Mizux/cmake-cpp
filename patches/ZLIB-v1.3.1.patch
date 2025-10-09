@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 15ceebe..03825a2 100644
+index 15ceebe..8dc0df6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,23 +1,21 @@
@@ -63,7 +63,7 @@ index 15ceebe..03825a2 100644
  
  if(NOT CYGWIN)
      # This property causes shared libraries on Linux to have the full version
-@@ -164,26 +171,45 @@ if(NOT CYGWIN)
+@@ -164,26 +171,47 @@ if(NOT CYGWIN)
      #
      # This has no effect with MSVC, on that platform the version info for
      # the DLL comes from the resource file win32/zlib1.rc
@@ -114,12 +114,14 @@ index 15ceebe..03825a2 100644
 +  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/ZLIBConfig.cmake"
 +    "${CMAKE_CURRENT_BINARY_DIR}/ZLIBConfigVersion.cmake"
 +    DESTINATION lib/cmake/ZLIB)
++else()
++  message(FATAL_ERROR "ZLIB won't be installed")
  endif()
 +
  if(NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL )
      install(FILES ${ZLIB_PUBLIC_HDRS} DESTINATION "${INSTALL_INC_DIR}")
  endif()
-@@ -199,20 +225,20 @@ endif()
+@@ -199,20 +227,20 @@ endif()
  #============================================================================
  if(ZLIB_BUILD_EXAMPLES)
      add_executable(example test/example.c)
