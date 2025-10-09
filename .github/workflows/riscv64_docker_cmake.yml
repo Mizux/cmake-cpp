@@ -21,7 +21,7 @@ jobs:
           #ubuntu,
         ]
       fail-fast: false
-    name: riscv64•${{matrix.distro}}
+    name: riscv64•${{matrix.distro}}•CMake
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5

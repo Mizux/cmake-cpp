@@ -21,7 +21,7 @@ jobs:
           ubuntu
         ]
       fail-fast: false
-    name: arm64•${{matrix.distro}}
+    name: arm64•${{matrix.distro}}•CMake
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
