@@ -31,3 +31,9 @@ jobs:
       run: make --directory=ci toolchain_${{matrix.targets}}_build
     - name: Build Test stage
       run: make --directory=ci toolchain_${{matrix.targets}}_test
+
+  s390x_toolchain_cmake:
+    runs-on: ubuntu-latest
+    needs: s390x
+    steps:
+      - uses: actions/checkout@v5

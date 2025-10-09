@@ -34,3 +34,9 @@ jobs:
       run: make --directory=ci toolchain_${{matrix.targets}}_build
     - name: Build Test stage
       run: make --directory=ci toolchain_${{matrix.targets}}_test
+
+  mips64_toolchain_cmake:
+    runs-on: ubuntu-latest
+    needs: mips64
+    steps:
+      - uses: actions/checkout@v5

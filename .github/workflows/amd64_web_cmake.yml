@@ -8,19 +8,26 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  Distros:
+  docker:
+    name: amd64•Web•CMake
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
-    - name: Check docker
-      run: |
-        docker info
-        docker buildx ls
-    - name: Build env image
-      run: make --directory=ci web_env
-    - name: Build devel project
-      run: make --directory=ci web_devel
-    - name: Build project
-      run: make --directory=ci web_build
-    - name: Test project
-      run: make --directory=ci web_test
+      - uses: actions/checkout@v5
+      - name: Check docker
+        run: |
+          docker info
+          docker buildx ls
+      - name: Build env image
+        run: make --directory=ci web_env
+      - name: Build devel image
+        run: make --directory=ci web_devel
+      - name: Build project
+        run: make --directory=ci web_build
+      - name: Test project
+        run: make --directory=ci web_test
+
+  amd64_web_cmake:
+    runs-on: ubuntu-latest
+    needs: docker
+    steps:
+      - uses: actions/checkout@v5

@@ -34,3 +34,9 @@ jobs:
       run: make --directory=ci toolchain_${{matrix.targets}}_build
     - name: Build Test stage
       run: make --directory=ci toolchain_${{matrix.targets}}_test
+
+  powerpc_toolchain_cmake:
+    runs-on: ubuntu-latest
+    needs: powerpc
+    steps:
+      - uses: actions/checkout@v5
