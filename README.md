@@ -62,7 +62,7 @@ This project should run on GNU/Linux, MacOS and Windows.
 
 You'll need:
 
-* "CMake >= 3.16".
+* "CMake >= 3.24".
 
 ## Codemap
 
@@ -124,6 +124,7 @@ cmake --build build --config Release
 CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --config Release --target test
 ```
 ## Build directory layout
+
 Since we want to use the [CMAKE_BINARY_DIR](https://cmake.org/cmake/help/latest/variable/CMAKE_BINARY_DIR.html) to generate the binary package.  
 We want this layout (tree build --prune -P "*.so|FooApp"):
 
