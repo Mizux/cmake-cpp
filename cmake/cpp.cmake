@@ -30,6 +30,49 @@ endif()
 
 include(GNUInstallDirs)
 
+# get_cpp_proto()
+# CMake macro to generate Protobuf cpp sources
+# Parameters:
+#  the proto c++ headers list
+#  the proto c++ sources list
+# e.g.:
+# get_cpp_proto(PROTO_HDRS PROTO_SRCS)
+macro(get_cpp_proto PROTO_HDRS PROTO_SRCS)
+  file(GLOB_RECURSE PROTO_FILES RELATIVE ${PROJECT_SOURCE_DIR} "*.proto")
+  ## Get Protobuf include dir
+  get_target_property(protobuf_dirs protobuf::libprotobuf INTERFACE_INCLUDE_DIRECTORIES)
+  foreach(dir IN LISTS protobuf_dirs)
+    if (NOT "${dir}" MATCHES "INSTALL_INTERFACE|-NOTFOUND")
+      message(STATUS "protoc(cc) Adding proto path: ${dir}")
+      list(APPEND PROTO_DIRS "--proto_path=${dir}")
+    endif()
+  endforeach()
+
+  foreach(PROTO_FILE IN LISTS PROTO_FILES)
+    message(STATUS "protoc(cc) .proto: ${PROTO_FILE}")
+    get_filename_component(PROTO_DIR ${PROTO_FILE} DIRECTORY)
+    get_filename_component(PROTO_NAME ${PROTO_FILE} NAME_WE)
+    set(PROTO_HDR ${PROJECT_BINARY_DIR}/${PROTO_DIR}/${PROTO_NAME}.pb.h)
+    set(PROTO_SRC ${PROJECT_BINARY_DIR}/${PROTO_DIR}/${PROTO_NAME}.pb.cc)
+    message(STATUS "protoc(cc) hdr: ${PROTO_HDR}")
+    message(STATUS "protoc(cc) src: ${PROTO_SRC}")
+    add_custom_command(
+      OUTPUT ${PROTO_SRC} ${PROTO_HDR}
+      COMMAND ${PROTOC_PRG}
+        "--proto_path=${PROJECT_SOURCE_DIR}"
+        ${PROTO_DIRS}
+        "--cpp_out=${PROJECT_BINARY_DIR}"
+        ${PROTO_FILE}
+      DEPENDS ${PROTO_NAME}.proto ${PROTOC_PRG}
+      COMMENT "Generate C++ protocol buffer for ${PROTO_FILE}"
+      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+      VERBATIM)
+    list(APPEND ${PROTO_HDRS} ${PROTO_HDR})
+    list(APPEND ${PROTO_SRCS} ${PROTO_SRC})
+  endforeach()
+endmacro()
+
+
 add_subdirectory(Foo)
 add_subdirectory(Bar)
 add_subdirectory(FooBar)
