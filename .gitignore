@@ -7,6 +7,7 @@ cache/
 
 # IDE
 .vs/
+.vscode/
 .cache/
 # Kdevelop
 .kdev4/
