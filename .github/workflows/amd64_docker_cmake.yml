@@ -11,6 +11,7 @@ jobs:
   docker:
     strategy:
       matrix:
+        platform: [amd64] # arm64 riscv64
         distro: [
           almalinux,
           alpine,
@@ -22,7 +23,7 @@ jobs:
           ubuntu
         ]
       fail-fast: false
-    name: amd64•${{matrix.distro}}•CMake
+    name: ${{matrix.platform}}•${{matrix.distro}}•CMake
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -31,22 +32,22 @@ jobs:
           docker info
           docker buildx ls
       - name: Build env image
-        run: make --directory=ci amd64_${{matrix.distro}}_env
+        run: make --directory=ci ${{matrix.platform}}_${{matrix.distro}}_env
       - name: Build devel image
-        run: make --directory=ci amd64_${{matrix.distro}}_devel
+        run: make --directory=ci ${{matrix.platform}}_${{matrix.distro}}_devel
       - name: Build project
-        run: make --directory=ci amd64_${{matrix.distro}}_build
+        run: make --directory=ci ${{matrix.platform}}_${{matrix.distro}}_build
       - name: Test project
-        run: make --directory=ci amd64_${{matrix.distro}}_test
+        run: make --directory=ci ${{matrix.platform}}_${{matrix.distro}}_test
 
       - name: Build install env image
-        run: make --directory=ci amd64_${{matrix.distro}}_install_env
+        run: make --directory=ci ${{matrix.platform}}_${{matrix.distro}}_install_env
       - name: Build install devel image
-        run: make --directory=ci amd64_${{matrix.distro}}_install_devel
+        run: make --directory=ci ${{matrix.platform}}_${{matrix.distro}}_install_devel
       - name: Build install project
-        run: make --directory=ci amd64_${{matrix.distro}}_install_build
+        run: make --directory=ci ${{matrix.platform}}_${{matrix.distro}}_install_build
       - name: Test install project
-        run: make --directory=ci amd64_${{matrix.distro}}_install_test
+        run: make --directory=ci ${{matrix.platform}}_${{matrix.distro}}_install_test
 
   amd64_docker_cmake:
     runs-on: ubuntu-latest
