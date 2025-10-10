@@ -115,10 +115,8 @@ include(host)
 include(check_deps)
 
 include(cpp)
-
-add_subdirectory(Foo)
-add_subdirectory(Bar)
-add_subdirectory(FooBar)
-add_subdirectory(FooBarApp)
+foreach(SUBPROJECT IN ITEMS Foo Bar FooBar FooBarApp)
+  add_subdirectory(${SUBPROJECT})
+endforeach()
 
 add_subdirectory(examples)
