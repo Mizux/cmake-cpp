@@ -27,11 +27,10 @@ target_link_libraries(FooBarApp PRIVATE
   protobuf::libprotobuf
   CMakeCpp::FooBar
 )
-
 add_executable(${PROJECT_NAMESPACE}::FooBarApp ALIAS FooBarApp)
 
 if(BUILD_TESTING)
-  add_test(NAME cpp_FooBarApp_test COMMAND FooBarApp)
+  add_test(NAME cxx_FooBarApp_test COMMAND FooBarApp)
 endif()
 
 # Install

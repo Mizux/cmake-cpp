@@ -30,6 +30,171 @@ endif()
 
 include(GNUInstallDirs)
 
+################
+##  C++ Test  ##
+################
+# add_cxx_test()
+# CMake function to generate and build C++ test.
+# Parameters:
+# NAME: CMake target name
+# SOURCES: List of source files
+# [COMPILE_DEFINITIONS]: List of private compile definitions
+# [COMPILE_OPTIONS]: List of private compile options
+# [LINK_LIBRARIES]: List of private libraries to use when linking
+# note: ortools::ortools is always linked to the target
+# [LINK_OPTIONS]: List of private link options
+# e.g.:
+# add_cxx_test(
+#   NAME
+#     foo_test
+#   SOURCES
+#     foo_test.cc
+#     ${PROJECT_SOURCE_DIR}/Foo/foo_test.cc
+#   LINK_LIBRARIES
+#     GTest::gmock
+#     GTest::gtest_main
+# )
+function(add_cxx_test)
+  set(options "")
+  set(oneValueArgs "NAME")
+  set(multiValueArgs
+    "SOURCES;COMPILE_DEFINITIONS;COMPILE_OPTIONS;LINK_LIBRARIES;LINK_OPTIONS")
+  cmake_parse_arguments(TEST
+    "${options}"
+    "${oneValueArgs}"
+    "${multiValueArgs}"
+    ${ARGN}
+  )
+  if(NOT BUILD_TESTING)
+    return()
+  endif()
+
+  if(NOT TEST_NAME)
+    message(FATAL_ERROR "no NAME provided")
+  endif()
+  if(NOT TEST_SOURCES)
+    message(FATAL_ERROR "no SOURCES provided")
+  endif()
+  message(STATUS "Configuring test ${TEST_NAME} ...")
+
+  add_executable(${TEST_NAME} "")
+  target_sources(${TEST_NAME} PRIVATE ${TEST_SOURCES})
+  target_include_directories(${TEST_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+  target_compile_definitions(${TEST_NAME} PRIVATE ${TEST_COMPILE_DEFINITIONS})
+  target_compile_features(${TEST_NAME} PRIVATE cxx_std_20)
+  target_compile_options(${TEST_NAME} PRIVATE ${TEST_COMPILE_OPTIONS})
+  target_link_libraries(${TEST_NAME} PRIVATE
+    GTest::gtest
+    GTest::gtest_main
+    ${TEST_LINK_LIBRARIES}
+  )
+  target_link_options(${TEST_NAME} PRIVATE ${TEST_LINK_OPTIONS})
+
+  include(GNUInstallDirs)
+  if(APPLE)
+    set_target_properties(${TEST_NAME} PROPERTIES
+      INSTALL_RPATH "@loader_path/../${CMAKE_INSTALL_LIBDIR};@loader_path")
+  elseif(UNIX)
+    cmake_path(RELATIVE_PATH CMAKE_INSTALL_FULL_LIBDIR
+      BASE_DIRECTORY ${CMAKE_INSTALL_FULL_BINDIR}
+      OUTPUT_VARIABLE libdir_relative_path)
+    set_target_properties(${TEST_NAME} PROPERTIES
+      INSTALL_RPATH "$ORIGIN/${libdir_relative_path}:$ORIGIN")
+  endif()
+
+  if(BUILD_TESTING)
+    add_test(
+      NAME cxx_${TEST_NAME}
+      COMMAND ${TEST_NAME}
+      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    )
+  endif()
+  message(STATUS "Configuring test ${TEST_NAME} ...DONE")
+endfunction()
+
+###################
+##  C++ Library  ##
+###################
+# add_cxx_library()
+# CMake function to generate and build C++ library.
+# Parameters:
+# NAME: CMake target name
+# SOURCES: List of source files
+# [TYPE]: SHARED, STATIC or INTERFACE
+# [COMPILE_DEFINITIONS]: List of private compile definitions
+# [COMPILE_OPTIONS]: List of private compile options
+# [LINK_LIBRARIES]: List of **public** libraries to use when linking
+# note: ortools::ortools is always linked to the target
+# [LINK_OPTIONS]: List of private link options
+# e.g.:
+# add_cxx_library(
+#   NAME
+#     foo
+#   SOURCES
+#     foo.cc
+#     ${PROJECT_SOURCE_DIR}/Foo/foo.cc
+#   TYPE
+#     SHARED
+#   LINK_LIBRARIES
+#     GTest::gmock
+#     GTest::gtest_main
+#   TESTING
+# )
+function(add_cxx_library)
+  set(options "TESTING")
+  set(oneValueArgs "NAME;TYPE")
+  set(multiValueArgs
+    "SOURCES;COMPILE_DEFINITIONS;COMPILE_OPTIONS;LINK_LIBRARIES;LINK_OPTIONS")
+  cmake_parse_arguments(LIBRARY
+    "${options}"
+    "${oneValueArgs}"
+    "${multiValueArgs}"
+    ${ARGN}
+  )
+  if(LIBRARY_TESTING AND NOT BUILD_TESTING)
+    return()
+  endif()
+
+  if(NOT LIBRARY_NAME)
+    message(FATAL_ERROR "no NAME provided")
+  endif()
+  if(NOT LIBRARY_SOURCES)
+    message(FATAL_ERROR "no SOURCES provided")
+  endif()
+  message(STATUS "Configuring library ${LIBRARY_NAME} ...")
+
+  add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} "")
+  if(LIBRARY_TYPE STREQUAL "INTERFACE")
+    target_include_directories(${LIBRARY_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+    target_link_libraries(${LIBRARY_NAME} INTERFACE ${LIBRARY_LINK_LIBRARIES})
+  else()
+    target_sources(${LIBRARY_NAME} PRIVATE ${LIBRARY_SOURCES})
+    target_include_directories(${LIBRARY_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+    target_compile_definitions(${LIBRARY_NAME} PRIVATE ${LIBRARY_COMPILE_DEFINITIONS})
+    target_compile_features(${LIBRARY_NAME} PRIVATE cxx_std_20)
+    target_compile_options(${LIBRARY_NAME} PRIVATE ${LIBRARY_COMPILE_OPTIONS})
+    target_link_libraries(${LIBRARY_NAME} PUBLIC ${LIBRARY_LINK_LIBRARIES})
+    target_link_options(${LIBRARY_NAME} PRIVATE ${LIBRARY_LINK_OPTIONS})
+  endif()
+
+  include(GNUInstallDirs)
+  if(APPLE)
+    set_target_properties(${LIBRARY_NAME} PROPERTIES
+      INSTALL_RPATH "@loader_path/../${CMAKE_INSTALL_LIBDIR};@loader_path")
+  elseif(UNIX)
+    cmake_path(RELATIVE_PATH CMAKE_INSTALL_FULL_LIBDIR
+      BASE_DIRECTORY ${CMAKE_INSTALL_FULL_BINDIR}
+      OUTPUT_VARIABLE libdir_relative_path)
+    set_target_properties(${LIBRARY_NAME} PROPERTIES
+      INSTALL_RPATH "$ORIGIN/${libdir_relative_path}:$ORIGIN")
+  endif()
+  add_library(${PROJECT_NAMESPACE}::${LIBRARY_NAME} ALIAS ${LIBRARY_NAME})
+  message(STATUS "Configuring library ${LIBRARY_NAME} ...DONE")
+endfunction()
+
+##################
+##  PROTO FILE  ##
+##################
 # get_cpp_proto()
 # CMake macro to generate Protobuf cpp sources
 # Parameters:
@@ -75,6 +240,12 @@ endmacro()
 ###################
 ## CMake Install ##
 ###################
+include(GNUInstallDirs)
+#include(GenerateExportHeader)
+#GENERATE_EXPORT_HEADER(${PROJECT_NAME})
+#install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}_export.h
+#  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
 install(EXPORT ${PROJECT_NAME}Targets
   NAMESPACE ${PROJECT_NAMESPACE}::
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
