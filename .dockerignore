@@ -24,9 +24,18 @@ ci/docs
 ci/cache
 
 # Native build
+.cache/
+.vagrant/
 build/
 build*/
+cache/
+compile_commands.json
+export/
 
-# Editor directories and files
-*.user
+# Editors
+.kdev4/
+*.kdev4
 *.swp
+*.user
+.vs/
+.vscode/

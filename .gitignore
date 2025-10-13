@@ -1,18 +1,16 @@
+# Native build
+.cache/
+.vagrant/
 build/
 build*/
-export/
 cache/
+compile_commands.json
+export/
 
-.vagrant/
-
-# IDE
-.vs/
-.vscode/
-.cache/
-# Kdevelop
+# Editors
 .kdev4/
 *.kdev4
-# vim
-compile_commands.json
 *.swp
 *.user
+.vs/
+.vscode/
