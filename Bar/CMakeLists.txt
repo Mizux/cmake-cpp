@@ -1,33 +1,14 @@
-add_library(Bar)
-target_sources(Bar
-  PRIVATE
+add_cxx_library(
+  NAME
+    Bar
+  HEADERS
     include/bar/Bar.hpp
-    src/Bar.cpp)
-target_include_directories(Bar
-  PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>)
-target_compile_features(Bar PUBLIC cxx_std_20)
-set_target_properties(Bar PROPERTIES
-  VERSION ${PROJECT_VERSION}
-  POSITION_INDEPENDENT_CODE ON
-  PUBLIC_HEADER include/bar/Bar.hpp)
-if(APPLE)
-  set_target_properties(Bar PROPERTIES INSTALL_RPATH "@loader_path")
-elseif(UNIX)
-  set_target_properties(Bar PROPERTIES INSTALL_RPATH "$ORIGIN")
-endif()
-target_link_libraries(Bar PRIVATE absl::log)
-add_library(${PROJECT_NAMESPACE}::Bar ALIAS Bar)
+  SOURCES
+    src/Bar.cpp
+  LINK_LIBRARIES
+    absl::log
+  INSTALL_DIR
+    bar
+)
 
 add_subdirectory(tests)
-
-# Install
-include(GNUInstallDirs)
-install(TARGETS Bar
-  EXPORT ${PROJECT_NAME}Targets
-  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bar
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  #RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
