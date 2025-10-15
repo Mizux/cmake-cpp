@@ -88,6 +88,7 @@ endmacro()
 # [LINK_LIBRARIES]: List of **public** libraries to use when linking
 # note: ortools::ortools is always linked to the target
 # [LINK_OPTIONS]: List of private link options
+# [INSTALL_DIR]: relative path to install public headers
 # e.g.:
 # add_cxx_library(
 #   NAME
@@ -142,8 +143,8 @@ function(add_cxx_library)
       ${LIBRARY_HEADERS}
       ${LIBRARY_SOURCES}
     )
-    target_compile_definitions(${LIBRARY_NAME} PRIVATE ${LIBRARY_COMPILE_DEFINITIONS})
     target_compile_features(${LIBRARY_NAME} PRIVATE cxx_std_20)
+    target_compile_definitions(${LIBRARY_NAME} PRIVATE ${LIBRARY_COMPILE_DEFINITIONS})
     target_compile_options(${LIBRARY_NAME} PRIVATE ${LIBRARY_COMPILE_OPTIONS})
     target_link_libraries(${LIBRARY_NAME} PUBLIC ${LIBRARY_LINK_LIBRARIES})
     target_link_options(${LIBRARY_NAME} PRIVATE ${LIBRARY_LINK_OPTIONS})
