@@ -20,7 +20,7 @@ jobs:
     name: Linux•Toolchain ${{matrix.targets}}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: Build env stage
       run: make --directory=ci toolchain_${{matrix.targets}}_env
     - name: Build devel stage
@@ -36,4 +36,4 @@ jobs:
     runs-on: ubuntu-latest
     needs: riscv64
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
