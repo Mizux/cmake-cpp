@@ -20,6 +20,7 @@ if(BUILD_ZLIB)
     UPDATE_COMMAND git reset --hard
     PATCH_COMMAND git apply --ignore-whitespace
     "${CMAKE_CURRENT_LIST_DIR}/../../patches/ZLIB-v1.3.1.patch"
+    SYSTEM
   )
   set(ZLIB_BUILD_EXAMPLES OFF)
   FetchContent_MakeAvailable(ZLIB)
@@ -42,6 +43,7 @@ if(BUILD_absl)
     PATCH_COMMAND git apply --ignore-whitespace
     "${CMAKE_CURRENT_LIST_DIR}/../../patches/abseil-cpp-20260107.1.patch"
     OVERRIDE_FIND_PACKAGE
+    SYSTEM
   )
   set(ABSL_USE_SYSTEM_INCLUDES ON)
   # We want Abseil to declare what C++ standard it was compiled with.
@@ -74,6 +76,7 @@ if(BUILD_Protobuf)
     PATCH_COMMAND git apply --ignore-whitespace
     "${CMAKE_CURRENT_LIST_DIR}/../../patches/protobuf-v33.1.patch"
     OVERRIDE_FIND_PACKAGE # Make package visible for "protobuf-matchers" below
+    SYSTEM
   )
   set(protobuf_BUILD_TESTS OFF)
   set(protobuf_BUILD_SHARED_LIBS ON)
@@ -99,6 +102,7 @@ if(BUILD_re2)
     UPDATE_COMMAND git reset --hard
     PATCH_COMMAND git apply --ignore-whitespace
     "${CMAKE_CURRENT_LIST_DIR}/../../patches/re2-2025-08-12.patch"
+    SYSTEM
   )
   set(RE2_BUILD_TESTING OFF)
   FetchContent_MakeAvailable(re2)
@@ -121,6 +125,7 @@ if(BUILD_googletest)
     UPDATE_COMMAND git reset --hard
     PATCH_COMMAND git apply --ignore-whitespace
     "${CMAKE_CURRENT_LIST_DIR}/../../patches/googletest-v1.17.0.patch"
+    SYSTEM
   )
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
   set(GTEST_HAS_ABSL ON)
@@ -139,6 +144,7 @@ if(BUILD_benchmark)
     GIT_TAG v1.9.2
     GIT_SHALLOW TRUE
     #PATCH_COMMAND git apply --ignore-whitespace ""
+    SYSTEM
   )
   set(BENCHMARK_ENABLE_TESTING OFF)
   set(BENCHMARK_ENABLE_WERROR OFF)
