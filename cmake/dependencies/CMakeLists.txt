@@ -46,7 +46,7 @@ if(BUILD_absl)
   set(ABSL_USE_SYSTEM_INCLUDES ON)
   # We want Abseil to declare what C++ standard it was compiled with.
   set(ABSL_PROPAGATE_CXX_STD ON)
-  set(ABSL_BUILD_TEST_HELPERS ON)
+  set(ABSL_BUILD_TEST_HELPERS OFF)
   set(ABSL_USE_EXTERNAL_GOOGLETEST ON)
   set(ABSL_FIND_GOOGLETEST OFF)
   # We want Abseil to keep the INSTALL rules enabled, even though it is a
