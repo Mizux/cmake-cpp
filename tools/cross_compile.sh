@@ -33,7 +33,7 @@ function install_qemu() {
     >&2 echo 'QEMU is disabled !'
     return 0
   fi
-  local -r QEMU_VERSION=${QEMU_VERSION:=9.0.2}
+  local -r QEMU_VERSION=${QEMU_VERSION:=11.0.1}
   local -r QEMU_TARGET=${QEMU_ARCH}-linux-user
 
   if echo "${QEMU_VERSION} ${QEMU_TARGET}" | cmp --silent "${QEMU_INSTALL}/.build" -; then
@@ -52,6 +52,7 @@ function install_qemu() {
   unpack "${QEMU_URL}" "${QEMU_DIR}"
   cd "${QEMU_DIR}" || exit 2
 
+  # Qemu (meson based build) depends on: pkgconf, libglib2.0, python3, ninja
   ./configure \
     --prefix="${QEMU_INSTALL}" \
     --target-list="${QEMU_TARGET}" \
@@ -93,6 +94,8 @@ function clean_build() {
 
 function expand_bootlin_config() {
   # ref: https://toolchains.bootlin.com/
+  local -r GCC_DIR=${ARCHIVE_DIR}/${GCC_RELATIVE_DIR}
+
   case "${TARGET}" in
     "arm" | "armv7-eabihf")
       local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/armv7-eabihf/tarballs/armv7-eabihf--glibc--stable-2024.05-1.tar.xz"
@@ -118,6 +121,7 @@ function expand_bootlin_config() {
       local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-440fp/tarballs/powerpc-440fp--glibc--stable-2024.05-1.tar.xz"
       local -r GCC_PREFIX="powerpc"
       local -r GCC_SUFFIX=""
+      QEMU_ARGS+=( -cpu "440epx" )
       ;;
     "ppc-e500mc")
       local -r TOOLCHAIN_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc-e500mc/tarballs/powerpc-e500mc--glibc--stable-2024.05-1.tar.xz"
@@ -317,7 +321,7 @@ SYNOPSIS
 DESCRIPTION
 \tCross compile using a cross toolchain.
 
-\tYou MUST define the following variables before running this script:
+\tYou MUST define the following variable before running this script:
 \t* TARGET:
 \t\tx86_64
 \t\tarmv7-eabihf(arm) armebv7-eabihf(armeb) (bootlin)
@@ -339,11 +343,11 @@ OPTIONS
 
 EXAMPLES
 * Using export:
-export TARGET=aarch64-linux-gnu
+export TARGET=aarch64
 $0
 
 * One-liner:
-TARGET=aarch64-linux-gnu $0"
+TARGET=aarch64 $0"
 }
 
 # Main
