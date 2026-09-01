@@ -15,14 +15,16 @@ if(BUILD_ZLIB)
   FetchContent_Declare(
     ZLIB
     GIT_REPOSITORY "https://github.com/madler/ZLIB.git"
-    GIT_TAG "v1.3.1"
+    GIT_TAG "v1.3.2"
     GIT_SHALLOW TRUE
     UPDATE_COMMAND git reset --hard
-    PATCH_COMMAND git apply --ignore-whitespace
-    "${CMAKE_CURRENT_LIST_DIR}/../../patches/ZLIB-v1.3.1.patch"
+    #PATCH_COMMAND git apply --ignore-whitespace
+    #"${CMAKE_CURRENT_LIST_DIR}/../../patches/ZLIB-v1.3.2.patch"
+    OVERRIDE_FIND_PACKAGE
     SYSTEM
   )
-  set(ZLIB_BUILD_EXAMPLES OFF)
+  set(ZLIB_BUILD_TESTING OFF)
+  set(ZLIB_BUILD_STATIC OFF)
   FetchContent_MakeAvailable(ZLIB)
   list(POP_BACK CMAKE_MESSAGE_INDENT)
   message(CHECK_PASS "fetched")
@@ -37,11 +39,11 @@ if(BUILD_absl)
   FetchContent_Declare(
     absl
     GIT_REPOSITORY "https://github.com/abseil/abseil-cpp.git"
-    GIT_TAG "20260107.1"
+    GIT_TAG "20260817.0"
     GIT_SHALLOW TRUE
     UPDATE_COMMAND git reset --hard
     PATCH_COMMAND git apply --ignore-whitespace
-    "${CMAKE_CURRENT_LIST_DIR}/../../patches/abseil-cpp-20260107.1.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/../../patches/abseil-cpp-20260817.0.patch"
     OVERRIDE_FIND_PACKAGE
     SYSTEM
   )
@@ -69,12 +71,12 @@ if(BUILD_Protobuf)
   FetchContent_Declare(
     Protobuf
     GIT_REPOSITORY "https://github.com/protocolbuffers/protobuf.git"
-    GIT_TAG "v33.1"
+    GIT_TAG "v36.1"
     GIT_SHALLOW TRUE
     GIT_SUBMODULES ""
     UPDATE_COMMAND git reset --hard
     PATCH_COMMAND git apply --ignore-whitespace
-    "${CMAKE_CURRENT_LIST_DIR}/../../patches/protobuf-v33.1.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/../../patches/protobuf-v36.1.patch"
     OVERRIDE_FIND_PACKAGE # Make package visible for "protobuf-matchers" below
     SYSTEM
   )
@@ -120,14 +122,15 @@ if(BUILD_googletest)
   FetchContent_Declare(
     googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG v1.17.0
+    GIT_TAG v1.18.0
     GIT_SHALLOW TRUE
     UPDATE_COMMAND git reset --hard
     PATCH_COMMAND git apply --ignore-whitespace
-    "${CMAKE_CURRENT_LIST_DIR}/../../patches/googletest-v1.17.0.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/../../patches/googletest-v1.18.0.patch"
     SYSTEM
   )
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  set(gtest_disable_warnings_as_errors ON CACHE BOOL "" FORCE)
   set(GTEST_HAS_ABSL ON)
   set(INSTALL_GTEST OFF)
   FetchContent_MakeAvailable(googletest)
@@ -141,7 +144,7 @@ if(BUILD_benchmark)
   FetchContent_Declare(
     benchmark
     GIT_REPOSITORY https://github.com/google/benchmark.git
-    GIT_TAG v1.9.2
+    GIT_TAG v1.9.5
     GIT_SHALLOW TRUE
     #PATCH_COMMAND git apply --ignore-whitespace ""
     SYSTEM
