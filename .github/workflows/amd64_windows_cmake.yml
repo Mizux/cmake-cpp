@@ -26,7 +26,7 @@ jobs:
       CTEST_OUTPUT_ON_FAILURE: 1
     steps:
       - name: Run sccache-cache
-        uses: mozilla-actions/sccache-action@v0.0.10
+        uses: mozilla-actions/sccache-action@v0.0.11
       - uses: actions/checkout@v7
       - name: Check CMake
         run: |
