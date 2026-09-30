@@ -1,7 +1,12 @@
 # ref: https://toolchains.bootlin.com/
 name: s390x Toolchain CMake
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches:
+      - ci
+      - main
+  workflow_dispatch:
 
 concurrency:
   group: ${{github.workflow}}-${{github.ref}}
