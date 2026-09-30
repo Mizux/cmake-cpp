@@ -25,22 +25,9 @@ jobs:
       SCCACHE_GHA_ENABLED: "true"
       CTEST_OUTPUT_ON_FAILURE: 1
     steps:
+      - name: Run sccache-cache
+        uses: mozilla-actions/sccache-action@v0.0.10
       - uses: actions/checkout@v7
-
-      # CONFIGURING CACHES
-      - name: Cache CMake dependency source code
-        uses: actions/cache@v6
-        with:
-          key: ${{env.deps_src_key}}-${{hashFiles('CMakeLists.txt', 'cmake/**')}}
-          path: ${{github.workspace}}/build/_deps/*-src
-      - name: Cache CMake dependency build
-        uses: actions/cache@v6
-        with:
-          key: ${{env.deps_build_key}}-${{hashFiles('CMakeLists.txt', 'cmake/**')}}
-          path: |
-            ${{github.workspace}}/build/_deps/*-build
-            ${{github.workspace}}/build/_deps/*-subbuild
-
       - name: Check CMake
         run: |
           cmake --version
