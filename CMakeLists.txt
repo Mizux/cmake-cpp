@@ -1,9 +1,14 @@
 # This file is just an orchestration
-cmake_minimum_required(VERSION 3.24..3.31)
+cmake_minimum_required(VERSION 3.25..3.31)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # Enable output of compile commands during generation.
 option(CMAKE_EXPORT_COMPILE_COMMANDS "Export compile command" ON)
+
+# Enable SCCache if any
+include(sccache)
+# Enable CCache if any
+include(ccache)
 
 project(CMakeCpp VERSION 1.0.0 LANGUAGES C CXX)
 set(PROJECT_NAMESPACE CMakeCpp)
@@ -70,9 +75,6 @@ endif()
 if(MSVC AND BUILD_SHARED_LIBS)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
-
-# Enable CCache if any
-include(ccache)
 
 # Build deps
 option(BUILD_ZLIB "Build the ZLIB dependency Library" ON)
