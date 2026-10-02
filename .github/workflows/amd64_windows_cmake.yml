@@ -34,55 +34,11 @@ jobs:
         uses: mozilla-actions/sccache-action@v0.0.11
 
       # Extract and inject MSVC environment variables
-      - name: Configure Native MSVC Environment for Ninja generator
+      - name: Set up MSVC x64
         if: ${{matrix.cmake.generator == 'Ninja'}}
-        shell: powershell
-        run: |
-          # Locate the installation path of the Visual Studio Enterprise edition on the runner
-          $vsInstallPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
-          if (-not $vsInstallPath) {
-              Write-Error "Visual Studio installation could not be found."
-              exit 1
-          }
-
-          # Target path for the developer command prompt batch file
-          $devCmdPath = Join-Path $vsInstallPath "Common7\Tools\VsDevCmd.bat"
-          Write-Host "Found Developer Cmd at: $devCmdPath"
-
-          # Run the batch file and dump the environment variables it configures
-          # We target x64 architecture specifically
-          $envVars = cmd.exe /c " `"$devCmdPath`" -arch=x64 && set"
-
-          # Parse and append the variables to GITHUB_ENV and GITHUB_PATH
-          foreach ($line in $envVars) {
-              if ($line -match "^([^=]+)=(.*)$") {
-                  $name = $Matches[1]
-                  $value = $Matches[2]
-
-                  # Avoid overriding standard system variables that shouldn't be altered
-                  if ($name -in @("ALLUSERSPROFILE", "APPDATA", "COMPUTERNAME", "ComSpec", "CommonProgramFiles", "CommonProgramFiles(x86)", "CommonProgramW6432")) {
-                      continue
-                  }
-
-                  if ($name -eq "Path") {
-                      # Inject path additions into GITHUB_PATH (split paths by semicolon)
-                      $paths = $value -split ";"
-                      foreach ($p in $paths) {
-                          if ($p -and (Test-Path $p)) {
-                              $p | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-                          }
-                      }
-                  } else {
-                      # Inject other environment variables (like INCLUDE, LIB, LIBPATH) into GITHUB_ENV
-                      "$name=$value" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-                  }
-              }
-          }
-          # CRITICAL: Force environment compilers to cl.exe
-          "CC=cl" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          "CXX=cl" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          Write-Host "Successfully injected MSVC environment into GitHub Runner!"
-
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
       - uses: actions/checkout@v7
       - name: Check CMake
         run: |
