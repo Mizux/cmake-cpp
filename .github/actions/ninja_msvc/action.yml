@@ -1,0 +1,58 @@
+name: 'Ninja x MSVC'
+description: 'Use ninja generator with MSVC cl.exe'
+runs:
+  using: "composite"
+  steps:
+    - name: Configure Native MSVC Environment for Ninja generator
+      shell: powershell
+      run: |
+        # Locate the installation path of the Visual Studio Enterprise edition on the runner
+        # e.g. "C:\Program Files\Microsoft Visual Studio\2022\Community"
+        $vsInstallPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
+        if (-not $vsInstallPath) {
+            Write-Error "Visual Studio installation could not be found."
+            exit 1
+        }
+
+        # 1. Snapshot current environment before loading VS DevShell
+        $oldEnv = @{}
+        Get-ChildItem env: | ForEach-Object { $oldEnv[$_.Name] = $_.Value }
+
+        # 2. Target the PowerShell-native developer shell script
+        $devCmdPath = Join-Path $vsInstallPath "Common7\Tools\Launch-VsDevShell.ps1"
+        Write-Host "Found Developer Shell at: $devCmdPath"
+
+        # 3. Run the script to load VS variables directly into this PowerShell session
+        # Specify both -Arch amd64 and -HostArch amd64 to target x64 natively with 64-bit tools
+        & $devCmdPath -Arch amd64 -HostArch amd64 -SkipAutomaticLocation
+
+        # 4. Read the updated environment variables natively from PowerShell's env: drive
+        $envVars = Get-ChildItem env:
+
+        # 5. Parse and append only new/modified variables to GitHub Actions runner environment
+        foreach ($var in $envVars) {
+            $name = $var.Name
+            $value = $var.Value
+
+            if ($oldEnv.ContainsKey($name) -and $oldEnv[$name] -eq $value) {
+                continue
+            }
+
+            if ($name -eq "Path") {
+                # GitHub Actions PREPENDS each line of GITHUB_PATH as it reads top-to-bottom.
+                # We must reverse the array so the first path (MSVC Hostx64/x64) is prepended last
+                # and stays at the very front of PATH (ahead of VC/Tools/Llvm/x64/bin).
+                $paths = $value -split ";"
+                [array]::Reverse($paths)
+                foreach ($p in $paths) {
+                    if ($p -and (Test-Path $p)) {
+                        $p | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+                    }
+                }
+            } else {
+                # Inject modified/new environment variables (INCLUDE, LIB, LIBPATH, etc.) into GITHUB_ENV
+                "$name=$value" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            }
+        }
+        Write-Host "Successfully injected MSVC environment into GitHub Runner!"
+
