@@ -30,16 +30,12 @@ jobs:
       SCCACHE_GHA_ENABLED: "true"
       CTEST_OUTPUT_ON_FAILURE: 1
     steps:
+      - uses: actions/checkout@v7
       - name: Run sccache-cache
         uses: mozilla-actions/sccache-action@v0.0.11
-
       # Extract and inject MSVC environment variables
-      - name: Set up MSVC x64
+      - uses: ./.github/actions/ninja_msvc
         if: ${{matrix.cmake.generator == 'Ninja'}}
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x64
-      - uses: actions/checkout@v7
       - name: Check CMake
         run: |
           cmake --version
