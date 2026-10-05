@@ -3,9 +3,6 @@ name: amd64 Windows CMake
 
 on:
   push:
-    branches:
-      - ci
-      - main
   pull_request:
   workflow_dispatch:
 
